@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "lib": ["ESNext"],
+    "moduleResolution": "node",
+    "noEmit": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "types": ["node"]
+  },
+  "include": ["parse-theme.mts"],
+  "exclude": [
+    "node_modules",
+    "app",
+    ".next",
+    ".yarn",
+    "components",
+    "public"
+  ]
+}

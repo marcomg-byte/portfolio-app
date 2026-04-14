@@ -1,0 +1,134 @@
+:root {
+    --color-azure-50: 237 244 254;
+    --color-azure-100: 219 233 253;
+    --color-azure-200: 183 211 251;
+    --color-azure-300: 147 189 249;
+    --color-azure-400: 111 167 247;
+    --color-azure-500: 72 150 240;
+    --color-azure-600: 59 126 208;
+    --color-azure-700: 46 102 176;
+    --color-azure-800: 33 78 144;
+    --color-azure-900: 20 54 112;
+    --color-midnight-50: 232 235 239;
+    --color-midnight-100: 209 215 223;
+    --color-midnight-200: 163 175 191;
+    --color-midnight-300: 117 135 159;
+    --color-midnight-400: 71 95 127;
+    --color-midnight-500: 10 26 47;
+    --color-midnight-600: 8 22 37;
+    --color-midnight-700: 6 18 30;
+    --color-midnight-800: 4 14 22;
+    --color-midnight-900: 2 9 15;
+    --color-mist-50: 255 255 255;
+    --color-mist-100: 249 251 252;
+    --color-mist-200: 244 247 250;
+    --color-mist-300: 230 237 243;
+    --color-mist-400: 207 217 227;
+    --color-mist-500: 184 197 211;
+    --color-mist-600: 148 163 184;
+    --color-mist-700: 100 116 139;
+    --color-mist-800: 71 85 105;
+    --color-mist-900: 51 65 85;
+    --color-ocean-50: 230 235 242;
+    --color-ocean-100: 205 215 229;
+    --color-ocean-200: 155 175 203;
+    --color-ocean-300: 105 135 177;
+    --color-ocean-400: 55 95 151;
+    --color-ocean-500: 7 51 110;
+    --color-ocean-600: 6 43 94;
+    --color-ocean-700: 5 34 77;
+    --color-ocean-800: 3 26 61;
+    --color-ocean-900: 2 17 44;
+    --color-sky-50: 230 240 255;
+    --color-sky-100: 204 224 255;
+    --color-sky-200: 153 194 255;
+    --color-sky-300: 102 163 255;
+    --color-sky-400: 51 133 255;
+    --color-sky-500: 0 119 255;
+    --color-sky-600: 0 102 219;
+    --color-sky-700: 0 85 183;
+    --color-sky-800: 0 68 148;
+    --color-sky-900: 0 51 112;
+    --space-unit: 8px
+
+}
+
+@theme inline {
+    --color-primary: rgb(var(--color-sky-500));
+    --color-primary-hover: rgb(var(--color-sky-600));
+    --color-primary-active: rgb(var(--color-sky-700));
+    --color-primary-soft: rgb(var(--color-sky-100));
+    --color-secondary: rgb(var(--color-azure-500));
+    --color-secondary-hover: rgb(var(--color-azure-600));
+    --color-secondary-active: rgb(var(--color-azure-700));
+    --color-secondary-soft: rgb(var(--color-azure-100));
+    --color-accent: rgb(var(--color-ocean-500));
+    --color-accent-hover: rgb(var(--color-ocean-600));
+    --color-accent-active: rgb(var(--color-ocean-700));
+    --color-accent-soft: rgb(var(--color-ocean-100));
+    --color-subtle: rgb(var(--color-mist-200));
+    --color-subtle-hover: rgb(var(--color-mist-300));
+    --color-subtle-active: rgb(var(--color-mist-400));
+    --color-inverse: rgb(var(--color-midnight-500));
+    --color-inverse-hover: rgb(var(--color-midnight-600));
+    --color-inverse-active: rgb(var(--color-midnight-700));
+    --color-inverse-soft: rgb(var(--color-midnight-400));
+    --color-surface: rgb(var(--color-mist-100));
+    --color-border: rgb(var(--color-mist-300));
+    --spacing: 8px;
+    --spacing-0: 0px;
+    --spacing-2px: 2px;
+    --spacing-2xs: 4px;
+    --spacing-xs: 8px;
+    --spacing-sm: 12px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --spacing-2xl: 40px;
+    --spacing-3xl: 48px;
+    --spacing-4xl: 64px;
+    --spacing-5xl: 80px;
+    --spacing-6xl: 96px
+
+}
+
+@media (prefers-color-scheme: dark) {
+    @theme inline {
+        --color-primary: rgb(var(--color-sky-500));
+        --color-primary-hover: rgb(var(--color-sky-400));
+        --color-primary-active: rgb(var(--color-sky-300));
+        --color-primary-soft: rgb(var(--color-sky-700));
+        --color-secondary: rgb(var(--color-azure-500));
+        --color-secondary-hover: rgb(var(--color-azure-400));
+        --color-secondary-active: rgb(var(--color-azure-300));
+        --color-secondary-soft: rgb(var(--color-azure-700));
+        --color-accent: rgb(var(--color-ocean-500));
+        --color-accent-hover: rgb(var(--color-ocean-400));
+        --color-accent-active: rgb(var(--color-ocean-300));
+        --color-accent-soft: rgb(var(--color-ocean-700));
+        --color-subtle: rgb(var(--color-mist-600));
+        --color-subtle-hover: rgb(var(--color-mist-500));
+        --color-subtle-active: rgb(var(--color-mist-400));
+        --color-inverse: rgb(var(--color-mist-100));
+        --color-inverse-hover: rgb(var(--color-mist-200));
+        --color-inverse-active: rgb(var(--color-mist-300));
+        --color-inverse-soft: rgb(var(--color-mist-600));
+        --color-surface: rgb(var(--color-midnight-500));
+        --color-border: rgb(var(--color-mist-600));
+        --spacing: 8px;
+        --spacing-0: 0px;
+        --spacing-2px: 2px;
+        --spacing-2xs: 4px;
+        --spacing-xs: 8px;
+        --spacing-sm: 12px;
+        --spacing-md: 16px;
+        --spacing-lg: 24px;
+        --spacing-xl: 32px;
+        --spacing-2xl: 40px;
+        --spacing-3xl: 48px;
+        --spacing-4xl: 64px;
+        --spacing-5xl: 80px;
+        --spacing-6xl: 96px
+    
+    }
+}

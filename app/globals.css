@@ -1,26 +1,56 @@
 @import "tailwindcss";
+@import "./theme.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@font-face {
+  font-family: 'Inter Body';
+  src: url('/fonts/Inter_18pt-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  size-adjust: 95%;
+  font-size-adjust: ex-height;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@font-face {
+  font-family: 'Inter Bold';
+  src: url('/fonts/Inter_24pt-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  size-adjust: 95%;
+  font-size-adjust: ex-height;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@font-face {
+  font-family: 'Inter Heading';
+  src: url('/fonts/Inter_28pt-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  size-adjust: 95%;
+  font-size-adjust: ex-height;
+}
+
+@layer base {
+  body {
+    font-family: 'Inter Body', sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Inter Heading', sans-serif;
+  }
+
+  strong,
+  b,
+  em,
+  mark {
+    font-family: 'Inter Bold', sans-serif;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
