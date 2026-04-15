@@ -485,6 +485,41 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fortawesome/fontawesome-common-types@npm:7.2.0":
+  version: 7.2.0
+  resolution: "@fortawesome/fontawesome-common-types@npm:7.2.0"
+  checksum: 10c0/991ca1390c078d973e92034cf7dbae2fc3aa50cd7ff322b7b23e4c54ec84dae12979bada9a782bdaea11a1577ae74d802aa651c590f41d2e1b1126c17e6cd413
+  languageName: node
+  linkType: hard
+
+"@fortawesome/fontawesome-svg-core@npm:^7.2.0":
+  version: 7.2.0
+  resolution: "@fortawesome/fontawesome-svg-core@npm:7.2.0"
+  dependencies:
+    "@fortawesome/fontawesome-common-types": "npm:7.2.0"
+  checksum: 10c0/5c6655b030254804999eb87b96111cdcc42c0789e6e9ea13bc1e37d5ebf9fb982c79a618b68272cc59c23c4e1abf73d487e747a17a61499eac5f9f528fc54ad4
+  languageName: node
+  linkType: hard
+
+"@fortawesome/free-solid-svg-icons@npm:^7.2.0":
+  version: 7.2.0
+  resolution: "@fortawesome/free-solid-svg-icons@npm:7.2.0"
+  dependencies:
+    "@fortawesome/fontawesome-common-types": "npm:7.2.0"
+  checksum: 10c0/922ffe0f53b3cebcf36a4a6872958e7d6a0fbaa5c5c73cddbdea9301181fe8625331a0bf8aa09ca54c4d284805473e38d0eb9f06da05546f1914cec2c062343f
+  languageName: node
+  linkType: hard
+
+"@fortawesome/react-fontawesome@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "@fortawesome/react-fontawesome@npm:3.3.0"
+  peerDependencies:
+    "@fortawesome/fontawesome-svg-core": ~6 || ~7
+    react: ^18.0.0 || ^19.0.0
+  checksum: 10c0/6c35b9197ee64afc3afad85dee644938c51938cbf2e851c878eed5dd9afba5d1da88a46aca3c3cd88af9e7de16798910d27ef2a45047dd0ef36de070f51f71c0
+  languageName: node
+  linkType: hard
+
 "@gar/promise-retry@npm:^1.0.0":
   version: 1.0.3
   resolution: "@gar/promise-retry@npm:1.0.3"
@@ -802,6 +837,38 @@ __metadata:
   checksum: 10c0/4b30ec8cd56c5fd9a661f088230af01e0c1a3888d11ffb6b47639700f71225be21d1f7e168048d6d4f9449207b978a235c07c8f15c07705685d16dc06280e9d9
   languageName: node
   linkType: hard
+
+"@marcomg-byte/portfolio-app@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@marcomg-byte/portfolio-app@workspace:."
+  dependencies:
+    "@fortawesome/fontawesome-svg-core": "npm:^7.2.0"
+    "@fortawesome/free-solid-svg-icons": "npm:^7.2.0"
+    "@fortawesome/react-fontawesome": "npm:^3.3.0"
+    "@tailwindcss/postcss": "npm:^4"
+    "@types/node": "npm:^20"
+    "@types/react": "npm:^19"
+    "@types/react-dom": "npm:^19"
+    classnames: "npm:^2.5.1"
+    colord: "npm:^2.9.3"
+    embla-carousel: "npm:^8.6.0"
+    embla-carousel-fade: "npm:^8.6.0"
+    embla-carousel-react: "npm:^8.6.0"
+    eslint: "npm:^9"
+    eslint-config-next: "npm:16.2.3"
+    eslint-config-prettier: "npm:^10.1.8"
+    eslint-plugin-prettier: "npm:^5.5.5"
+    next: "npm:16.2.3"
+    postcss: "npm:^8.5.9"
+    postcss-js: "npm:^5.1.0"
+    prettier: "npm:^3.8.2"
+    react: "npm:19.2.4"
+    react-dom: "npm:19.2.4"
+    tailwindcss: "npm:^4"
+    tsx: "npm:^4.21.0"
+    typescript: "npm:^5"
+  languageName: unknown
+  linkType: soft
 
 "@napi-rs/wasm-runtime@npm:^0.2.11":
   version: 0.2.12
@@ -1840,6 +1907,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"classnames@npm:^2.5.1":
+  version: 2.5.1
+  resolution: "classnames@npm:2.5.1"
+  checksum: 10c0/afff4f77e62cea2d79c39962980bf316bacb0d7c49e13a21adaadb9221e1c6b9d3cdb829d8bb1b23c406f4e740507f37e1dcf506f7e3b7113d17c5bab787aa69
+  languageName: node
+  linkType: hard
+
 "client-only@npm:0.0.1":
   version: 0.0.1
   resolution: "client-only@npm:0.0.1"
@@ -2023,6 +2097,43 @@ __metadata:
   version: 1.5.335
   resolution: "electron-to-chromium@npm:1.5.335"
   checksum: 10c0/ce634af91fba9ac647b5660bacdf08c6cec49743281733ae1c754487fafdb6299968e386434f1b749d09d5fd5a977c66d5cd2335a9dd2837ab10dc5b4c2545ac
+  languageName: node
+  linkType: hard
+
+"embla-carousel-fade@npm:^8.6.0":
+  version: 8.6.0
+  resolution: "embla-carousel-fade@npm:8.6.0"
+  peerDependencies:
+    embla-carousel: 8.6.0
+  checksum: 10c0/00b44b6bd8df7d6854c7ca00e46a25996d58904c790043067e85210b29972fe0a602f0d36e98a27043fd92c229d9f46069be178b8462b7fcedfe13b14d3009b5
+  languageName: node
+  linkType: hard
+
+"embla-carousel-react@npm:^8.6.0":
+  version: 8.6.0
+  resolution: "embla-carousel-react@npm:8.6.0"
+  dependencies:
+    embla-carousel: "npm:8.6.0"
+    embla-carousel-reactive-utils: "npm:8.6.0"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.1 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+  checksum: 10c0/461b0c427a6fca62e730c7b39d08e9c55b01a2138c173d5b9ebf77ec92092a900b45ac384731c77382b48d5d65946994d3abba6e9899a66d6e16f8ddf191ed1c
+  languageName: node
+  linkType: hard
+
+"embla-carousel-reactive-utils@npm:8.6.0":
+  version: 8.6.0
+  resolution: "embla-carousel-reactive-utils@npm:8.6.0"
+  peerDependencies:
+    embla-carousel: 8.6.0
+  checksum: 10c0/33d07e6df4d8dec9b4fc95858838ea2d5e5df078039c05b2a342c05ba4979d8d18564a1c607da445fed744daf969a0b5a90124ce487a854e86ced6f0458b51e9
+  languageName: node
+  linkType: hard
+
+"embla-carousel@npm:8.6.0, embla-carousel@npm:^8.6.0":
+  version: 8.6.0
+  resolution: "embla-carousel@npm:8.6.0"
+  checksum: 10c0/f4c598e7be28b70340d31ffd2bebb2472db370b0c81d9b089bf9555cf618695f35dc4a0694565c994c9ab972731123063f945aa09ff485df0df761d79c6a08ef
   languageName: node
   linkType: hard
 
@@ -4143,31 +4254,6 @@ __metadata:
   checksum: 10c0/e2c6023372cc7b5764719a5ffb9da0f8e781212fa7ca4bd0562db929df8e117460f00dff3cb7509dacfc06b86de924b247f504d0ce1806a37fac4633081466b0
   languageName: node
   linkType: hard
-
-"portfolio-app@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "portfolio-app@workspace:."
-  dependencies:
-    "@tailwindcss/postcss": "npm:^4"
-    "@types/node": "npm:^20"
-    "@types/react": "npm:^19"
-    "@types/react-dom": "npm:^19"
-    colord: "npm:^2.9.3"
-    eslint: "npm:^9"
-    eslint-config-next: "npm:16.2.3"
-    eslint-config-prettier: "npm:^10.1.8"
-    eslint-plugin-prettier: "npm:^5.5.5"
-    next: "npm:16.2.3"
-    postcss: "npm:^8.5.9"
-    postcss-js: "npm:^5.1.0"
-    prettier: "npm:^3.8.2"
-    react: "npm:19.2.4"
-    react-dom: "npm:19.2.4"
-    tailwindcss: "npm:^4"
-    tsx: "npm:^4.21.0"
-    typescript: "npm:^5"
-  languageName: unknown
-  linkType: soft
 
 "possible-typed-array-names@npm:^1.0.0":
   version: 1.1.0

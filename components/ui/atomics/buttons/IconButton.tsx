@@ -1,0 +1,209 @@
+import type {
+  AnchorHTMLAttributes,
+  ButtonHTMLAttributes,
+  JSX,
+  MouseEvent,
+  Ref,
+} from 'react';
+import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import classNames from 'classnames';
+
+/**
+ * Color options for the IconButton component.
+ *
+ * - 'primary': Primary color style
+ * - 'secondary': Secondary color style
+ * - 'accent': Accent color style
+ */
+type IconButtonColor = 'primary' | 'secondary' | 'accent';
+
+/**
+ * Size options for the IconButton component.
+ *
+ * - 'sm': Small
+ * - 'md': Medium
+ * - 'lg': Large
+ */
+type IconButtonSize = 'sm' | 'md' | 'lg';
+
+/**
+ * Visual style variants for the IconButton component.
+ *
+ * - 'outline': Bordered, transparent background
+ * - 'filled': Solid background
+ */
+type IconButtonVariant = 'outline' | 'filled';
+
+/**
+ * Props for the anchor variant of the IconButton component.
+ *
+ * @property {IconDefinition} [children] - The icon to display inside the anchor.
+ * @property {string} [className] - Additional CSS classes for the anchor.
+ * @property {IconButtonColor} [color] - The color style of the anchor.
+ * @property {string} href - The URL to link to (required for anchor usage).
+ * @property {IconButtonSize} [size] - The size of the anchor button.
+ * @property {(event: MouseEvent<HTMLAnchorElement>) => void} [onClick] - Click event handler for the anchor.
+ * @property {Ref<HTMLAnchorElement>} [ref] - Ref for the anchor element.
+ * @property {IconButtonVariant} [variant] - The visual style of the anchor button.
+ * @property {(event: MouseEvent<HTMLAnchorElement>) => void} [onClick] - Click event handler for the anchor.
+ * @property {Ref<HTMLAnchorElement>} [ref] - Ref for the anchor element.
+ * @property {IconButtonVariant} [variant] - The visual style of the anchor button.
+ */
+interface AnchorProps extends Omit<
+  AnchorHTMLAttributes<HTMLAnchorElement>,
+  'children'
+> {
+  children?: IconDefinition;
+  className?: string;
+  color?: IconButtonColor;
+  href: string;
+  size?: IconButtonSize;
+  onClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
+  ref?: Ref<HTMLAnchorElement>;
+  variant?: IconButtonVariant;
+}
+
+/**
+ * Props for the button variant of the IconButton component.
+ *
+ * @property {IconDefinition} [children] - The icon to display inside the button.
+ * @property {string} [className] - Additional CSS classes for the button.
+ * @property {IconButtonColor} [color] - The color style of the button.
+ * @property {never} [href] - Not allowed for button usage.
+ * @property {IconButtonSize} [size] - The size of the button.
+ * @property {(event: MouseEvent<HTMLButtonElement>) => void} [onClick] - Click event handler for the button.
+ * @property {Ref<HTMLButtonElement>} [ref] - Ref for the button element.
+ * @property {IconButtonVariant} [variant] - The visual style of the button.
+ */
+interface ButtonProps extends Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  'children'
+> {
+  children?: IconDefinition;
+  className?: string;
+  color?: IconButtonColor;
+  href?: never;
+  size?: IconButtonSize;
+  onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
+  ref?: Ref<HTMLButtonElement>;
+  variant?: IconButtonVariant;
+}
+
+/**
+ * IconButton component.
+ *
+ * Renders a styled button or anchor containing a FontAwesome icon, supporting different sizes, variants, and color styles.
+ * The element type is determined by the presence of the 'href' prop:
+ * - If 'href' is provided, renders an anchor (<a>).
+ * - Otherwise, renders a native button (<button>).
+ *
+ * @param {AnchorProps | ButtonProps} props - Props for the anchor or button variant.
+ * @returns {JSX.Element} The rendered icon button element.
+ *
+ * @example
+ * ```tsx
+ * import { IconButton } from '@/components/ui/atomics';
+ * import { faCoffee } from '@fortawesome/free-solid-svg-icons';
+ *
+ * const MyIconButton = () => (
+ *  <IconButton
+ *    color="primary"
+ *    size="md"
+ *    variant="outline"
+ *    onClick={() => alert('Icon button clicked!')}
+ *  >
+ *    <FontAwesomeIcon icon={faCoffee} />
+ *  </IconButton>
+ * );
+ * ```
+ */
+function IconButton(props: AnchorProps): JSX.Element;
+function IconButton(props: ButtonProps): JSX.Element;
+function IconButton({
+  children,
+  className,
+  color = 'primary',
+  href,
+  size = 'sm',
+  onClick,
+  variant = 'outline',
+  ...rest
+}: AnchorProps | ButtonProps): JSX.Element {
+  const containerClasses = classNames(
+    'mg:flex mg:items-center mg:justify-center mg:rounded-lg mg:font-body mg:p-1 mg:min-h-2 mg:min-w-2 mg:hover:cursor-pointer',
+    {
+      'mg:text-sm': size === 'sm',
+      'mg:text-base': size === 'md',
+      'mg:text-lg': size === 'lg',
+    },
+  );
+
+  const outlineClasses =
+    variant === 'outline'
+      ? classNames(
+          'mg:border-solid mg:border-1 mg:hover:border-accent mg:bg-transparent mg:text-primary',
+          {
+            'mg:text-primary mg:border-primary': color === 'primary',
+            'mg:text-secondary mg:border-secondary': color === 'secondary',
+            'mg:text-accent mg:border-accent': color === 'accent',
+          },
+        )
+      : '';
+
+  const filledClasses =
+    variant === 'filled'
+      ? classNames('mg:text-primary mg:hover:text-inverse', {
+          'mg:bg-primary mg:hover:bg-primary-hover': color === 'primary',
+          'mg:bg-secondary mg:hover:bg-secondary-hover': color === 'secondary',
+          'mg:bg-accent mg:hover:bg-accent-hover': color === 'accent',
+        })
+      : '';
+
+  const classes = classNames(
+    containerClasses,
+    outlineClasses,
+    filledClasses,
+    className,
+  );
+
+  if (href) {
+    return (
+      <a
+        className={classes}
+        href={href}
+        onClick={onClick as (event: MouseEvent<HTMLAnchorElement>) => void}
+        {...(rest as AnchorHTMLAttributes<HTMLAnchorElement>)}
+      >
+        {children && (
+          <FontAwesomeIcon
+            key={children.iconName}
+            className="mg:animate-spin-in"
+            icon={children}
+          />
+        )}
+      </a>
+    );
+  }
+
+  return (
+    <button
+      className={classes}
+      onClick={onClick as (event: MouseEvent<HTMLButtonElement>) => void}
+      {...(rest as ButtonHTMLAttributes<HTMLButtonElement>)}
+    >
+      {children && (
+        <FontAwesomeIcon
+          key={children.iconName}
+          className="mg:animate-spin-in"
+          icon={children}
+        />
+      )}
+    </button>
+  );
+}
+
+IconButton.displayName = 'IconButton';
+
+export { IconButton };
+export type { IconButtonVariant };
