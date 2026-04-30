@@ -1,5 +1,10 @@
 import type { Metadata } from 'next';
+import { Appbar } from '@/components/ui';
+import { config } from '@fortawesome/fontawesome-svg-core';
+import '@fortawesome/fontawesome-svg-core/styles.css';
 import './globals.css';
+
+config.autoAddCss = false;
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -12,8 +17,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="mg-h-full mg-antialiased">
-      <body className="mg-min-h-full mg-flex mg-flex-col">{children}</body>
+    <html lang="en" className="mg:h-full mg:antialiased">
+      <body className="mg:min-h-full mg:flex mg:flex-col mg:bg-primary">
+        <Appbar
+          pages={[
+            { text: 'About', href: '/about' },
+            { text: 'Projects', href: '#projects' },
+            { text: 'Blog', href: '#blog' },
+            { text: 'Contact', href: '#contact' },
+            { text: 'Resume', href: '#resume', variant: 'outline' },
+          ]}
+        />
+        {children}
+      </body>
     </html>
   );
 }

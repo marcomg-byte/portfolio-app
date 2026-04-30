@@ -1,0 +1,13 @@
+{
+  "tailwindCSS.experimental.configFile": "app/globals.css",
+  "tailwindCSS.suggestions": true,
+  "tailwindCSS.classFunctions": [
+    "classNames"
+  ],
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "editor.quickSuggestions": {
+    "strings": "on"
+  }
+}

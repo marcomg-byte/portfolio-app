@@ -12,6 +12,15 @@ const eslintConfig = defineConfig([
   {
     rules: {
       'no-unused-vars': 'off',
+      'max-len': [
+        'warn',
+        {
+          code: 140,
+          ignoreComments: true,
+          ignoreStrings: true,
+          ignoreTemplateLiterals: true,
+        },
+      ],
       '@typescript-eslint/no-unused-vars': [
         'error',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },

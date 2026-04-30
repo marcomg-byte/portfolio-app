@@ -2,6 +2,7 @@
   "name": "@marcomg-byte/portfolio-app",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "yarn theme:run && next dev",
     "build": "yarn theme:run && next build",
@@ -12,7 +13,14 @@
     "theme:run": "tsx parse-theme.mts"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^7.2.0",
+    "@fortawesome/free-solid-svg-icons": "^7.2.0",
+    "@fortawesome/react-fontawesome": "^3.3.0",
+    "classnames": "^2.5.1",
     "colord": "^2.9.3",
+    "embla-carousel": "^8.6.0",
+    "embla-carousel-fade": "^8.6.0",
+    "embla-carousel-react": "^8.6.0",
     "next": "16.2.3",
     "react": "19.2.4",
     "react-dom": "19.2.4"

@@ -49,10 +49,32 @@ class ColorTokenParsingError extends Error {
 }
 
 /**
- * Mode: Maps semantic color names (e.g. "primary", "accent") to color references (e.g. "colors.sky.500").
- * Example: { primary: "colors.sky.500", ... }
+ * @type
+ * Mode: Represents the semantic color mapping for a specific theme mode (light or dark).
+ * Each key is a semantic color name (e.g. "primary", "secondary") and the value is a reference string to a base color token (e.g. "colors.sky.500").
+ * @property background - A nested object mapping semantic background color names to their token references.
+ * @property text - A nested object mapping semantic text color names to their token references.
+ * @property [key: string] - Allows for additional semantic color categories (e.g. "border", "accent") to be included in the future.
+ *
+ * @example
+ * ```ts
+ * const lightMode: Mode = {
+ *  background: {
+ *   primary: "colors.azure.900",
+ *   secondary: "colors.ocean.600",
+ * },
+ * text: {
+ *  primary: "colors.black",
+ *  secondary: "colors.ocean.500",
+ * }
+ * }
+ * ```
  */
-type Mode = Record<string, string>;
+type Mode = {
+  background: Record<string, string>;
+  text: Record<string, string>;
+  [key: string]: Record<string, string>;
+};
 
 /**
  * Palette: Contains both light and dark Mode mappings for semantic colors.
@@ -64,7 +86,7 @@ type Palette = { light: Mode; dark: Mode };
  * ColorScale: Maps numeric scale steps (e.g. "100", "500") to hex color values.
  * Example: { "100": "#f0f0f0", "500": "#0077ff" }
  */
-type ColorScale = Record<string, string>;
+type ColorScale = Record<string, string> | string;
 
 /**
  * BaseColors: Maps color families (e.g. "sky", "mist") to their ColorScale.
@@ -94,10 +116,25 @@ type SpacingScale = {
 };
 
 /**
+ * BorderWidthScale: Defines the border width scale for the theme.
+ *
+ * Maps border width token names (e.g., 'thin', 'medium', 'thick') to their CSS values (e.g., '1px', '2px').
+ *
+ * Example:
+ * {
+ *   'thin': '1px',
+ *   'medium': '2px',
+ *   'thick': '4px'
+ * }
+ */
+type BorderWidthScale = Record<string, string>;
+
+/**
  * @interface
  * Theme: Contains the semantic palette for both light and dark modes.
  * @property colors - The semantic color palette for the theme, mapping to a Palette of light and dark modes.
  * @property spacing - The spacing scale for the theme, mapping to a SpacingScale object.
+ * @property borderWidth - The border width scale for the theme, mapping to a BorderWidthScale object.
  * @property [key: string] - Allows for additional theme properties (e.g. typography) to be included in the future.
  *
  * @example
@@ -123,7 +160,13 @@ type SpacingScale = {
 interface Theme {
   colors: { palette: Palette };
   spacing: SpacingScale;
-  [key: string]: string | { palette: Palette } | SpacingScale;
+  borderWidth: BorderWidthScale;
+  [key: string]:
+    | string
+    | { palette: Palette }
+    | SpacingScale
+    | BorderWidthScale
+    | Record<string, Record<string, string>>;
 }
 
 /**
@@ -185,17 +228,17 @@ interface Tokens {
  */
 function colorRefToCssVar(colorRef: string): string {
   const parts = colorRef.split('.');
-  if (parts.length !== 3 || parts[0] !== 'colors') {
+  if (parts.length > 3 || parts.length < 2 || parts[0] !== 'colors') {
     throw new ColorTokenParsingError(
       colorRef,
       new Error(
-        'Color reference must be in the format "colors.{family}.{scale}"',
+        'Color reference must be in the format "colors.{family}.{scale}" | "colors.{name}"',
       ),
     );
   }
 
-  const [_unused, family, scale] = parts;
-  return `var(--color-${family}-${scale})`;
+  const [category, family, scale] = parts;
+  return `var(--${category.replace('s', '')}-${family}${scale ? `-${scale}` : ''})`;
 }
 
 /**
@@ -239,15 +282,25 @@ function appendRootBaseTokens(
   const rootRule = postcss.rule({ selector: ':root' });
 
   Object.entries(baseColors).forEach(([family, scale]) => {
-    Object.entries(scale).forEach(([step, hex]) => {
-      const { r: red, g: green, b: blue } = colord(hex).toRgb();
+    if (typeof scale === 'object') {
+      Object.entries(scale).forEach(([step, hex]) => {
+        const { r: red, g: green, b: blue } = colord(hex).toRgb();
+        rootRule.append(
+          postcss.decl({
+            prop: `--color-${family}-${step}`,
+            value: `${red} ${green} ${blue}`,
+          }),
+        );
+      });
+    } else if (typeof scale === 'string') {
+      const { r: red, g: green, b: blue } = colord(scale).toRgb();
       rootRule.append(
         postcss.decl({
-          prop: `--color-${family}-${step}`,
+          prop: `--color-${family}`,
           value: `${red} ${green} ${blue}`,
         }),
       );
-    });
+    }
   });
 
   rootRule.append(
@@ -261,52 +314,68 @@ function appendRootBaseTokens(
 }
 
 /**
- * Appends semantic color CSS variable declarations to a @theme inline at-rule.
- * Each semantic color is mapped to a CSS variable referencing a base color variable.
- * Handles and logs errors for invalid color references.
+ * Maps a semantic color category to its corresponding CSS variable namespace.
+ *
+ * @param category - The semantic color category (e.g., 'background', 'text', 'border', or custom).
+ * @returns The CSS variable namespace string for the given category.
+ *
+ * @example
+ * categoryToThemeNamespace('background'); // '--background-color'
+ * categoryToThemeNamespace('primary');    // '--color-primary'
+ */
+function categoryToThemeNamespace(category: string): string {
+  if (category === 'background') return '--background-color';
+  if (category === 'text') return '--text-color';
+  if (category === 'border') return '--border-color';
+  return `--color-${category}`;
+}
+
+/**
+ * Appends semantic color and spacing CSS variable declarations to a @theme inline at-rule.
+ *
+ * Each semantic color is mapped to a CSS variable pass-through (e.g. --color-primary: var(--color-primary)),
+ * so that Tailwind utilities reference the semantic variable, which is then set by :root or [data-theme] selectors.
+ * This enables dynamic theme switching via CSS variable inheritance.
+ *
+ * Also appends spacing variables, including the base spacing unit and scaled spacing tokens.
  *
  * @param container - The PostCSS Container (root or at-rule) to append the @theme inline rule to.
  * @param mode - The semantic color mapping for the current theme mode (light or dark).
+ * @param spacing - The spacing scale for the theme.
+ * @param borderWidths - The border width scale for the theme.
  *
  * @example
- * ```ts
  * appendThemeInline(container, {
- *  primary: "colors.sky.500",
- *  accent: "colors.mist.500"
- * });
+ *   primary: "colors.sky.500",
+ *   accent: "colors.mist.500"
+ * }, spacing);
  * // Appends the following CSS to the container:
- * ```
- * ```css
- *  @theme inline {
- *   --color-primary: rgb(var(--color-sky-500));
- *   --color-accent: rgb(var(--color-mist-500));
- * }
- * ```
+ * // @theme inline {
+ * //   --color-primary: var(--color-primary);
+ * //   --color-accent: var(--color-accent);
+ * //   ...
+ * //   --spacing: 8px;
+ * //   --spacing-xs: 4px;
+ * //   ...
+ * // }
  */
 function appendThemeInline(
   container: Container,
   mode: Mode,
   spacing: SpacingScale,
+  borderWidths: BorderWidthScale,
 ): void {
   const themeRule = postcss.atRule({ name: 'theme', params: 'inline' });
-  Object.entries(mode).forEach(([semanticName, tokenRef]) => {
-    try {
+  Object.entries(mode).forEach(([category, categoryTokens]) => {
+    const namespace = categoryToThemeNamespace(category);
+    Object.entries(categoryTokens).forEach(([semanticName]) => {
       themeRule.append(
         postcss.decl({
-          prop: `--color-${semanticName}`,
-          value: `rgb(${colorRefToCssVar(tokenRef)})`,
+          prop: `${namespace}-${semanticName}`,
+          value: `var(--${category}-${semanticName})`,
         }),
       );
-    } catch (error: unknown) {
-      if (error instanceof ColorTokenParsingError || error instanceof Error) {
-        console.error(error.message);
-      }
-
-      console.error(
-        'Unknown error while parsing semantic color:',
-        semanticName,
-      );
-    }
+    });
   });
 
   const spacingUnit = Number(spacing['space-unit'].replace(/px$/, ''));
@@ -316,6 +385,17 @@ function appendThemeInline(
       prop: '--spacing',
       value: spacing['space-unit'],
     }),
+  );
+
+  Object.entries(borderWidths).forEach(
+    ([borderWidthName, borderWidthValue]) => {
+      themeRule.append(
+        postcss.decl({
+          prop: `--border-width-${borderWidthName}`,
+          value: borderWidthValue,
+        }),
+      );
+    },
   );
 
   Object.entries(spacing).forEach(([spacingName, spacingValue]) => {
@@ -333,42 +413,94 @@ function appendThemeInline(
 }
 
 /**
- * Generates the complete CSS string for base color variables and semantic theme variables (light and dark modes).
- * @param tokens - The full design tokens object containing base colors and theme palettes.
+ * Appends semantic color CSS variable declarations to a plain selector rule.
+ * Unlike appendThemeInline, this emits raw CSS custom properties (no @theme inline)
+ * so they work inside element selectors like [data-theme="dark"].
  *
- * - Appends all base color variables to :root.
- * - Appends semantic variables for the light palette to {@theme} inline.
- * - Appends semantic variables for the dark palette to {@theme} inline inside a dark media query.
- * @returns The generated CSS string.
+ * @param root - The PostCSS Root node to append the selector rule to.
+ * @param selector - The CSS selector string (e.g. '[data-theme="dark"]').
+ * @param mode - The semantic color mapping for the theme mode.
  *
  * @example
  * ```ts
- * const css = generateTheme(tokensFile);
- * // css will contain :root, {@theme} inline, and {@media} (prefers-color-scheme: dark) blocks
+ * appendSelectorVars(root, '[data-theme="dark"]', {
+ *   primary: "colors.sky.100",
+ *   accent: "colors.mist.100"
+ * });
+ * // Appends the following CSS to the root:
  * ```
+ * ```css
+ * [data-theme="dark"] {
+ *   --color-primary: rgb(240 240 240);
+ *   --color-accent: rgb(224 224 224);
+ *   ...
+ * }
+ * ```
+ */
+function appendSelectorVars(root: Root, selector: string, mode: Mode): void {
+  const rule = postcss.rule({ selector });
+  Object.entries(mode).forEach(([category, categoryTokens]) => {
+    Object.entries(categoryTokens).forEach(([semanticName, tokenRef]) => {
+      try {
+        rule.append(
+          postcss.decl({
+            prop: `--${category}-${semanticName}`,
+            value: `rgb(${colorRefToCssVar(tokenRef)})`,
+          }),
+        );
+      } catch (error: unknown) {
+        if (error instanceof ColorTokenParsingError || error instanceof Error) {
+          console.error(error.message);
+        }
+        console.error(
+          'Unknown error while parsing semantic color:',
+          semanticName,
+        );
+      }
+    });
+  });
+  root.append(rule);
+}
+
+/**
+ * Generates the complete CSS string for base color variables and semantic theme variables.
+ *
+ * Per Tailwind v4 docs, when using @custom-variant dark with a data-attribute selector,
+ * the @media (prefers-color-scheme: dark) @theme inline block conflicts with that approach.
+ * Instead, explicit [data-theme] selector rules are used so both dark: utilities and
+ * CSS variable-based colors respond to the same data-theme attribute.
+ *
+ * System preference is handled in JS via matchMedia.
+ *
+ * @param tokens - The full design tokens object containing base colors and theme palettes.
+ * @returns The generated CSS string.
  */
 function generateTheme(tokens: Tokens): string {
   const root = postcss.root();
 
   appendRootBaseTokens(root, tokens.colors, tokens.theme.spacing);
 
+  appendSelectorVars(root, ':root', tokens.theme.colors.palette.light);
+
   appendThemeInline(
     root,
     tokens.theme.colors.palette.light,
     tokens.theme.spacing,
+    tokens.theme.borderWidth,
   );
 
-  const darkMedia = postcss.atRule({
-    name: 'media',
-    params: '(prefers-color-scheme: dark)',
-  });
-
-  appendThemeInline(
-    darkMedia,
+  // Explicit selector overrides
+  appendSelectorVars(
+    root,
+    '[data-theme="light"]',
+    tokens.theme.colors.palette.light,
+  );
+  appendSelectorVars(
+    root,
+    '[data-theme="dark"]',
     tokens.theme.colors.palette.dark,
-    tokens.theme.spacing,
   );
-  root.append(darkMedia);
+
   return root.toString();
 }
 
