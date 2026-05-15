@@ -1,6 +1,13 @@
+'use client';
 import type { FC } from 'react';
-import { Typography } from '@/components/ui';
-import { Page } from '@/components/ui/components';
+import { useState } from 'react';
+import { Page, ProgressStepper, Step, Typography } from '@/components/ui';
+import type { StepType } from '@/components/ui';
+import {
+  faMobile,
+  faShield,
+  faWebAwesome,
+} from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
 
 interface SkillBadgeProps {
@@ -122,6 +129,9 @@ const skills: SkillBadgeProps[] = [
 ];
 
 export default function About() {
+  const [activeStep, setActiveStep] = useState<StepType>({});
+  const [completed, setCompleted] = useState<boolean>(false);
+
   return (
     <Page>
       <div className="mg:flex mg:justify-center mg:items-start mg:w-full">
@@ -168,6 +178,74 @@ export default function About() {
           improving developer experience, and meaning digital infrastructure. I
           focus on creating value that scales.
         </Typography>
+      </div>
+      <div className="mg:flex mg:w-full">
+        <ProgressStepper
+          activeStep={activeStep}
+          defaultStep={1}
+          completed={completed}
+          linear={false}
+          hideControls
+          onComplete={(value) => setCompleted(value)}
+          onInit={(step) => setActiveStep(step)}
+          onStepClick={(_event, step) => setActiveStep(step)}
+          orientation="horizontal"
+        >
+          <Step
+            icon={faWebAwesome}
+            label="LearnAla"
+            title="Web Development Intern at LearnAla"
+            description={
+              <>
+                <Typography variant="base" clamp={5}>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                  Expedita, voluptatem.
+                </Typography>
+                <Typography variant="base" clamp={5}>
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos
+                  aperiam doloremque debitis ratione, dolore distinctio sit ex
+                  similique facilis laboriosam.
+                </Typography>
+              </>
+            }
+          />
+          <Step
+            icon={faMobile}
+            label="Consorcio Jurídico"
+            title="Mobile Full Stack Engineer at Consorcio Jurídico"
+            description={
+              <>
+                <Typography variant="base" clamp={5}>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                  Expedita, voluptatem.
+                </Typography>
+                <Typography variant="base" clamp={5}>
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos
+                  aperiam doloremque debitis ratione, dolore distinctio sit ex
+                  similique facilis laboriosam.
+                </Typography>
+              </>
+            }
+          />
+          <Step
+            icon={faShield}
+            label="Deloitte"
+            title="Risk Advisor at Deloitte"
+            description={
+              <>
+                <Typography variant="base" clamp={5}>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                  Expedita, voluptatem.
+                </Typography>
+                <Typography variant="base" clamp={5}>
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos
+                  aperiam doloremque debitis ratione, dolore distinctio sit ex
+                  similique facilis laboriosam.
+                </Typography>
+              </>
+            }
+          />
+        </ProgressStepper>
       </div>
     </Page>
   );
