@@ -4,9 +4,9 @@ import classNames from 'classnames';
 /**
  * Number of lines to clamp text to.
  * Used for truncating text with CSS line clamping utilities.
- * Valid values: 1 to 6.
+ * Valid values: 1 to 10.
  */
-type ClampLine = 1 | 2 | 3 | 4 | 5 | 6;
+type ClampLine = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
 /**
  * @constant - clampClasses
@@ -21,6 +21,10 @@ const clampClasses: Record<ClampLine, string> = {
   4: 'mg:line-clamp-4',
   5: 'mg:line-clamp-5',
   6: 'mg:line-clamp-6',
+  7: 'mg:line-clamp-7',
+  8: 'mg:line-clamp-8',
+  9: 'mg:line-clamp-9',
+  10: 'mg:line-clamp-10',
 };
 
 /**

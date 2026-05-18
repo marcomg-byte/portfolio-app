@@ -113,7 +113,7 @@ interface ButtonProps extends Omit<
  *    variant="outline"
  *    onClick={() => alert('Icon button clicked!')}
  *  >
- *    <FontAwesomeIcon icon={faCoffee} />
+ *    faCoffee
  *  </IconButton>
  * );
  * ```

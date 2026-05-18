@@ -121,7 +121,7 @@ type ButtonComponentProps = (AnchorProps | ButtonProps) & BaseProps;
  * @param {Adornment} adornment - The adornment to render (FontAwesome icon or image object).
  * @returns {JSX.Element} The rendered icon or image element.
  */
-const getAdornment = (adornment: Adornment) => {
+const renderAdornment = (adornment: Adornment) => {
   if ('iconName' in adornment) {
     return <FontAwesomeIcon icon={adornment} className="mg:text-sm" />;
   }
@@ -186,7 +186,7 @@ function Button({
   const isEndAdornmentImage = endAdornment && 'src' in endAdornment;
 
   const classes = classNames(
-    'mg:inline-flex mg:items-center mg:justify-center mg:font-body mg:text-primary mg:hover:text-inverse mg:hover:cursor-pointer',
+    'mg:inline-flex mg:items-center mg:justify-between mg:font-body mg:text-primary mg:hover:text-inverse mg:hover:cursor-pointer mg:min-w-20',
     {
       'mg:px-1.5 mg:py-1 mg:rounded-sm': size === 'sm',
       'mg:px-2.5 mg:py-2 mg:rounded': size === 'md',
@@ -199,7 +199,7 @@ function Button({
         variant === 'text',
       'mg:border-solid mg:border-1 mg:border-primary mg:hover:border-primary-hover':
         variant === 'outline',
-      'mg:gap-0.5': (isStartAdornmentIcon || isEndAdornmentIcon) && children,
+      'mg:gap-2': (isStartAdornmentIcon || isEndAdornmentIcon) && children,
       'mg:gap-1': (isStartAdornmentImage || isEndAdornmentImage) && children,
     },
     className,
@@ -215,9 +215,9 @@ function Button({
         target={target}
         {...(rest as AnchorHTMLAttributes<HTMLAnchorElement>)}
       >
-        {startAdornment && getAdornment(startAdornment)}
+        {startAdornment && renderAdornment(startAdornment)}
         {children}
-        {endAdornment && getAdornment(endAdornment)}
+        {endAdornment && renderAdornment(endAdornment)}
       </a>
     );
   }
@@ -230,9 +230,9 @@ function Button({
       onClick={onClick as (event: MouseEvent<HTMLButtonElement>) => void}
       {...(rest as ButtonHTMLAttributes<HTMLButtonElement>)}
     >
-      {startAdornment && getAdornment(startAdornment)}
+      {startAdornment && renderAdornment(startAdornment)}
       {children}
-      {endAdornment && getAdornment(endAdornment)}
+      {endAdornment && renderAdornment(endAdornment)}
     </button>
   );
 }

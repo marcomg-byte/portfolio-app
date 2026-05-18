@@ -1,13 +1,41 @@
 import {
   Button,
   Hero,
+  Card,
+  CardHeader,
+  CardMedia,
+  CardFooter,
   Carousel,
+  Connector,
+  IconButton,
+  ProgressStepper,
+  Select,
+  Step,
+  Typography,
+} from './atomics';
+import type {
+  HeadingVariant,
+  ParagraphVariant,
+  StepType,
+  FooterAction,
+} from './atomics';
+import { Appbar, Page } from './components';
+
+export {
+  Button,
+  Hero,
+  Carousel,
+  Card,
+  CardHeader,
+  CardMedia,
+  CardFooter,
+  Connector,
   IconButton,
   Select,
   Typography,
-} from './atomics';
-import type { HeadingVariant, ParagraphVariant } from './atomics';
-import { Appbar, Page } from './components';
-
-export { Button, Hero, Carousel, IconButton, Select, Typography, Appbar, Page };
-export type { HeadingVariant, ParagraphVariant };
+  Appbar,
+  Page,
+  ProgressStepper,
+  Step,
+};
+export type { HeadingVariant, ParagraphVariant, StepType, FooterAction };

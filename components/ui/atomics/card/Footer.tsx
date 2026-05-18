@@ -80,27 +80,25 @@ const Footer: FC<FooterProps> = ({
       ref={ref}
       {...(rest as HTMLAttributes<HTMLDivElement>)}
     >
-      {title && (
-        <div className="mg:flex mg:flex-col mg:justify-center mg:items-start mg:gap-1.5">
-          {title && (
-            <>
-              <Typography bold className="mg:text-base" variant="h3">
-                {title}
-              </Typography>
-              {subtitle && (
-                <Typography clamp={5} variant="small">
-                  {subtitle}
-                </Typography>
-              )}
-            </>
-          )}
-          {description && (
-            <Typography clamp={5} variant="base">
-              {description}
+      <div className="mg:flex mg:flex-col mg:justify-center mg:items-start mg:gap-1.5">
+        {title && (
+          <>
+            <Typography clamp={3} bold className="mg:text-base" variant="h3">
+              {title}
             </Typography>
-          )}
-        </div>
-      )}
+            {subtitle && (
+              <Typography clamp={10} variant="small">
+                {subtitle}
+              </Typography>
+            )}
+          </>
+        )}
+        {description && (
+          <Typography clamp={10} variant="base">
+            {description}
+          </Typography>
+        )}
+      </div>
       {actions && (
         <div className="mg:flex mg:justify-start mg:items-center mg:gap-2">
           {actions.map((action, index) => (
@@ -128,3 +126,4 @@ const Footer: FC<FooterProps> = ({
 Footer.displayName = 'Card.Footer';
 
 export { Footer };
+export type { FooterAction };
