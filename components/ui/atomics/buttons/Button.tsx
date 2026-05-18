@@ -121,7 +121,7 @@ type ButtonComponentProps = (AnchorProps | ButtonProps) & BaseProps;
  * @param {Adornment} adornment - The adornment to render (FontAwesome icon or image object).
  * @returns {JSX.Element} The rendered icon or image element.
  */
-const getAdornment = (adornment: Adornment) => {
+const renderAdornment = (adornment: Adornment) => {
   if ('iconName' in adornment) {
     return <FontAwesomeIcon icon={adornment} className="mg:text-sm" />;
   }
@@ -215,9 +215,9 @@ function Button({
         target={target}
         {...(rest as AnchorHTMLAttributes<HTMLAnchorElement>)}
       >
-        {startAdornment && getAdornment(startAdornment)}
+        {startAdornment && renderAdornment(startAdornment)}
         {children}
-        {endAdornment && getAdornment(endAdornment)}
+        {endAdornment && renderAdornment(endAdornment)}
       </a>
     );
   }
@@ -230,9 +230,9 @@ function Button({
       onClick={onClick as (event: MouseEvent<HTMLButtonElement>) => void}
       {...(rest as ButtonHTMLAttributes<HTMLButtonElement>)}
     >
-      {startAdornment && getAdornment(startAdornment)}
+      {startAdornment && renderAdornment(startAdornment)}
       {children}
-      {endAdornment && getAdornment(endAdornment)}
+      {endAdornment && renderAdornment(endAdornment)}
     </button>
   );
 }

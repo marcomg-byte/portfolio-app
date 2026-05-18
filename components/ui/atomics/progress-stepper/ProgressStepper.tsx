@@ -231,7 +231,7 @@ const ProgressStepper: FC<ProgressStepperProps> = ({
   });
 
   const classes = classNames(
-    'mg:w-full mg:h-full mg:flex mg:p-6 mg:overflow-x-scroll',
+    'mg:w-full mg:h-full mg:flex mg:px-6 mg:pb-2 mg:pt-6 mg:overflow-x-scroll',
     {
       'mg:flex-col': orientation === 'vertical',
       'mg:justify-between': orientation === 'horizontal',

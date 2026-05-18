@@ -7,36 +7,48 @@ import type {
   Ref,
 } from 'react';
 import { cloneElement, isValidElement } from 'react';
+import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Badge } from '../badge';
 import { Typography } from '../typography';
 
 /**
+ * An adornment that may appear in the card header.
+ *
+ * This can be either:
+ * - an `IconDefinition` (a FontAwesome icon) which will be rendered
+ *   with `FontAwesomeIcon`, or
+ * - an object with a `src` string and optional `alt` text which will be
+ *   rendered using Next.js `Image`.
+ */
+type HeaderAdornment = IconDefinition | { src: string; alt?: string };
+
+/**
  * Props for the Card Header component.
  *
+ * @property {HeaderAdornment} [adornment] - Optional adornment which can be an icon definition or an image source with alt text.
  * @property {ReactElement<ComponentProps<typeof Badge>>} [badge] - Optional badge element to display.
- * @property {IconDefinition} [icon] - Optional FontAwesome icon to display.
  * @property {Ref<HTMLDivElement>} [ref] - Ref for the header div.
  * @property {ReactNode} [subtitle] - Optional subtitle content.
  * @property {string} title - Main title text (required).
  */
 interface HeaderProps extends HTMLAttributes<HTMLDivElement> {
+  adornment?: HeaderAdornment;
   badge?: ReactElement<ComponentProps<typeof Badge>>;
-  icon?: IconDefinition;
   ref?: Ref<HTMLDivElement>;
   subtitle?: ReactNode;
   title: string;
 }
 
 /**
- * @constant clonedBadge - Utility to clone a Badge element with animation and size props for consistent display in the header.
+ * @constant cloneBadge - Utility to clone a Badge element with animation and size props for consistent display in the header.
  * The function checks if the provided badge is a valid React element, and if so, it clones it with additional props for animation and size. If the badge is not valid, it returns the original badge without modification.
  *
  * @param {ReactElement<ComponentProps<typeof Badge>>} badge - The Badge element to clone and enhance.
  * @returns {ReactElement} The cloned Badge element with additional props, or the original if not valid.
  */
-const clonedBadge = (badge: ReactElement<ComponentProps<typeof Badge>>) => {
+const cloneBadge = (badge: ReactElement<ComponentProps<typeof Badge>>) => {
   if (isValidElement(badge)) {
     return cloneElement(badge, {
       className: 'mg:animate-fade-in',
@@ -44,7 +56,33 @@ const clonedBadge = (badge: ReactElement<ComponentProps<typeof Badge>>) => {
       style: { animationDuration: '2s' },
     });
   }
-  return badge;
+  return null;
+};
+
+/**
+ * Render a header adornment.
+ *
+ * If the adornment is an object with a `src` field it will be rendered
+ * as a Next.js `Image`. Otherwise it is assumed to be a FontAwesome
+ * `IconDefinition` and will be rendered with `FontAwesomeIcon`.
+ *
+ * @param {HeaderAdornment} adornment - The adornment to render.
+ * @returns {ReactElement | null} React element for the adornment, or `null`.
+ */
+const renderAdornment = (adornment: HeaderAdornment) => {
+  if ('src' in adornment) {
+    return (
+      <Image
+        alt={adornment.alt || ''}
+        src={adornment.src || ''}
+        width={40}
+        height={40}
+        className="mg-object-contain"
+      />
+    );
+  }
+
+  return <FontAwesomeIcon icon={adornment} className="mg-text-sm" />;
 };
 
 /**
@@ -55,21 +93,22 @@ const clonedBadge = (badge: ReactElement<ComponentProps<typeof Badge>>) => {
  *
  * @example
  * ```tsx
- * import { Header } from '@/components/ui/atomics';
+ * import { Badge, Header } from '@/components/ui/atomics';
  * import { faStar } from '@fortawesome/free-solid-svg-icons';
  *
  * const MyCardHeader = () => (
  *  <Header
  *    title="Card Title"
  *    subtitle="This is a subtitle for the card header."
- *    icon={faStar}
+ *    adornment={faStar}
+ *    badge={<Badge>New</Badge>}
  *  />
  * );
  * ```
  */
 const Header: FC<HeaderProps> = ({
+  adornment,
   badge,
-  icon,
   ref,
   subtitle,
   title,
@@ -81,15 +120,15 @@ const Header: FC<HeaderProps> = ({
       ref={ref}
       {...(rest as HTMLAttributes<HTMLDivElement>)}
     >
-      <div className="mg:flex mg:items-center mg:justify-between">
-        {icon && <FontAwesomeIcon icon={icon} className="mg:text-sm" />}
-        <Typography bold className="mg:text-base" variant="h2">
+      <div className="mg:flex mg:items-center mg:gap-3">
+        {adornment && renderAdornment(adornment)}
+        <Typography clamp={3} bold className="mg:text-base" variant="h2">
           {title}
         </Typography>
-        {badge && clonedBadge(badge)}
+        {badge && cloneBadge(badge)}
       </div>
       {subtitle && (
-        <Typography clamp={5} variant="small">
+        <Typography clamp={10} variant="small">
           {subtitle}
         </Typography>
       )}
