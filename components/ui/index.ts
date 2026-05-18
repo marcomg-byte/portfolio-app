@@ -13,7 +13,12 @@ import {
   Step,
   Typography,
 } from './atomics';
-import type { HeadingVariant, ParagraphVariant, StepType } from './atomics';
+import type {
+  HeadingVariant,
+  ParagraphVariant,
+  StepType,
+  FooterAction,
+} from './atomics';
 import { Appbar, Page } from './components';
 
 export {
@@ -33,4 +38,4 @@ export {
   ProgressStepper,
   Step,
 };
-export type { HeadingVariant, ParagraphVariant, StepType };
+export type { HeadingVariant, ParagraphVariant, StepType, FooterAction };

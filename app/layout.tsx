@@ -22,7 +22,7 @@ export default function RootLayout({
         <Appbar
           pages={[
             { text: 'About', href: '/about' },
-            { text: 'Projects', href: '#projects' },
+            { text: 'Projects', href: '/projects' },
             { text: 'Blog', href: '#blog' },
             { text: 'Contact', href: '#contact' },
             { text: 'Resume', href: '#resume', variant: 'outline' },

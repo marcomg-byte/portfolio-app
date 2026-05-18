@@ -126,3 +126,4 @@ const Footer: FC<FooterProps> = ({
 Footer.displayName = 'Card.Footer';
 
 export { Footer };
+export type { FooterAction };
