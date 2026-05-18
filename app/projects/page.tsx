@@ -18,6 +18,7 @@ import {
   faToolbox,
   faCloud,
   faServer,
+  faShield,
   faBook,
   faArrowRight,
 } from '@fortawesome/free-solid-svg-icons';
@@ -26,6 +27,7 @@ type Category =
   | 'All'
   | 'Backend'
   | 'Web Applications'
+  | 'Cybersecurity'
   | 'Developer Tools'
   | 'Cloud & DevOps'
   | 'Libraries/Design Systems';
@@ -37,7 +39,7 @@ interface CategoryButton {
 
 interface Project {
   actions: FooterAction[];
-  category: Category;
+  category: Category[];
   adornment: {
     src: string;
     alt: string;
@@ -50,6 +52,7 @@ interface Project {
 const categories: CategoryButton[] = [
   { name: 'All', icon: faEarth },
   { name: 'Backend', icon: faServer },
+  { name: 'Cybersecurity', icon: faShield },
   { name: 'Web Applications', icon: faCode },
   { name: 'Developer Tools', icon: faToolbox },
   { name: 'Cloud & DevOps', icon: faCloud },
@@ -69,7 +72,7 @@ const projects: Project[] = [
       },
     ],
     adornment: { src: '/images/atom.png', alt: 'React Logo' },
-    category: 'Web Applications',
+    category: ['Web Applications'],
     description:
       'A modern web application built with React and Next.js, featuring a sleek design and seamless user experience.',
     title: 'Portfolio Website',
@@ -90,7 +93,7 @@ const projects: Project[] = [
       src: '/images/cyber-security.png',
       alt: 'Cyber Security Image',
     },
-    category: 'Backend',
+    category: ['Backend', 'Cybersecurity'],
     description:
       'A TypeScript-powered Express.js server for sending emails via SMTP with robust validation, template rendering, advanced logging, modular architecture, and comprehensive error handling',
     title: 'Offser',
@@ -109,7 +112,7 @@ export default function Projects() {
       setSelectedProjects(clonedProjects);
     } else {
       setSelectedProjects(
-        clonedProjects.filter((project) => project.category === category),
+        clonedProjects.filter((project) => project.category.includes(category)),
       );
     }
   };
@@ -201,8 +204,8 @@ export default function Projects() {
           <Image
             width={160}
             height={160}
-            src="/images/collaboration.png"
-            alt="Collaboration Icon"
+            src="/images/team-work.png"
+            alt="Team Work Icon"
             className="mg:animate-fade-in"
           />
           <div className="mg:flex mg:flex-col mg:gap-4 mg:grow">
