@@ -1,16 +1,18 @@
 import {
   Button,
-  Hero,
   Card,
   CardHeader,
   CardMedia,
   CardFooter,
   Carousel,
   Connector,
+  Form,
+  Hero,
   IconButton,
   ProgressStepper,
   Select,
   Step,
+  TextInput,
   Typography,
 } from './atomics';
 import type {
@@ -22,20 +24,22 @@ import type {
 import { Appbar, Page } from './components';
 
 export {
+  Appbar,
   Button,
-  Hero,
   Carousel,
   Card,
   CardHeader,
   CardMedia,
   CardFooter,
   Connector,
+  Form,
+  Hero,
   IconButton,
   Select,
-  Typography,
-  Appbar,
   Page,
   ProgressStepper,
   Step,
+  TextInput,
+  Typography,
 };
 export type { HeadingVariant, ParagraphVariant, StepType, FooterAction };

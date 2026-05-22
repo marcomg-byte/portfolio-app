@@ -186,7 +186,7 @@ function Button({
   const isEndAdornmentImage = endAdornment && 'src' in endAdornment;
 
   const classes = classNames(
-    'mg:inline-flex mg:items-center mg:justify-between mg:font-body mg:text-primary mg:hover:text-inverse mg:hover:cursor-pointer mg:min-w-20',
+    'mg:inline-flex mg:items-center mg:justify-between mg:font-body mg:text-primary mg:hover:text-inverse mg:hover:cursor-pointer',
     {
       'mg:px-1.5 mg:py-1 mg:rounded-sm': size === 'sm',
       'mg:px-2.5 mg:py-2 mg:rounded': size === 'md',
