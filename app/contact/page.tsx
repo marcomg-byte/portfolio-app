@@ -1,5 +1,6 @@
 'use client';
-import { Form, Page, TextInput, Typography } from '@/components/ui';
+import { useState } from 'react';
+import { Form, Page, TextArea, TextInput, Typography } from '@/components/ui';
 import Image from 'next/image';
 import {
   faPerson,
@@ -149,6 +150,8 @@ const contactCards: ContactCardProps[] = [
 ];
 
 export default function Contact() {
+  const [message, setMessage] = useState<string>('');
+
   return (
     <Page title="Contact">
       <div className="mg:flex mg:justify-between mg:gap-2 mg:w-full mg:pt-6 mg:px-6 mg:pb-4 mg:overflow-x-hidden">
@@ -191,9 +194,10 @@ export default function Contact() {
             startAdornment={{ src: '/images/chatting.png', alt: 'Chat Image' }}
             title="Send a Message"
           >
-            <div className="mg:w-full mg:flex mg:gap-4 mg:justify-between">
+            <div className="mg:w-full mg:bg-inherit mg:flex mg:gap-4 mg:justify-between">
               <TextInput
                 adornmentColor="white"
+                clearable
                 fullWidth
                 label="name"
                 name="name"
@@ -225,6 +229,20 @@ export default function Contact() {
               placeholder="subject"
               showPasswordToggle
               startAdornment={faFile}
+            />
+            <TextArea
+              adornmentColor="white"
+              clearable
+              color="white"
+              fullWidth
+              label="message"
+              name="message"
+              onChange={(event) => setMessage(event.target.value)}
+              onClear={() => setMessage('')}
+              onKeyDown={() => setMessage('')}
+              placeholder="Your Message"
+              required
+              value={message}
             />
           </Form>
         </div>

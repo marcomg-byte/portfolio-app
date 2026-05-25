@@ -8,7 +8,7 @@ import {
 } from './card';
 import type { FooterAction } from './card';
 import { Carousel, Hero } from './carousel';
-import { Form, TextInput } from './form';
+import { Form, TextArea, TextInput } from './form';
 import { Connector, ProgressStepper, Step } from './progress-stepper';
 import type { StepType } from './progress-stepper';
 import { Select } from './select';
@@ -30,6 +30,7 @@ export {
   ProgressStepper,
   Select,
   Step,
+  TextArea,
   TextInput,
   Typography,
 };

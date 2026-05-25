@@ -12,6 +12,7 @@ import {
   ProgressStepper,
   Select,
   Step,
+  TextArea,
   TextInput,
   Typography,
 } from './atomics';
@@ -39,6 +40,7 @@ export {
   Page,
   ProgressStepper,
   Step,
+  TextArea,
   TextInput,
   Typography,
 };
