@@ -1,11 +1,13 @@
 'use client';
 import { useState } from 'react';
 import { Form, Page, TextArea, TextInput, Typography } from '@/components/ui';
+import type { FormValue } from '@/components/ui';
 import Image from 'next/image';
 import {
-  faPerson,
-  faMailBulk,
   faFile,
+  faLock,
+  faMailBulk,
+  faPerson,
 } from '@fortawesome/free-solid-svg-icons';
 
 const Rocket = () => (
@@ -31,7 +33,7 @@ const Rocket = () => (
       className="mg:absolute mg:top-[39px] mg:left-[5px] mg:w-1 mg:h-1 mg:rounded-full mg:bg-indigo-300/90 mg:animate-particle-drift"
       style={{ animationDelay: '1.0s' }}
     />
-    <div className="mg:rounded-full mg:w-44 mg:h-44 mg:bg-primary-subtle mg:flex mg:items-center mg:justify-center mg:transition-transform mg:duration-500 mg:ease-in-out mg:hover:scale-105">
+    <div className="mg:rounded-full mg:w-44 mg:h-44 mg:bg-primary-subtle mg:flex mg:items-center mg:justify-center mg:transition-transform mg:duration-500 mg:hover:scale-105">
       <Image
         src="/images/rocket.png"
         alt="Rocket Icon"
@@ -52,7 +54,7 @@ interface SkillCardProps {
 }
 
 const SkillCard = ({ description, image, title }: SkillCardProps) => (
-  <div className="mg:flex mg:flex-col mg:p-4 mg:gap-2 mg:justify-start mg:rounded-lg mg:bg-secondary mg:shadow-lg mg:shadow-black/20 mg:transition-transform mg:duration-500 mg:ease-in-out mg:hover:scale-105">
+  <div className="mg:flex mg:flex-col mg:p-4 mg:gap-2 mg:justify-start mg:rounded-lg mg:bg-secondary mg:shadow-lg mg:shadow-black/20 mg:transition-transform mg:duration-500 mg:hover:scale-105">
     <Image
       src={image?.src || ''}
       alt={image?.alt || ''}
@@ -96,14 +98,14 @@ interface ContactCardProps {
 }
 
 const ContactCard = ({ image, text, title }: ContactCardProps) => (
-  <div className="mg:flex mg:gap-3 mg:transition-transform mg:duration-500 mg:ease-in-out mg:hover:scale-105">
+  <div className="mg:flex mg:gap-3 mg:transition-transform mg:duration-500 mg:hover:scale-105">
     <Image
       src={image?.src || ''}
       alt={image?.alt || ''}
-      width={30}
-      height={30}
-      style={{ width: '30px', height: '30px' }}
-      className="mg:object-contain mg:animate-fade-in mg:transition-transform mg:duration-500 mg:ease-in-out mg:hover:scale-110"
+      width={32}
+      height={32}
+      style={{ width: '32px', height: '32px' }}
+      className="mg:object-contain mg:animate-fade-in mg:transition-transform mg:duration-500 mg:hover:scale-110"
     />
     <div className="mg:flex mg:flex-col mg:gap-1">
       <Typography bold className="mg:text-white" removePadding variant="h4">
@@ -150,7 +152,8 @@ const contactCards: ContactCardProps[] = [
 ];
 
 export default function Contact() {
-  const [message, setMessage] = useState<string>('');
+  const [values, setValues] = useState<FormValue[]>([]);
+  const [error, setError] = useState<boolean>(false);
 
   return (
     <Page title="Contact">
@@ -191,13 +194,25 @@ export default function Contact() {
       <div className="mg:flex mg:justify-between mg:gap-8 mg:px-6 mg:pb-6 mg:w-full">
         <div className="mg:flex mg:flex-col mg:rounded-lg mg:bg-secondary mg:w-2/3 mg:shadow-lg mg:shadow-black/20">
           <Form
-            startAdornment={{ src: '/images/chatting.png', alt: 'Chat Image' }}
+            adornmentColor="white"
+            color="white"
+            onChange={(val, err) => {
+              setValues(val);
+              setError(err);
+            }}
+            disclaimer={{
+              adornment: faLock,
+              text: 'Your information is safe with me. I will never share your data.',
+            }}
+            error={error}
+            startAdornment={faPerson}
             title="Send a Message"
+            value={values}
           >
             <div className="mg:w-full mg:bg-inherit mg:flex mg:gap-4 mg:justify-between">
               <TextInput
                 adornmentColor="white"
-                clearable
+                pattern={/[0-9]+/}
                 fullWidth
                 label="name"
                 name="name"
@@ -237,12 +252,8 @@ export default function Contact() {
               fullWidth
               label="message"
               name="message"
-              onChange={(event) => setMessage(event.target.value)}
-              onClear={() => setMessage('')}
-              onKeyDown={() => setMessage('')}
               placeholder="Your Message"
               required
-              value={message}
             />
           </Form>
         </div>
@@ -252,9 +263,9 @@ export default function Contact() {
               <Image
                 src="/images/contact.png"
                 alt="Contact Icon"
-                width={50}
-                height={50}
-                className="mg:object-contain mg:animate-fade-in mg:transition-transform mg:duration-500 mg:ease-in-out mg:hover:scale-110"
+                width={32}
+                height={32}
+                className="mg:object-contain mg:animate-fade-in mg:transition-transform mg:duration-500 mg:hover:scale-110"
               />
               <Typography
                 removePadding

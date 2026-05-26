@@ -31,13 +31,22 @@ const clampClasses: Record<ClampLine, string> = {
  * Color options for Typography text.
  * Determines the text color utility class applied.
  *
+ * - 'black': Solid black color
  * - 'primary': Main foreground color
  * - 'secondary': Secondary color
  * - 'accent': Accent color
  * - 'subtle': Subtle/less prominent color
  * - 'inverse': For use on dark backgrounds
+ * - 'white': Solid white color
  */
-type Color = 'primary' | 'secondary' | 'accent' | 'subtle' | 'inverse';
+type Color =
+  | 'black'
+  | 'primary'
+  | 'secondary'
+  | 'accent'
+  | 'subtle'
+  | 'inverse'
+  | 'white';
 
 /**
  * Heading tag variants for Typography.
@@ -232,11 +241,13 @@ function Typography({
       'mg:text-8xl': variant === 'h1',
       'mg:text-7xl': variant === 'h2',
       'mg:text-6xl': variant === 'h3',
+      'mg:text-black': color === 'black',
       'mg:text-primary': color === 'primary',
       'mg:text-secondary': color === 'secondary',
       'mg:text-accent': color === 'accent',
       'mg:text-subtle': color === 'subtle',
       'mg:text-inverse': color === 'inverse',
+      'mg:text-white': color === 'white',
     },
     headingClasses,
     paragraphClasses,

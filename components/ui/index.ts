@@ -20,6 +20,7 @@ import type {
   HeadingVariant,
   ParagraphVariant,
   StepType,
+  FormValue,
   FooterAction,
 } from './atomics';
 import { Appbar, Page } from './components';
@@ -44,4 +45,10 @@ export {
   TextInput,
   Typography,
 };
-export type { HeadingVariant, ParagraphVariant, StepType, FooterAction };
+export type {
+  FormValue,
+  HeadingVariant,
+  ParagraphVariant,
+  StepType,
+  FooterAction,
+};

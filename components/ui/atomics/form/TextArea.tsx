@@ -109,41 +109,149 @@ interface TextAreaProps extends Omit<
   TextareaHTMLAttributes<HTMLTextAreaElement>,
   'cols' | 'onError' | 'rows'
 > {
+  /**
+   * ID of the element that describes this textarea (for `aria-describedby`).
+   */
   'aria-describedby'?: string;
+  /**
+   * Accessible label for the textarea (for `aria-label`).
+   */
   'aria-label'?: string;
+  /**
+   * Whether the textarea is in an invalid state (for `aria-invalid`).
+   */
   'aria-invalid'?: boolean;
+  /**
+   * Color used for adornments and label text.
+   */
   adornmentColor?: TextAreaAdornmentColor;
+  /**
+   * Whether the textarea should receive focus automatically on mount.
+   */
   autoFocus?: boolean;
+  /**
+   * Override or extend CSS classes for internal sub-elements.
+   */
   classes?: TextAreaClasses;
+  /**
+   * Show a clear button to reset the textarea value.
+   */
   clearable?: boolean;
+  /**
+   * Text color variant for the textarea content.
+   */
   color?: TextAreaColor;
+  /**
+   * Number of columns (width) for the textarea.
+   */
   cols?: number;
+  /**
+   * Initial uncontrolled value for the textarea.
+   */
   defaultValue?: string;
+  /**
+   * Disable the textarea.
+   */
   disabled?: boolean;
+  /**
+   * Adornments rendered at the end of the textarea (icons, images, or nodes).
+   */
   endAdornments?: TextAreaAdornment[];
+  /**
+   * Mark the textarea as showing an error state.
+   */
   error?: boolean;
+  /**
+   * Make the textarea take full width of its container.
+   */
   fullWidth?: boolean;
+  /**
+   * The `id` attribute for the textarea.
+   */
   id?: string;
+  /**
+   * Optional label text displayed above the textarea.
+   */
   label?: string;
+  /**
+   * Maximum allowed length of the value.
+   */
   maxLength?: number;
+  /**
+   * Minimum required length of the value.
+   */
   minLength?: number;
+  /**
+   * The `name` attribute for form submission.
+   */
   name?: string;
+  /**
+   * Change event handler for controlled usage.
+   */
   onChange?: (event: ChangeEvent<HTMLTextAreaElement>) => void;
+  /**
+   * Handler invoked when the clear button is clicked.
+   */
   onClear?: (event: MouseEvent<HTMLButtonElement>) => void;
+  /**
+   * Input event handler.
+   */
   onInput?: (event: InputEvent<HTMLTextAreaElement>) => void;
+  /**
+   * Blur event handler.
+   */
   onBlur?: (event: FocusEvent<HTMLTextAreaElement>) => void;
+  /**
+   * Focus event handler.
+   */
   onFocus?: (event: FocusEvent<HTMLTextAreaElement>) => void;
+  /**
+   * Key down event handler.
+   */
   onKeyDown?: (event: KeyboardEvent<HTMLTextAreaElement>) => void;
+  /**
+   * Key up event handler.
+   */
   onKeyUp?: (event: KeyboardEvent<HTMLTextAreaElement>) => void;
+  /**
+   * Mouse down handler on the textarea element.
+   */
   onMouseDown?: (event: MouseEvent<HTMLTextAreaElement>) => void;
+  /**
+   * Placeholder text shown when the textarea is empty.
+   */
   placeholder?: string;
+  /**
+   * Render the textarea as read-only.
+   */
   readonly?: boolean;
+  /**
+   * Whether the field is required.
+   */
   required?: boolean;
+  /**
+   * Number of visible rows for the textarea.
+   */
   rows?: number;
+  /**
+   * Size preset controlling width/height when not fullWidth.
+   */
   size?: TextAreaSize;
+  /**
+   * Whether spell checking is enabled.
+   */
   spellCheck?: boolean;
+  /**
+   * Adornments rendered at the start of the textarea.
+   */
   startAdornments?: TextAreaAdornment[];
+  /**
+   * Visual status (error, success, warning) to style the control.
+   */
   status?: TextAreaStatus;
+  /**
+   * Controlled value for the textarea.
+   */
   value?: string;
 }
 
