@@ -219,7 +219,6 @@ export default function Contact() {
                 required
                 color="white"
                 placeholder="name"
-                showPasswordToggle
                 startAdornment={faPerson}
               />
               <TextInput

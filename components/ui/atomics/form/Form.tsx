@@ -469,56 +469,53 @@ const Form: FC<FormProps> = ({
     }
   };
 
-  const renderChildren = (children?: ReactNode) => {
+  const renderChildren = (children?: ReactNode): ReactNode => {
     let counter = 0;
-    const results: (TextAreaComponent | TextInputComponent)[] = [];
 
-    const walk = (node?: ReactNode) => {
-      const nodeArray = Children.toArray(node);
-      nodeArray.forEach((child) => {
-        if (!isValidElement(child)) return;
+    const walk = (node?: ReactNode): ReactNode => {
+      return Children.map(node, (child) => {
+        if (!isValidElement(child)) return child;
 
-        if (isValidElement(child) && child.type === TextArea) {
+        if (child.type === TextArea) {
           counter++;
           const key = `form-text-area-${counter}`;
           const currentValue = values.find((value) => value?.key === key);
-          results.push(
-            cloneElement<TextAreaProps>(child as TextAreaComponent, {
-              key,
-              onChange: (event) => handleInputChange(event, key),
-              onClear: () => handleInputClear(key),
-              value: currentValue?.value,
-            }),
-          );
+          const props = child.props as TextAreaComponent['props'];
+          return cloneElement<TextAreaProps>(child as TextAreaComponent, {
+            key,
+            onChange: (event) => handleInputChange(event, key),
+            onClear: props?.clearable ? () => handleInputClear(key) : undefined,
+            value: currentValue?.value,
+          });
         }
 
-        if (isValidElement(child) && child.type === TextInput) {
+        if (child.type === TextInput) {
           counter++;
           const key = `form-text-input-${counter}`;
           const currentValue = values.find((value) => value?.key === key);
-          results.push(
-            cloneElement<TextInputProps>(child as TextInputComponent, {
-              key,
-              error: currentValue?.error,
-              onClear: () => handleInputClear(key),
-              onChange: (event) => handleInputChange(event, key),
-              onError: (error) => handleInputError(error, key),
-              value: currentValue?.value,
-            }),
-          );
+          const props = child.props as TextInputComponent['props'];
+          return cloneElement<TextInputProps>(child as TextInputComponent, {
+            key,
+            error: currentValue?.error,
+            onClear: props?.clearable ? () => handleInputClear(key) : undefined,
+            onChange: (event) => handleInputChange(event, key),
+            onError: (error) => handleInputError(error, key),
+            value: currentValue?.value,
+          });
         }
 
-        if (
-          isValidElement(child) &&
-          (child as ElementWithChildren).props?.children
-        ) {
-          walk((child as ElementWithChildren).props.children);
+        if ((child as ElementWithChildren).props?.children) {
+          const nested = walk((child as ElementWithChildren).props.children);
+          return cloneElement(child as ElementWithChildren, {
+            children: nested,
+          });
         }
+
+        return child;
       });
     };
 
-    walk(children);
-    return results;
+    return walk(children);
   };
 
   useEffect(() => {
