@@ -98,7 +98,7 @@ const paragraphVariants = ['base', 'small', 'large'] as ParagraphVariant[];
  * @property {boolean} [underline] - Underline the text.
  */
 interface BaseProps {
-  align?: 'left' | 'center' | 'right';
+  align?: 'left' | 'center' | 'right' | 'justify';
   bold?: boolean;
   className?: string;
   color?: Color;
@@ -233,6 +233,7 @@ function Typography({
       'mg:text-left': align === 'left',
       'mg:text-center': align === 'center',
       'mg:text-right': align === 'right',
+      'mg:text-justify': align === 'justify',
       'mg:truncate': truncate,
       'mg:underline': underline,
       'mg:text-sm': variant === 'small' || variant === 'h6',

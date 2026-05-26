@@ -1,14 +1,24 @@
 'use client';
 import { useState } from 'react';
-import { Form, Page, TextArea, TextInput, Typography } from '@/components/ui';
+import {
+  Button,
+  Form,
+  Page,
+  TextArea,
+  TextInput,
+  Typography,
+} from '@/components/ui';
 import type { FormValue } from '@/components/ui';
 import Image from 'next/image';
 import {
+  faArrowRight,
+  faCircle,
   faFile,
   faLock,
   faMailBulk,
   faPerson,
 } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Rocket = () => (
   <div className="mg:relative mg:h-48">
@@ -287,6 +297,77 @@ export default function Contact() {
                 title={card.title}
               />
             ))}
+          </div>
+        </div>
+      </div>
+      <div className="mg:flex mg:gap-4 mg:w-full mg:p-6">
+        <div className="mg:flex mg:flex-col mg:gap-3 mg:pr-2 mg:w-1/3">
+          <div className="mg:flex mg:flex-col mg:gap-4">
+            <div className="mg:flex mg:gap-3">
+              <Image
+                src="/images/target.png"
+                alt="Target Icon"
+                width={48}
+                height={48}
+                style={{ width: '48px', height: '48px' }}
+                className="mg:object-contain mg:animate-fade-in mg:duration-500 mg:pt-2"
+              />
+              <Typography color="primary" removePadding variant="h2">
+                Let&apos;s create impact
+              </Typography>
+            </div>
+            <Typography
+              align="justify"
+              color="primary"
+              clamp={8}
+              removePadding
+              variant="base"
+            >
+              I&apos;m passionate about solving complex problems and building
+              scalable, secure and maintainable systems that make a difference.
+            </Typography>
+            <Typography
+              align="justify"
+              color="primary"
+              clamp={8}
+              removePadding
+              variant="base"
+            >
+              Whether you have a project in mind, need technichal consultation
+              or just want to connect, I&apos;d love to hear from you.
+            </Typography>
+            <div className="mg:flex">
+              <Button
+                endAdornment={faArrowRight}
+                href="/projects"
+                variant="outline"
+              >
+                PROJECTS
+              </Button>
+            </div>
+          </div>
+        </div>
+        <div className="mg:flex mg:w-1/3">
+          <div className="mg:relative mg:w-full mg:aspect-square mg:rounded-full mg:overflow-hidden mg:transition-transform mg:duration-200 mg:hover:scale-105">
+            <Image
+              src="/images/coding.jpg"
+              alt="Coding Image"
+              fill
+              priority
+              sizes="(max-width: 768px) 100vw, 300px"
+              className="mg:object-cover mg:animate-fade-in mg:duration-500"
+            />
+          </div>
+        </div>
+        <div className="mg:flex mg:flex-col mg:pl-2 mg:w-1/3">
+          <div className="mg:flex mg:gap-3">
+            <FontAwesomeIcon
+              icon={faCircle}
+              className="mg:text-lg mg:text-success mg:pt-4 mg:animate-fade-in mg:duration-500"
+            />
+            <Typography color="primary" removePadding variant="h2">
+              Currently available for
+            </Typography>
           </div>
         </div>
       </div>
