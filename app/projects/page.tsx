@@ -220,7 +220,7 @@ export default function Projects() {
         <Button
           endAdornment={faArrowRight}
           target="_blank"
-          href="#contact"
+          href="/contact"
           variant="outline"
         >
           LET&apos;S CONNECT

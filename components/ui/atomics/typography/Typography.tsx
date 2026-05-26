@@ -31,13 +31,22 @@ const clampClasses: Record<ClampLine, string> = {
  * Color options for Typography text.
  * Determines the text color utility class applied.
  *
+ * - 'black': Solid black color
  * - 'primary': Main foreground color
  * - 'secondary': Secondary color
  * - 'accent': Accent color
  * - 'subtle': Subtle/less prominent color
  * - 'inverse': For use on dark backgrounds
+ * - 'white': Solid white color
  */
-type Color = 'primary' | 'secondary' | 'accent' | 'subtle' | 'inverse';
+type Color =
+  | 'black'
+  | 'primary'
+  | 'secondary'
+  | 'accent'
+  | 'subtle'
+  | 'inverse'
+  | 'white';
 
 /**
  * Heading tag variants for Typography.
@@ -89,7 +98,7 @@ const paragraphVariants = ['base', 'small', 'large'] as ParagraphVariant[];
  * @property {boolean} [underline] - Underline the text.
  */
 interface BaseProps {
-  align?: 'left' | 'center' | 'right';
+  align?: 'left' | 'center' | 'right' | 'justify';
   bold?: boolean;
   className?: string;
   color?: Color;
@@ -224,6 +233,7 @@ function Typography({
       'mg:text-left': align === 'left',
       'mg:text-center': align === 'center',
       'mg:text-right': align === 'right',
+      'mg:text-justify': align === 'justify',
       'mg:truncate': truncate,
       'mg:underline': underline,
       'mg:text-sm': variant === 'small' || variant === 'h6',
@@ -232,11 +242,13 @@ function Typography({
       'mg:text-8xl': variant === 'h1',
       'mg:text-7xl': variant === 'h2',
       'mg:text-6xl': variant === 'h3',
+      'mg:text-black': color === 'black',
       'mg:text-primary': color === 'primary',
       'mg:text-secondary': color === 'secondary',
       'mg:text-accent': color === 'accent',
       'mg:text-subtle': color === 'subtle',
       'mg:text-inverse': color === 'inverse',
+      'mg:text-white': color === 'white',
     },
     headingClasses,
     paragraphClasses,

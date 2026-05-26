@@ -31,7 +31,10 @@ const Button = (): JSX.Element => {
   };
 
   return (
-    <IconButton onClick={handleToggle}>
+    <IconButton
+      classes={{ children: 'mg:animate-spin-in' }}
+      onClick={handleToggle}
+    >
       {mode === 'light' ? faMoon : faSun}
     </IconButton>
   );

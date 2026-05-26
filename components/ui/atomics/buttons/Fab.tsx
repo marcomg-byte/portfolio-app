@@ -184,6 +184,7 @@ function Fab({
       : '';
   const classes = classNames(
     'mg:inline-flex mg:items-center mg:justify-center mg:border-solid mg:border-1 mg:hover:cursor-pointer',
+    'mg:focus-visible:outline-1 mg:focus-visible:outline-offset-4 mg:focus-visible:outline-primary',
     {
       'mg:border-primary mg:hover:border-primary-hover mg:text-primary mg:hover:text-primary-hover':
         color === 'primary',

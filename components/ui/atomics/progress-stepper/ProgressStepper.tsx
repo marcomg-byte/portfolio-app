@@ -172,7 +172,6 @@ function mapChildrenToSteps(
  *     </ProgressStepper>
  *   );
  * };
-
  */
 const ProgressStepper: FC<ProgressStepperProps> = ({
   activeStep: activeStepProp,

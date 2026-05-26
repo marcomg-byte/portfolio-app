@@ -24,7 +24,7 @@ export default function RootLayout({
             { text: 'About', href: '/about' },
             { text: 'Projects', href: '/projects' },
             { text: 'Blog', href: '#blog' },
-            { text: 'Contact', href: '#contact' },
+            { text: 'Contact', href: '/contact' },
             { text: 'Resume', href: '#resume', variant: 'outline' },
           ]}
         />

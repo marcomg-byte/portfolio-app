@@ -9,6 +9,7 @@ import type {
 } from 'react';
 import Image from 'next/image';
 import classNames from 'classnames';
+import { twMerge } from 'tailwind-merge';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
@@ -16,6 +17,11 @@ import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
  * Supported adornments for the Button component: either a FontAwesome icon or an image.
  */
 type Adornment = IconDefinition | ButtonImage;
+
+interface ButtonClasses {
+  adornment?: string;
+  button?: string;
+}
 
 /**
  * Image object for use as a button adornment.
@@ -60,7 +66,7 @@ type ButtonVariant = 'primary' | 'secondary' | 'text' | 'outline';
  */
 interface BaseProps {
   children?: ReactNode;
-  className?: string;
+  classes?: ButtonClasses;
   endAdornment?: Adornment;
   size?: 'sm' | 'md' | 'lg';
   startAdornment?: Adornment;
@@ -79,7 +85,10 @@ interface BaseProps {
  * @property {Ref<HTMLAnchorElement>} [ref] - Ref for the anchor element.
  * @property {'primary' | 'secondary' | 'text' | 'outline'} [variant] - The visual style of the anchor button.
  */
-interface AnchorProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
+interface AnchorProps extends Omit<
+  AnchorHTMLAttributes<HTMLAnchorElement>,
+  'className'
+> {
   href: string;
   onClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
   ref?: Ref<HTMLAnchorElement>;
@@ -98,7 +107,10 @@ interface AnchorProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
  * @property {Ref<HTMLButtonElement>} [ref] - Ref for the button element.
  * @property {'primary' | 'secondary' | 'text' | 'outline'} [variant] - The visual style of the button.
  */
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  'className'
+> {
   href?: never;
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
   ref?: Ref<HTMLButtonElement>;
@@ -121,9 +133,21 @@ type ButtonComponentProps = (AnchorProps | ButtonProps) & BaseProps;
  * @param {Adornment} adornment - The adornment to render (FontAwesome icon or image object).
  * @returns {JSX.Element} The rendered icon or image element.
  */
-const renderAdornment = (adornment: Adornment) => {
+const renderAdornment = (adornment: Adornment, className?: string) => {
+  const iconClasses = twMerge('mg:text-xs', className);
+  const imageClasses = twMerge(
+    'mg:object-contain mg:animate-fade-in mg:duration-500',
+    className,
+  );
+
   if ('iconName' in adornment) {
-    return <FontAwesomeIcon icon={adornment} className="mg:text-sm" />;
+    return (
+      <FontAwesomeIcon
+        key={adornment.iconName}
+        icon={adornment}
+        className={iconClasses}
+      />
+    );
   }
 
   return (
@@ -132,7 +156,7 @@ const renderAdornment = (adornment: Adornment) => {
       src={adornment.src || ''}
       width={16}
       height={16}
-      className="mg-object-contain"
+      className={imageClasses}
     />
   );
 };
@@ -168,7 +192,7 @@ function Button(props: AnchorProps & BaseProps): JSX.Element;
 function Button(props: ButtonProps & BaseProps): JSX.Element;
 function Button({
   children,
-  className,
+  classes = {},
   endAdornment,
   href,
   size = 'md',
@@ -185,31 +209,34 @@ function Button({
   const isStartAdornmentImage = startAdornment && 'src' in startAdornment;
   const isEndAdornmentImage = endAdornment && 'src' in endAdornment;
 
-  const classes = classNames(
-    'mg:inline-flex mg:items-center mg:justify-between mg:font-body mg:text-primary mg:hover:text-inverse mg:hover:cursor-pointer mg:min-w-20',
-    {
-      'mg:px-1.5 mg:py-1 mg:rounded-sm': size === 'sm',
-      'mg:px-2.5 mg:py-2 mg:rounded': size === 'md',
-      'mg:px-3.5 mg:py-3 mg:rounded-lg': size === 'lg',
-      'mg:text-sm': size === 'sm' || size === 'md',
-      'mg:text-base': size === 'lg',
-      'mg:bg-primary mg:hover:bg-primary-hover': variant === 'primary',
-      'mg:bg-secondary mg:hover:bg-secondary-hover': variant === 'secondary',
-      'mg:bg-transparent mg:hover:border-solid mg:hover:border-1 mg:hover:border-accent':
-        variant === 'text',
-      'mg:border-solid mg:border-1 mg:border-primary mg:hover:border-primary-hover':
-        variant === 'outline',
-      'mg:gap-2': (isStartAdornmentIcon || isEndAdornmentIcon) && children,
-      'mg:gap-1': (isStartAdornmentImage || isEndAdornmentImage) && children,
-    },
-    className,
+  const buttonClasses = twMerge(
+    classNames(
+      'mg:inline-flex mg:items-center mg:justify-between mg:font-body mg:text-primary mg:hover:text-primary-hover mg:hover:cursor-pointer',
+      'mg:focus-visible:outline-1 mg:focus-visible:outline-offset-4 mg:focus-visible:outline-primary',
+      {
+        'mg:px-1.5 mg:py-1 mg:rounded-sm': size === 'sm',
+        'mg:px-2.5 mg:py-2 mg:rounded': size === 'md',
+        'mg:px-3.5 mg:py-3 mg:rounded-lg': size === 'lg',
+        'mg:text-sm': size === 'sm' || size === 'md',
+        'mg:text-base': size === 'lg',
+        'mg:bg-primary mg:hover:bg-primary-hover': variant === 'primary',
+        'mg:bg-secondary mg:hover:bg-secondary-hover': variant === 'secondary',
+        'mg:bg-transparent mg:hover:border-solid mg:hover:border-1 mg:hover:border-accent':
+          variant === 'text',
+        'mg:border-solid mg:border-1 mg:border-primary mg:hover:border-accent':
+          variant === 'outline',
+        'mg:gap-2': (isStartAdornmentIcon || isEndAdornmentIcon) && children,
+        'mg:gap-1': (isStartAdornmentImage || isEndAdornmentImage) && children,
+      },
+    ),
+    classes?.button,
   );
 
   if (href) {
     return (
       <a
         ref={ref as Ref<HTMLAnchorElement>}
-        className={classes}
+        className={buttonClasses}
         href={href}
         onClick={onClick as (event: MouseEvent<HTMLAnchorElement>) => void}
         target={target}
@@ -225,7 +252,7 @@ function Button({
   return (
     <button
       ref={ref as Ref<HTMLButtonElement>}
-      className={classes}
+      className={buttonClasses}
       type={type}
       onClick={onClick as (event: MouseEvent<HTMLButtonElement>) => void}
       {...(rest as ButtonHTMLAttributes<HTMLButtonElement>)}

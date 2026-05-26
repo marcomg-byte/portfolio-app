@@ -8,11 +8,13 @@ import {
 } from './card';
 import type { FooterAction } from './card';
 import { Carousel, Hero } from './carousel';
+import { Form, TextArea, TextInput } from './form';
+import type { FormValue } from './form';
 import { Connector, ProgressStepper, Step } from './progress-stepper';
-import type { StepType } from './progress-stepper/ProgressStepper';
+import type { StepType } from './progress-stepper';
 import { Select } from './select';
 import { Typography } from './typography';
-import type { HeadingVariant, ParagraphVariant } from './typography/Typography';
+import type { HeadingVariant, ParagraphVariant } from './typography';
 
 export {
   Badge,
@@ -22,12 +24,21 @@ export {
   CardMedia,
   CardFooter,
   Connector,
+  Form,
   Hero,
   Carousel,
   IconButton,
   ProgressStepper,
   Select,
   Step,
+  TextArea,
+  TextInput,
   Typography,
 };
-export type { HeadingVariant, ParagraphVariant, StepType, FooterAction };
+export type {
+  FormValue,
+  HeadingVariant,
+  ParagraphVariant,
+  StepType,
+  FooterAction,
+};

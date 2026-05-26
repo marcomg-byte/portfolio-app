@@ -1,13 +1,25 @@
 import type {
   AnchorHTMLAttributes,
   ButtonHTMLAttributes,
+  ComponentProps,
   JSX,
   MouseEvent,
+  ReactElement,
   Ref,
 } from 'react';
+import { cloneElement, isValidElement } from 'react';
+import Image from 'next/image';
 import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
+import { twMerge } from 'tailwind-merge';
+
+type IconButtonChildren = IconDefinition | ReactElement;
+
+interface IconButtonClasses {
+  children?: string;
+  iconButton?: string;
+}
 
 /**
  * Color options for the IconButton component.
@@ -35,6 +47,16 @@ type IconButtonSize = 'sm' | 'md' | 'lg';
  */
 type IconButtonVariant = 'outline' | 'filled';
 
+type ImageComponent = ReactElement<ComponentProps<typeof Image>>;
+
+interface BaseProps {
+  children?: IconButtonChildren;
+  classes?: IconButtonClasses;
+  color?: IconButtonColor;
+  size?: IconButtonSize;
+  variant?: IconButtonVariant;
+}
+
 /**
  * Props for the anchor variant of the IconButton component.
  *
@@ -52,16 +74,12 @@ type IconButtonVariant = 'outline' | 'filled';
  */
 interface AnchorProps extends Omit<
   AnchorHTMLAttributes<HTMLAnchorElement>,
-  'children'
+  'children' | 'className'
 > {
-  children?: IconDefinition;
-  className?: string;
-  color?: IconButtonColor;
-  href: string;
-  size?: IconButtonSize;
+  href?: string;
   onClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
   ref?: Ref<HTMLAnchorElement>;
-  variant?: IconButtonVariant;
+  target?: string;
 }
 
 /**
@@ -78,17 +96,45 @@ interface AnchorProps extends Omit<
  */
 interface ButtonProps extends Omit<
   ButtonHTMLAttributes<HTMLButtonElement>,
-  'children'
+  'children' | 'className'
 > {
-  children?: IconDefinition;
-  className?: string;
-  color?: IconButtonColor;
   href?: never;
-  size?: IconButtonSize;
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
   ref?: Ref<HTMLButtonElement>;
-  variant?: IconButtonVariant;
+  target?: never;
 }
+
+type IconButtonProps = (AnchorProps | ButtonProps) & BaseProps;
+
+const renderChildren = (children: IconButtonChildren, className?: string) => {
+  const imageClasses = twMerge(
+    'mg:object-cover mg:animate-fade-in mg:duration-500',
+    className,
+  );
+
+  if ('iconName' in children) {
+    return (
+      <FontAwesomeIcon
+        key={children.iconName}
+        className={className}
+        icon={children}
+      />
+    );
+  }
+
+  if (isValidElement(children) && children.type === Image) {
+    const imageProps = children.props as ImageComponent['props'];
+    return cloneElement(children as ImageComponent, {
+      src: imageProps.src || '',
+      alt: imageProps.alt || '',
+      width: 24,
+      height: 24,
+      className: imageClasses,
+    });
+  }
+
+  return children;
+};
 
 /**
  * IconButton component.
@@ -118,20 +164,21 @@ interface ButtonProps extends Omit<
  * );
  * ```
  */
-function IconButton(props: AnchorProps): JSX.Element;
-function IconButton(props: ButtonProps): JSX.Element;
+function IconButton(props: AnchorProps & BaseProps): JSX.Element;
+function IconButton(props: ButtonProps & BaseProps): JSX.Element;
 function IconButton({
   children,
-  className,
+  classes = {},
   color = 'primary',
   href,
   size = 'sm',
   onClick,
   variant = 'outline',
   ...rest
-}: AnchorProps | ButtonProps): JSX.Element {
+}: IconButtonProps): JSX.Element {
   const containerClasses = classNames(
     'mg:flex mg:items-center mg:justify-center mg:rounded-lg mg:font-body mg:p-1 mg:min-h-2 mg:min-w-2 mg:hover:cursor-pointer',
+    'mg:focus-visible:outline-1 mg:focus-visible:outline-offset-4 mg:focus-visible:outline-primary',
     {
       'mg:text-sm': size === 'sm',
       'mg:text-base': size === 'md',
@@ -160,45 +207,31 @@ function IconButton({
         })
       : '';
 
-  const classes = classNames(
-    containerClasses,
-    outlineClasses,
-    filledClasses,
-    className,
+  const iconButtonClasses = twMerge(
+    classNames(containerClasses, outlineClasses, filledClasses),
+    classes?.iconButton,
   );
 
   if (href) {
     return (
       <a
-        className={classes}
+        className={iconButtonClasses}
         href={href}
         onClick={onClick as (event: MouseEvent<HTMLAnchorElement>) => void}
         {...(rest as AnchorHTMLAttributes<HTMLAnchorElement>)}
       >
-        {children && (
-          <FontAwesomeIcon
-            key={children.iconName}
-            className="mg:animate-spin-in"
-            icon={children}
-          />
-        )}
+        {children && renderChildren(children, classes?.children)}
       </a>
     );
   }
 
   return (
     <button
-      className={classes}
+      className={iconButtonClasses}
       onClick={onClick as (event: MouseEvent<HTMLButtonElement>) => void}
       {...(rest as ButtonHTMLAttributes<HTMLButtonElement>)}
     >
-      {children && (
-        <FontAwesomeIcon
-          key={children.iconName}
-          className="mg:animate-spin-in"
-          icon={children}
-        />
-      )}
+      {children && renderChildren(children, classes?.children)}
     </button>
   );
 }
