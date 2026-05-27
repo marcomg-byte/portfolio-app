@@ -117,12 +117,8 @@ export default function Home() {
       </div>
       <div className="mg:flex mg:flex-col mg:items-center mg:justify-center mg:w-full mg:bg-primary">
         <div className="mg:flex mg:flex-col mg:items-start mg:justify-center mg:w-full mg:gap-1 mg:px-6">
-          <Typography className="mg:text-2xl" variant="h2">
-            Featured Projects
-          </Typography>
-          <Typography className="mg:text-xl" variant="base">
-            A selection of my recent work
-          </Typography>
+          <Typography variant="h2">Featured Projects</Typography>
+          <Typography variant="base">A selection of my recent work</Typography>
         </div>
         <Carousel
           transitionDuration={50}

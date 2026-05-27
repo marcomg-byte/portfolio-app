@@ -271,7 +271,7 @@ const Carousel: FC<CarouselProps> = ({
             <IconButton
               variant={controlsVariant}
               color="secondary"
-              className="mg:pointer-events-auto"
+              classes={{ iconButton: 'mg:pointer-events-auto' }}
               onClick={handlePrev}
             >
               {faChevronLeft}
@@ -279,7 +279,7 @@ const Carousel: FC<CarouselProps> = ({
             <IconButton
               variant={controlsVariant}
               color="secondary"
-              className="mg:pointer-events-auto"
+              classes={{ iconButton: 'mg:pointer-events-auto' }}
               onClick={handleNext}
             >
               {faChevronRight}

@@ -93,6 +93,20 @@
     --color-white: 255 255 255;
     --space-unit: 8px
 ;
+    --font-size-text-xs: 0.75rem;
+    --font-size-text-sm: 0.875rem;
+    --font-size-text-base: 1rem;
+    --font-size-text-lg: 1.125rem;
+    --font-size-text-xl: 1.25rem;
+    --font-size-text-2xl: 1.5rem;
+    --font-size-text-3xl: 1.875rem;
+    --font-size-text-4xl: 2.25rem;
+    --font-size-text-5xl: 3rem;
+    --font-size-text-6xl: 3.75rem;
+    --font-size-text-7xl: 4.5rem;
+    --font-size-text-8xl: 6rem;
+    --font-size-text-9xl: 8rem
+;
     --background-primary: rgb(var(--color-azure-100));
     --background-primary-hover: rgb(var(--color-azure-200));
     --background-primary-active: rgb(var(--color-white));
@@ -130,6 +144,11 @@
     --background-accent: rgb(var(--color-sky-400));
     --background-accent-hover: rgb(var(--color-sky-600));
     --background-accent-active: rgb(var(--color-sky-800));
+    --background-inverse: rgb(var(--color-azure-700));
+    --background-inverse-hover: rgb(var(--color-azure-700));
+    --background-inverse-active: rgb(var(--color-black));
+    --background-inverse-subtle: rgb(var(--color-azure-600));
+    --background-inverse-accent: rgb(var(--color-sky-500));
     --text-primary: rgb(var(--color-ocean-700));
     --text-primary-hover: rgb(var(--color-ocean-900));
     --text-secondary: rgb(var(--color-azure-500));
@@ -255,6 +274,11 @@
     --background-color-accent: var(--background-accent);
     --background-color-accent-hover: var(--background-accent-hover);
     --background-color-accent-active: var(--background-accent-active);
+    --background-color-inverse: var(--background-inverse);
+    --background-color-inverse-hover: var(--background-inverse-hover);
+    --background-color-inverse-active: var(--background-inverse-active);
+    --background-color-inverse-subtle: var(--background-inverse-subtle);
+    --background-color-inverse-accent: var(--background-inverse-accent);
     --text-color-primary: var(--text-primary);
     --text-color-primary-hover: var(--text-primary-hover);
     --text-color-secondary: var(--text-secondary);
@@ -357,7 +381,20 @@
     --spacing-3xl: 48px;
     --spacing-4xl: 64px;
     --spacing-5xl: 80px;
-    --spacing-6xl: 96px
+    --spacing-6xl: 96px;
+    --font-size-text-xs: var(--font-size-text-xs);
+    --font-size-text-sm: var(--font-size-text-sm);
+    --font-size-text-base: var(--font-size-text-base);
+    --font-size-text-lg: var(--font-size-text-lg);
+    --font-size-text-xl: var(--font-size-text-xl);
+    --font-size-text-2xl: var(--font-size-text-2xl);
+    --font-size-text-3xl: var(--font-size-text-3xl);
+    --font-size-text-4xl: var(--font-size-text-4xl);
+    --font-size-text-5xl: var(--font-size-text-5xl);
+    --font-size-text-6xl: var(--font-size-text-6xl);
+    --font-size-text-7xl: var(--font-size-text-7xl);
+    --font-size-text-8xl: var(--font-size-text-8xl);
+    --font-size-text-9xl: var(--font-size-text-9xl)
 
 }
 
@@ -399,6 +436,11 @@
     --background-accent: rgb(var(--color-sky-400));
     --background-accent-hover: rgb(var(--color-sky-600));
     --background-accent-active: rgb(var(--color-sky-800));
+    --background-inverse: rgb(var(--color-azure-700));
+    --background-inverse-hover: rgb(var(--color-azure-700));
+    --background-inverse-active: rgb(var(--color-black));
+    --background-inverse-subtle: rgb(var(--color-azure-600));
+    --background-inverse-accent: rgb(var(--color-sky-500));
     --text-primary: rgb(var(--color-ocean-700));
     --text-primary-hover: rgb(var(--color-ocean-900));
     --text-secondary: rgb(var(--color-azure-500));
@@ -518,6 +560,11 @@
     --background-info-primary-active: rgb(var(--color-cyan-800));
     --background-info-primary-subtle: rgb(var(--color-cyan-300));
     --background-info-primary-accent: rgb(var(--color-cyan-500));
+    --background-inverse: rgb(var(--color-azure-100));
+    --background-inverse-hover: rgb(var(--color-azure-200));
+    --background-inverse-active: rgb(var(--color-white));
+    --background-inverse-subtle: rgb(var(--color-azure-300));
+    --background-inverse-accent: rgb(var(--color-sky-500));
     --background-subtle: rgb(var(--color-mist-900));
     --background-subtle-hover: rgb(var(--color-mist-600));
     --background-subtle-active: rgb(var(--color-mist-50));

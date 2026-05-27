@@ -9,6 +9,8 @@ import {
   Form,
   Hero,
   IconButton,
+  List,
+  ListItem,
   ProgressStepper,
   Select,
   Step,
@@ -17,6 +19,7 @@ import {
   Typography,
 } from './atomics';
 import type {
+  Item,
   HeadingVariant,
   ParagraphVariant,
   StepType,
@@ -37,6 +40,8 @@ export {
   Form,
   Hero,
   IconButton,
+  List,
+  ListItem,
   Select,
   Page,
   ProgressStepper,
@@ -46,6 +51,7 @@ export {
   Typography,
 };
 export type {
+  Item,
   FormValue,
   HeadingVariant,
   ParagraphVariant,

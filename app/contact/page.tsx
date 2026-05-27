@@ -4,6 +4,8 @@ import {
   Button,
   Form,
   Page,
+  List,
+  ListItem,
   TextArea,
   TextInput,
   Typography,
@@ -12,6 +14,7 @@ import type { FormValue } from '@/components/ui';
 import Image from 'next/image';
 import {
   faArrowRight,
+  faCheckCircle,
   faCircle,
   faFile,
   faLock,
@@ -70,13 +73,13 @@ const SkillCard = ({ description, image, title }: SkillCardProps) => (
       alt={image?.alt || ''}
       width={80}
       height={80}
-      className="mg:object-contain mg:-ml-1 mg:animate-fade-in"
+      className="mg:object-contain mg:-ml-1 mg:animate-fade-in mg:duration-500"
     />
     <div className="mg:flex mg:flex-col mg:gap-1 mg:max-w-24">
-      <Typography removePadding bold className="mg:text-white" variant="h4">
+      <Typography removePadding bold color="white" variant="h4">
         {title}
       </Typography>
-      <Typography removePadding className="mg:text-white" variant="base">
+      <Typography removePadding color="white" variant="base">
         {description}
       </Typography>
     </div>
@@ -118,10 +121,10 @@ const ContactCard = ({ image, text, title }: ContactCardProps) => (
       className="mg:object-contain mg:animate-fade-in mg:transition-transform mg:duration-500 mg:hover:scale-110"
     />
     <div className="mg:flex mg:flex-col mg:gap-1">
-      <Typography bold className="mg:text-white" removePadding variant="h4">
+      <Typography bold color="white" removePadding variant="h4">
         {title}
       </Typography>
-      <Typography className="mg:text-white" removePadding variant="base">
+      <Typography color="white" removePadding variant="base">
         {text}
       </Typography>
     </div>
@@ -222,7 +225,6 @@ export default function Contact() {
             <div className="mg:w-full mg:bg-inherit mg:flex mg:gap-4 mg:justify-between">
               <TextInput
                 adornmentColor="white"
-                pattern={/[0-9]+/}
                 fullWidth
                 label="name"
                 name="name"
@@ -278,13 +280,14 @@ export default function Contact() {
               />
               <Typography
                 removePadding
-                className="mg:text-white mg:text-xl"
+                color="white"
+                className="mg:text-xl"
                 variant="h2"
               >
                 Contact Information
               </Typography>
             </div>
-            <Typography removePadding className="mg:text-white" variant="base">
+            <Typography removePadding color="white" variant="base">
               Here&apos;s how you can reach me
             </Typography>
           </div>
@@ -359,7 +362,7 @@ export default function Contact() {
             />
           </div>
         </div>
-        <div className="mg:flex mg:flex-col mg:pl-2 mg:w-1/3">
+        <div className="mg:flex mg:flex-col mg:gap-6 mg:pl-2 mg:w-1/3">
           <div className="mg:flex mg:gap-3">
             <FontAwesomeIcon
               icon={faCircle}
@@ -369,6 +372,25 @@ export default function Contact() {
               Currently available for
             </Typography>
           </div>
+          <List
+            divider
+            fullWidth
+            adornmentColor="success"
+            background="secondary"
+            color="white"
+            selectable={false}
+          >
+            <ListItem
+              adornment={faCheckCircle}
+              title="Full Time Opportunities"
+            />
+            <ListItem
+              adornment={faCheckCircle}
+              title="Contract & freelance projects"
+            />
+            <ListItem adornment={faCheckCircle} title="Technical consulting" />
+            <ListItem adornment={faCheckCircle} title="Architecture advisory" />
+          </List>
         </div>
       </div>
     </Page>

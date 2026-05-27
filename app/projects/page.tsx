@@ -101,24 +101,21 @@ const projects: Project[] = [
   },
 ];
 
-const clonedProjects = Array(5).fill(projects).flat();
-
 export default function Projects() {
-  const [selectedProjects, setSelectedProjects] =
-    useState<Project[]>(clonedProjects);
+  const [selectedProjects, setSelectedProjects] = useState<Project[]>(projects);
 
   const handleCategorySelect = (category: Category) => {
     if (category === 'All') {
-      setSelectedProjects(clonedProjects);
+      setSelectedProjects(projects);
     } else {
       setSelectedProjects(
-        clonedProjects.filter((project) => project.category.includes(category)),
+        projects.filter((project) => project.category.includes(category)),
       );
     }
   };
 
   const handleReset = () => {
-    setSelectedProjects(clonedProjects);
+    setSelectedProjects(projects);
   };
 
   return (
@@ -152,7 +149,7 @@ export default function Projects() {
               fill
               priority
               sizes="(max-width: 768px) 100vw, 300px"
-              className="mg:object-cover mg:animate-fade-in"
+              className="mg:object-cover mg:animate-fade-in mg:duration-500"
             />
           </div>
         </div>
@@ -206,7 +203,8 @@ export default function Projects() {
             height={160}
             src="/images/team-work.png"
             alt="Team Work Icon"
-            className="mg:animate-fade-in"
+            className="mg:animate-fade-in mg:duration-500"
+            style={{ width: 'auto', height: 'auto' }}
           />
           <div className="mg:flex mg:flex-col mg:gap-4 mg:grow">
             <Typography variant="h2">Have an idea in mind?</Typography>

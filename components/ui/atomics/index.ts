@@ -10,6 +10,8 @@ import type { FooterAction } from './card';
 import { Carousel, Hero } from './carousel';
 import { Form, TextArea, TextInput } from './form';
 import type { FormValue } from './form';
+import { List, ListItem } from './list';
+import type { Item } from './list';
 import { Connector, ProgressStepper, Step } from './progress-stepper';
 import type { StepType } from './progress-stepper';
 import { Select } from './select';
@@ -28,6 +30,8 @@ export {
   Hero,
   Carousel,
   IconButton,
+  List,
+  ListItem,
   ProgressStepper,
   Select,
   Step,
@@ -36,6 +40,7 @@ export {
   Typography,
 };
 export type {
+  Item,
   FormValue,
   HeadingVariant,
   ParagraphVariant,

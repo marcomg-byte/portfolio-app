@@ -4,20 +4,22 @@ import { Button } from '../../atomics';
 import { Button as ThemeButton } from '@/components/theme';
 import { usePathname } from 'next/navigation';
 
+interface AppbarButton {
+  target?: string;
+  text: string;
+  variant?: 'primary' | 'secondary' | 'text' | 'outline';
+  href: string;
+}
+
 /**
  * Props for the Appbar component.
  *
  * Extends all standard HTML div attributes.
  *
- * @property {Array<{text: string, variant?: 'primary' | 'secondary' | 'text' | 'outline', href: string}>} pages - Navigation links to display in the app bar. Each page includes the button text, an optional variant, and the link href.
  * @property {Ref<HTMLDivElement>} [ref] - Ref for the root div element.
  */
 interface AppbarProps extends HTMLAttributes<HTMLDivElement> {
-  pages: {
-    text: string;
-    variant?: 'primary' | 'secondary' | 'text' | 'outline';
-    href: string;
-  }[];
+  pages: AppbarButton[];
   ref?: Ref<HTMLDivElement>;
 }
 
@@ -67,6 +69,7 @@ const Appbar: FC<AppbarProps> = ({ pages, ref, ...rest }) => {
             key={`appbar-button-${index}`}
             variant={page.variant || 'text'}
             href={isCurrentPath ? '/' : page.href}
+            target={page?.target}
           >
             {isCurrentPath ? 'Home' : page.text}
           </Button>

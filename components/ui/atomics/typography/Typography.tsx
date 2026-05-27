@@ -1,5 +1,6 @@
 import type { HTMLAttributes, JSX, ReactNode, Ref } from 'react';
 import classNames from 'classnames';
+import { twMerge } from 'tailwind-merge';
 
 /**
  * Number of lines to clamp text to.
@@ -227,42 +228,43 @@ function Typography({
       })
     : '';
 
-  const classes = classNames(
-    {
-      'mg:py-1': !removePadding,
-      'mg:text-left': align === 'left',
-      'mg:text-center': align === 'center',
-      'mg:text-right': align === 'right',
-      'mg:text-justify': align === 'justify',
-      'mg:truncate': truncate,
-      'mg:underline': underline,
-      'mg:text-sm': variant === 'small' || variant === 'h6',
-      'mg:text-base': variant === 'base' || variant === 'h5',
-      'mg:text-lg': variant === 'large' || variant === 'h4',
-      'mg:text-8xl': variant === 'h1',
-      'mg:text-7xl': variant === 'h2',
-      'mg:text-6xl': variant === 'h3',
-      'mg:text-black': color === 'black',
-      'mg:text-primary': color === 'primary',
-      'mg:text-secondary': color === 'secondary',
-      'mg:text-accent': color === 'accent',
-      'mg:text-subtle': color === 'subtle',
-      'mg:text-inverse': color === 'inverse',
-      'mg:text-white': color === 'white',
-    },
-    headingClasses,
-    paragraphClasses,
-    spanClasses,
-    clamp ? clampClasses[clamp] : '',
+  const classes = twMerge(
+    classNames(
+      {
+        'mg:py-1': !removePadding,
+        'mg:text-left': align === 'left',
+        'mg:text-center': align === 'center',
+        'mg:text-right': align === 'right',
+        'mg:text-justify': align === 'justify',
+        'mg:truncate': truncate,
+        'mg:underline': underline,
+        'mg:text-sm': variant === 'small' || variant === 'h6',
+        'mg:text-base': variant === 'base' || variant === 'h5',
+        'mg:text-lg': variant === 'large' || variant === 'h4',
+        'mg:text-8xl': variant === 'h1',
+        'mg:text-7xl': variant === 'h2',
+        'mg:text-6xl': variant === 'h3',
+        'mg:text-black': color === 'black',
+        'mg:text-primary': color === 'primary',
+        'mg:text-secondary': color === 'secondary',
+        'mg:text-accent': color === 'accent',
+        'mg:text-subtle': color === 'subtle',
+        'mg:text-inverse': color === 'inverse',
+        'mg:text-white': color === 'white',
+      },
+      headingClasses,
+      paragraphClasses,
+      spanClasses,
+      clamp ? clampClasses[clamp] : '',
+    ),
     className,
   );
 
   if (span) {
     return (
-      <span
-        className={classes}
-        {...(rest as HTMLAttributes<HTMLSpanElement>)}
-      ></span>
+      <span className={classes} {...(rest as HTMLAttributes<HTMLSpanElement>)}>
+        {children}
+      </span>
     );
   }
 
