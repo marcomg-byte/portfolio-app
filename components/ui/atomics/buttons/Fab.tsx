@@ -10,12 +10,18 @@ import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Image from 'next/image';
 import classNames from 'classnames';
+import { twMerge } from 'tailwind-merge';
 
 /**
  * Adornment used by the Fab. Can be a Font Awesome `IconDefinition`
  * (rendered via `FontAwesomeIcon`) or an image payload (`FabImage`).
  */
 type FabAdornment = IconDefinition | FabImage;
+
+interface FabClasses {
+  adornment?: string;
+  button?: string;
+}
 
 /**
  * Allowed color theme names for the Fab component.
@@ -50,7 +56,7 @@ interface BaseProps {
   /** Content placed inside the button. */
   children?: ReactNode;
   /** Additional CSS classes to apply. */
-  className?: string;
+  classes?: FabClasses;
   /** Color theme for the Fab. */
   color?: FabColor;
   /** Adornment rendered after the children. */
@@ -108,15 +114,22 @@ type FabProps = (AnchorProps | ButtonProps) & BaseProps;
  * @param {FabAdornment} adornment - IconDefinition or FabImage to render.
  * @returns {JSX.Element} The rendered adornment element.
  */
-const renderAdornment = (adornment: FabAdornment) => {
+const renderAdornment = (adornment: FabAdornment, className?: string) => {
+  const iconClasses = classNames('mg:text-xs', className);
+
+  const imageClasses = twMerge(
+    'mg:object-contain mg:animate-fade-in mg:duration-500',
+    className,
+  );
+
   if ('iconName' in adornment) {
-    return <FontAwesomeIcon className="mg:text-xs" icon={adornment} />;
+    return <FontAwesomeIcon className={iconClasses} icon={adornment} />;
   }
 
   return (
     <Image
       alt={adornment.alt || ''}
-      className="mg:object-contain"
+      className={imageClasses}
       height={16}
       src={adornment.src || ''}
       width={16}
@@ -153,7 +166,7 @@ function Fab(props: AnchorProps & BaseProps): JSX.Element;
 function Fab(props: ButtonProps & BaseProps): JSX.Element;
 function Fab({
   children,
-  className,
+  classes = {},
   color = 'primary',
   endAdornment,
   href,
@@ -182,58 +195,55 @@ function Fab({
           'mg:w-6 mg:h-4': size === 'lg',
         })
       : '';
-  const classes = classNames(
-    'mg:inline-flex mg:items-center mg:justify-center mg:border-solid mg:border-1 mg:hover:cursor-pointer',
-    'mg:focus-visible:outline-1 mg:focus-visible:outline-offset-4 mg:focus-visible:outline-primary',
-    {
-      'mg:border-primary mg:hover:border-primary-hover mg:text-primary mg:hover:text-primary-hover':
-        color === 'primary',
-      'mg:border-secondary mg:hover:border-secondary-hover mg:text-secondary mg:hover:text-secondary-hover':
-        color === 'secondary',
-      'mg:border-accent mg:hover:border-accent-hover mg:text-accent mg:hover:text-accent-hover':
-        color === 'accent',
-      'mg:border-error mg:hover:border-error-hover mg:text-danger mg:hover:text-danger-hover':
-        color === 'error',
-      'mg:border-info mg:hover:border-info-hover mg:text-info mg:hover:text-info-hover':
-        color === 'info',
-      'mg:border-success mg:hover:border-success-hover mg:text-success mg:hover:text-success-hover':
-        color === 'success',
-      'mg:border-warning mg:hover:border-warning-hover mg:text-warning mg:hover:text-warning-hover':
-        color === 'warning',
-    },
-    circularClasses,
-    extendedClasses,
-    className,
+  const buttonClasses = twMerge(
+    classNames(
+      'mg:inline-flex mg:items-center mg:justify-center mg:border-solid mg:border-1 mg:hover:cursor-pointer',
+      'mg:focus-visible:outline-1 mg:focus-visible:outline-offset-4 mg:focus-visible:outline-primary',
+      {
+        'mg:border-primary mg:text-primary': color === 'primary',
+        'mg:border-secondary mg:text-secondary': color === 'secondary',
+        'mg:border-accent mg:hover:border-accent-hover mg:text-accent mg:hover:text-accent-hover':
+          color === 'accent',
+        'mg:border-error mg:text-danger': color === 'error',
+        'mg:border-info mg:text-info': color === 'info',
+        'mg:border-success mg:text-success': color === 'success',
+        'mg:border-warning mg:text-warning': color === 'warning',
+        'mg:hover:border-accent mg:hover:text-accent': color !== 'accent',
+      },
+      circularClasses,
+      extendedClasses,
+    ),
+    classes?.button,
   );
 
   if (href) {
     return (
       <a
-        className={classes}
+        className={buttonClasses}
         href={href}
         onClick={onClick as (event: MouseEvent<HTMLAnchorElement>) => void}
         target={target}
         ref={ref as Ref<HTMLAnchorElement>}
         {...(rest as AnchorHTMLAttributes<HTMLAnchorElement>)}
       >
-        {startAdornment && renderAdornment(startAdornment)}
+        {startAdornment && renderAdornment(startAdornment, classes?.adornment)}
         {children}
-        {endAdornment && renderAdornment(endAdornment)}
+        {endAdornment && renderAdornment(endAdornment, classes?.adornment)}
       </a>
     );
   }
 
   return (
     <button
-      className={classes}
+      className={buttonClasses}
       onClick={onClick as (event: MouseEvent<HTMLButtonElement>) => void}
       ref={ref as Ref<HTMLButtonElement>}
       type={type}
       {...(rest as ButtonHTMLAttributes<HTMLButtonElement>)}
     >
-      {startAdornment && renderAdornment(startAdornment)}
+      {startAdornment && renderAdornment(startAdornment, classes?.adornment)}
       {children}
-      {endAdornment && renderAdornment(endAdornment)}
+      {endAdornment && renderAdornment(endAdornment, classes?.adornment)}
     </button>
   );
 }

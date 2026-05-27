@@ -103,7 +103,7 @@ const Footer: FC<FooterProps> = ({
         <div className="mg:flex mg:justify-start mg:items-center mg:gap-2">
           {actions.map((action, index) => (
             <Button
-              className="mg:animate-fade-in"
+              classes={{ button: 'mg:animate-fade-in mg:duration-500' }}
               endAdornment={action?.endAdornment}
               href={action?.href as string}
               key={`footer-action-${index}`}

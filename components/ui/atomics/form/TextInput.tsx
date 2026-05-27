@@ -506,14 +506,16 @@ const TextInput: FC<TextInputProps> = ({
   };
 
   useEffect(() => {
-    if (status === 'error') {
-      if (onError) onError(true);
-      else setError(true);
-    } else if (!pattern) {
-      if (onError) onError(false);
-      else setError(false);
+    const isErrorWithoutPattern = status === 'error' && !pattern;
+
+    if (status !== 'error' && pattern) return;
+
+    if (onError) {
+      if (isErrorWithoutPattern) onError(error !== isErrorWithoutPattern);
+    } else {
+      if (isErrorWithoutPattern) setError(error !== isErrorWithoutPattern);
     }
-  }, [pattern, status, onError, setError]);
+  }, [pattern, status, onError, setError, error]);
 
   const type = typeProp === 'password' && showPassword ? 'text' : typeProp;
 

@@ -325,7 +325,7 @@ const Hero: FC<HeroProps> = ({
               key={`hero-link-${index}`}
               href={link.href}
               variant={link.variant}
-              className="mg:animate-fade-in"
+              classes={{ button: 'mg:animate-fade-in mg:duration-500' }}
               style={{ animationDelay: `${0.2 + index * 0.15}s` }}
             >
               {link.label}
@@ -338,7 +338,7 @@ const Hero: FC<HeroProps> = ({
           <IconButton
             variant="filled"
             color="secondary"
-            className="mg:animate-slide-in-left"
+            classes={{ iconButton: 'mg:animate-slide-in-left' }}
             onClick={handlePrev}
           >
             {faChevronLeft}
@@ -346,7 +346,7 @@ const Hero: FC<HeroProps> = ({
           <IconButton
             variant="filled"
             color="secondary"
-            className="mg:animate-slide-in-right"
+            classes={{ iconButton: 'mg:animate-slide-in-right' }}
             onClick={handleNext}
           >
             {faChevronRight}

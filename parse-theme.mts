@@ -115,6 +115,11 @@ type SpacingScale = {
   [key: string]: string | number;
 };
 
+interface Typography {
+  fontSize: Record<string, string>;
+  [key: string]: string | Record<string, string>;
+}
+
 /**
  * BorderWidthScale: Defines the border width scale for the theme.
  *
@@ -160,13 +165,15 @@ type BorderWidthScale = Record<string, string>;
 interface Theme {
   colors: { palette: Palette };
   spacing: SpacingScale;
+  typography: Typography;
   borderWidth: BorderWidthScale;
   [key: string]:
     | string
     | { palette: Palette }
     | SpacingScale
     | BorderWidthScale
-    | Record<string, Record<string, string>>;
+    | Record<string, Record<string, string>>
+    | Typography;
 }
 
 /**
@@ -314,6 +321,25 @@ function appendRootBaseTokens(
 }
 
 /**
+ * Appends typography tokens (font sizes) as CSS variables to :root.
+ * @param root - PostCSS root node
+ * @param typography - Object containing a `fontSize` map
+ */
+function appendTypographyTokens(
+  root: Root,
+  typography?: { fontSize?: Record<string, string> },
+): void {
+  if (!typography || !typography.fontSize) return;
+  const rule = postcss.rule({ selector: ':root' });
+  Object.entries(typography.fontSize).forEach(([name, value]) => {
+    rule.append(
+      postcss.decl({ prop: `--font-size-${name}`, value: `${value}` }),
+    );
+  });
+  root.append(rule);
+}
+
+/**
  * Maps a semantic color category to its corresponding CSS variable namespace.
  *
  * @param category - The semantic color category (e.g., 'background', 'text', 'border', or custom).
@@ -367,6 +393,7 @@ function appendThemeInline(
   mode: Mode,
   spacing: SpacingScale,
   borderWidths: BorderWidthScale,
+  typography?: { fontSize?: Record<string, string> },
 ): void {
   const themeRule = postcss.atRule({ name: 'theme', params: 'inline' });
   Object.entries(mode).forEach(([category, categoryTokens]) => {
@@ -411,6 +438,17 @@ function appendThemeInline(
       );
     }
   });
+
+  if (typography?.fontSize) {
+    Object.entries(typography.fontSize).forEach(([name]) => {
+      themeRule.append(
+        postcss.decl({
+          prop: `--font-size-${name}`,
+          value: `var(--font-size-${name})`,
+        }),
+      );
+    });
+  }
 
   container.append(themeRule);
 }
@@ -482,6 +520,7 @@ function generateTheme(tokens: Tokens): string {
   const root = postcss.root();
 
   appendRootBaseTokens(root, tokens.colors, tokens.theme.spacing);
+  appendTypographyTokens(root, tokens.theme?.typography);
 
   appendSelectorVars(root, ':root', tokens.theme.colors.palette.light);
 
@@ -490,9 +529,9 @@ function generateTheme(tokens: Tokens): string {
     tokens.theme.colors.palette.light,
     tokens.theme.spacing,
     tokens.theme.borderWidth,
+    tokens.theme.typography,
   );
 
-  // Explicit selector overrides
   appendSelectorVars(
     root,
     '[data-theme="light"]',

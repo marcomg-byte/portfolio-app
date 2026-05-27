@@ -52,7 +52,7 @@ const SkillBadge: FC<SkillBadgeProps> = ({
           fill
           sizes="40px"
           priority
-          className="mg:object-contain mg:animate-fade-in"
+          className="mg:object-contain mg:animate-fade-in mg:duration-500"
         />
       </div>
     </div>
@@ -69,7 +69,7 @@ const SkillBadge: FC<SkillBadgeProps> = ({
 
 const HobbyCard: FC<HobbyCard> = ({ adornment, title }) => (
   <div className="mg:flex mg:flex-col mg:items-center mg:justify-center mg:gap-2 mg:p-3 mg:rounded-lg mg:shadow-xl mg:transition-transform mg:duration-200 mg:hover:scale-105 mg:min-w-24 mg:bg-secondary">
-    <Typography className="mg:text-white" variant="base">
+    <Typography color="white" variant="base">
       {title}
     </Typography>
     <Image
@@ -314,15 +314,13 @@ export default function About() {
               fill
               priority
               sizes="(max-width: 768px) 100vw, 300px"
-              className="mg:object-cover mg:animate-fade-in"
+              className="mg:object-cover mg:animate-fade-in mg:duration-500"
             />
           </div>
         </div>
       </div>
       <div className="mg:flex mg:justify-start mg:items-center mg:w-full mg:px-6 mg:pb-2">
-        <Typography color="secondary" variant="h2" className="mg:text-2xl">
-          Skills & Expertise
-        </Typography>
+        <Typography variant="h2">Skills & Expertise</Typography>
       </div>
       <div className="mg:flex mg:justify-evenly mg:items-center mg:w-full mg:py-3 mg:px-6 mg:gap-4 mg:overflow-scroll">
         {skills.map((skill, index) => (
@@ -341,7 +339,7 @@ export default function About() {
       <div className="mg:flex mg:w-full">
         <ProgressStepper
           activeStep={activeStep}
-          defaultStep={1}
+          linear={false}
           completed={completed}
           onComplete={(value) => setCompleted(value)}
           onInit={(step) => setActiveStep(step)}

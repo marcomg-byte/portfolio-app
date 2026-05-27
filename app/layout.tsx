@@ -23,9 +23,13 @@ export default function RootLayout({
           pages={[
             { text: 'About', href: '/about' },
             { text: 'Projects', href: '/projects' },
-            { text: 'Blog', href: '#blog' },
             { text: 'Contact', href: '/contact' },
-            { text: 'Resume', href: '#resume', variant: 'outline' },
+            {
+              text: 'Resume',
+              href: '/files/CV.pdf',
+              target: '_blank',
+              variant: 'outline',
+            },
           ]}
         />
         {children}

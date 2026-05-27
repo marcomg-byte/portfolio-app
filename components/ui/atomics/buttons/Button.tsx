@@ -3,7 +3,6 @@ import type {
   AnchorHTMLAttributes,
   ButtonHTMLAttributes,
   JSX,
-  MouseEvent,
   ReactNode,
   Ref,
 } from 'react';
@@ -55,19 +54,12 @@ type ButtonVariant = 'primary' | 'secondary' | 'text' | 'outline';
 
 /**
  * Common props for the Button component, shared by both anchor and button variants.
- *
- * @property {ReactNode} [children] - Content to display inside the button.
- * @property {string} [className] - Additional CSS classes for the button.
- * @property {Adornment} [endAdornment] - Icon or image to display at the end of the button.
- * @property {'sm' | 'md' | 'lg'} [size] - Size of the button.
- * @property {Adornment} [startAdornment] - Icon or image to display at the start of the button.
- * @property {Ref<HTMLAnchorElement>} [ref] - Ref for the anchor or button element.
- * @property {ButtonVariant} [variant] - Visual style variant for the button.
  */
 interface BaseProps {
   children?: ReactNode;
   classes?: ButtonClasses;
   endAdornment?: Adornment;
+  fullWidth?: boolean;
   size?: 'sm' | 'md' | 'lg';
   startAdornment?: Adornment;
   ref?: Ref<HTMLAnchorElement>;
@@ -81,7 +73,6 @@ interface BaseProps {
  * @property {string} href - The URL to link to (required for anchor usage).
  * @property {'sm' | 'md' | 'lg'} [size] - The size of the anchor button.
  * @property {never} [type] - Not allowed for anchor usage.
- * @property {(event: MouseEvent<HTMLAnchorElement>) => void} [onClick] - Click event handler for the anchor.
  * @property {Ref<HTMLAnchorElement>} [ref] - Ref for the anchor element.
  * @property {'primary' | 'secondary' | 'text' | 'outline'} [variant] - The visual style of the anchor button.
  */
@@ -90,7 +81,6 @@ interface AnchorProps extends Omit<
   'className'
 > {
   href: string;
-  onClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
   ref?: Ref<HTMLAnchorElement>;
   target?: string;
   type?: never;
@@ -103,7 +93,6 @@ interface AnchorProps extends Omit<
  * @property {never} [href] - Not allowed for button usage.
  * @property {'sm' | 'md' | 'lg'} [size] - The size of the button.
  * @property {ButtonType} [type] - The button type attribute.
- * @property {(event: MouseEvent<HTMLButtonElement>) => void} [onClick] - Click event handler for the button.
  * @property {Ref<HTMLButtonElement>} [ref] - Ref for the button element.
  * @property {'primary' | 'secondary' | 'text' | 'outline'} [variant] - The visual style of the button.
  */
@@ -112,7 +101,6 @@ interface ButtonProps extends Omit<
   'className'
 > {
   href?: never;
-  onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
   ref?: Ref<HTMLButtonElement>;
   target?: never;
   type?: ButtonType;
@@ -195,13 +183,13 @@ function Button({
   classes = {},
   endAdornment,
   href,
+  fullWidth = false,
   size = 'md',
   startAdornment,
   ref,
   target,
   type = 'button',
   variant = 'primary',
-  onClick,
   ...rest
 }: ButtonComponentProps): JSX.Element {
   const isStartAdornmentIcon = startAdornment && 'iconName' in startAdornment;
@@ -214,11 +202,12 @@ function Button({
       'mg:inline-flex mg:items-center mg:justify-between mg:font-body mg:text-primary mg:hover:text-primary-hover mg:hover:cursor-pointer',
       'mg:focus-visible:outline-1 mg:focus-visible:outline-offset-4 mg:focus-visible:outline-primary',
       {
-        'mg:px-1.5 mg:py-1 mg:rounded-sm': size === 'sm',
-        'mg:px-2.5 mg:py-2 mg:rounded': size === 'md',
-        'mg:px-3.5 mg:py-3 mg:rounded-lg': size === 'lg',
-        'mg:text-sm': size === 'sm' || size === 'md',
-        'mg:text-base': size === 'lg',
+        'mg:px-1.5 mg:py-1 mg:rounded-sm': size === 'sm' && !fullWidth,
+        'mg:px-2.5 mg:py-2 mg:rounded-md': size === 'md' && !fullWidth,
+        'mg:px-3.5 mg:py-3 mg:rounded-lg': size === 'lg' && !fullWidth,
+        'mg:py-3 mg:rounded-lg mg:w-full': fullWidth,
+        'mg:text-sm': (size === 'sm' || size === 'md') && !fullWidth,
+        'mg:text-base': size === 'lg' || fullWidth,
         'mg:bg-primary mg:hover:bg-primary-hover': variant === 'primary',
         'mg:bg-secondary mg:hover:bg-secondary-hover': variant === 'secondary',
         'mg:bg-transparent mg:hover:border-solid mg:hover:border-1 mg:hover:border-accent':
@@ -238,7 +227,6 @@ function Button({
         ref={ref as Ref<HTMLAnchorElement>}
         className={buttonClasses}
         href={href}
-        onClick={onClick as (event: MouseEvent<HTMLAnchorElement>) => void}
         target={target}
         {...(rest as AnchorHTMLAttributes<HTMLAnchorElement>)}
       >
@@ -254,7 +242,6 @@ function Button({
       ref={ref as Ref<HTMLButtonElement>}
       className={buttonClasses}
       type={type}
-      onClick={onClick as (event: MouseEvent<HTMLButtonElement>) => void}
       {...(rest as ButtonHTMLAttributes<HTMLButtonElement>)}
     >
       {startAdornment && renderAdornment(startAdornment)}
