@@ -147,6 +147,9 @@ const Carousel: FC<CarouselProps> = ({
 
   const isPaused = useRef(false);
 
+  const slidesLength = Children.toArray(children).length;
+  const isUniqueView = slidesLength === slidesPerView;
+
   const handleMouseEnter = () => {
     if (pauseOnHover) isPaused.current = true;
   };
@@ -188,6 +191,18 @@ const Carousel: FC<CarouselProps> = ({
       'mg:bg-secondary-subtle': index !== selectedIndex,
     });
 
+  const slideContainerClasses = classNames(
+    'mg:flex mg:items-stretch mg:justify-start mg:pb-3 mg:w-full',
+    {
+      'mg:gap-8': gap === 8 && isUniqueView,
+      'mg:gap-16': gap === 16 && isUniqueView,
+      'mg:gap-24': gap === 24 && isUniqueView,
+      'mg:gap-32': gap === 32 && isUniqueView,
+      'mg:gap-40': gap === 40 && isUniqueView,
+      'mg:gap-48': gap === 48 && isUniqueView,
+    },
+  );
+
   const slideClasses = classNames(
     'mg:h-full mg:flex mg:justify-center mg:items-stretch mg:w-9/10 mg:shrink-0',
     {
@@ -200,7 +215,7 @@ const Carousel: FC<CarouselProps> = ({
     },
   );
 
-  const arrangeSlides = (children: ReactNode) => {
+  const renderSlides = (children: ReactNode) => {
     const slides = Children.toArray(children);
     const numberOfViews = Math.ceil(slides.length / slidesPerView);
     const views: ReactNode[][] = new Array(Math.ceil(numberOfViews))
@@ -263,10 +278,8 @@ const Carousel: FC<CarouselProps> = ({
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <div className="mg:flex mg:items-stretch mg:justify-start mg:w-full">
-          {arrangeSlides(children)}
-        </div>
-        {showControls && (
+        <div className={slideContainerClasses}>{renderSlides(children)}</div>
+        {showControls && !isUniqueView && (
           <div className="mg:absolute mg:top-1/2 mg:left-0 mg:w-full mg:flex mg:items-center mg:justify-between mg:px-2 mg:pointer-events-none">
             <IconButton
               variant={controlsVariant}
@@ -287,7 +300,7 @@ const Carousel: FC<CarouselProps> = ({
           </div>
         )}
       </div>
-      {showDots && scrollSnaps.length > 1 && (
+      {showDots && scrollSnaps.length >= 1 && (
         <div className="mg:flex mg:justify-center mg:items-center mg:gap-2 mg:w-full mg:h-6">
           {scrollSnaps.map((_, index) => (
             <button
