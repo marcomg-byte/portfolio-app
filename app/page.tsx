@@ -80,7 +80,7 @@ export default function Home() {
           },
         ]}
       />
-      <div className="mg:flex mg:items-stretch mg:justify-center mg:w-full mg:gap-16 mg:p-6">
+      <div className="mg:flex mg:items-stretch mg:justify-center mg:w-full mg:gap-16 mg:overflow-x-scroll mg:p-6">
         {cards.map((card, index) => (
           <Card key={index}>
             <CardHeader
@@ -125,7 +125,8 @@ export default function Home() {
           transition="slide"
           enableSwipe
           slidesPerView={2}
-          slidesPerGroup={1}
+          slidesPerGroup={2}
+          loop
         >
           <Card>
             <CardMedia
@@ -172,120 +173,6 @@ export default function Home() {
               title="Portfolio App"
               subtitle="A personal portfolio website built with Next.js and TypeScript, showcasing my projects, skills, and experience in a clean and responsive design."
               actions={[
-                {
-                  label: 'See Code',
-                  href: 'https://github.com/marcomg-byte/offser',
-                  target: '_blank',
-                  startAdornment: {
-                    src: '/images/github.png',
-                    alt: 'GitHub Icon',
-                  },
-                  variant: 'secondary',
-                },
-              ]}
-            />
-          </Card>
-          <Card>
-            <CardMedia
-              src="/images/warehouse.jpg"
-              alt="Warehouse Image"
-              aspectRatio="4:3"
-            />
-            <CardFooter
-              title="Portfolio App 2"
-              subtitle="A personal portfolio website built with Next.js and TypeScript, showcasing my projects, skills, and experience in a clean and responsive design."
-              actions={[
-                {
-                  label: 'See Code',
-                  href: 'https://github.com/marcomg-byte/offser',
-                  target: '_blank',
-                  startAdornment: {
-                    src: '/images/github.png',
-                    alt: 'GitHub Icon',
-                  },
-                  variant: 'secondary',
-                },
-              ]}
-            />
-          </Card>
-          <Card>
-            <CardMedia
-              src="/images/pentest.jpg"
-              alt="Server Image"
-              aspectRatio="4:3"
-              priority="eager"
-            />
-            <CardFooter
-              title="Offser 2"
-              subtitle="A TypeScript-powered Express.js server for sending emails via SMTP with robust validation, template rendering, advanced logging, modular architecture, and comprehensive error handling"
-              actions={[
-                {
-                  label: 'See Package',
-                  href: 'https://www.npmjs.com/package/offser',
-                  target: '_blank',
-                  startAdornment: {
-                    src: '/images/npm.png',
-                    alt: 'NPM Icon',
-                  },
-                  variant: 'secondary',
-                },
-                {
-                  label: 'See Code',
-                  href: 'https://github.com/marcomg-byte/offser',
-                  target: '_blank',
-                  startAdornment: {
-                    src: '/images/github.png',
-                    alt: 'GitHub Icon',
-                  },
-                  variant: 'secondary',
-                },
-              ]}
-            />
-          </Card>
-          <Card>
-            <CardMedia
-              src="/images/warehouse.jpg"
-              alt="Warehouse Image"
-              aspectRatio="4:3"
-            />
-            <CardFooter
-              title="Portfolio App 3"
-              subtitle="A personal portfolio website built with Next.js and TypeScript, showcasing my projects, skills, and experience in a clean and responsive design."
-              actions={[
-                {
-                  label: 'See Code',
-                  href: 'https://github.com/marcomg-byte/offser',
-                  target: '_blank',
-                  startAdornment: {
-                    src: '/images/github.png',
-                    alt: 'GitHub Icon',
-                  },
-                  variant: 'secondary',
-                },
-              ]}
-            />
-          </Card>
-          <Card>
-            <CardMedia
-              src="/images/pentest.jpg"
-              alt="Server Image"
-              aspectRatio="4:3"
-              priority="eager"
-            />
-            <CardFooter
-              title="Offser 3"
-              subtitle="A TypeScript-powered Express.js server for sending emails via SMTP with robust validation, template rendering, advanced logging, modular architecture, and comprehensive error handling"
-              actions={[
-                {
-                  label: 'See Package',
-                  href: 'https://www.npmjs.com/package/offser',
-                  target: '_blank',
-                  startAdornment: {
-                    src: '/images/npm.png',
-                    alt: 'NPM Icon',
-                  },
-                  variant: 'secondary',
-                },
                 {
                   label: 'See Code',
                   href: 'https://github.com/marcomg-byte/offser',

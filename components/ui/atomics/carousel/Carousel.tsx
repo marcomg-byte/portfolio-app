@@ -41,45 +41,61 @@ type CarouselSlidesPerGroup = 1 | 2 | 3 | 4 | 5;
  */
 type CarouselTransition = 'fade' | 'slide';
 
+const smSlideBasisClasses: Record<CarouselSlidesPerView, string> = {
+  1: 'mg:sm:basis-[90%]',
+  2: 'mg:sm:basis-[45%]',
+  3: 'mg:sm:basis-[45%]',
+  4: 'mg:sm:basis-[45%]',
+  5: 'mg:sm:basis-[45%]',
+};
+
+const lgSlideBasisClasses: Record<CarouselSlidesPerView, string> = {
+  1: 'mg:lg:basis-[90%]',
+  2: 'mg:lg:basis-[45%]',
+  3: 'mg:lg:basis-[30%]',
+  4: 'mg:lg:basis-[22.5%]',
+  5: 'mg:lg:basis-[18%]',
+};
+
 /**
  * Props for the Carousel component.
- *
- * @property {'region' | 'listbox' | 'group'} [role] - ARIA role for accessibility.
- * @property {string} ['aria-label'] - ARIA label for accessibility.
- * @property {boolean} [autoPlay] - Enables automatic slide transition.
- * @property {ReactNode} [children] - Carousel slides as children.
- * @property {IconButtonVariant} [controlsVariant] - Variant for control buttons.
- * @property {number} [defaultIndex] - Initial slide index.
- * @property {boolean} [enableSwipe] - Enables swipe gesture navigation.
- * @property {CarouselGap} [gap] - Gap between slides (px).
- * @property {number} [interval] - Autoplay interval in ms.
- * @property {CarouselSlidesPerView} [slidesPerView] - Number of slides visible at once.
- * @property {CarouselSlidesPerGroup} [slidesPerGroup] - Number of slides to scroll per navigation.
- * @property {boolean} [loop] - Enables infinite looping.
- * @property {boolean} [pauseOnHover] - Pauses autoplay on hover.
- * @property {boolean} [showControls] - Shows navigation controls.
- * @property {boolean} [showDots] - Shows pagination dots.
- * @property {'fade' | 'slide'} [transition] - Transition animation type.
- * @property {number} [transitionDuration] - Transition duration in ms.
  */
 interface CarouselProps extends HTMLAttributes<HTMLDivElement> {
+  /** ARIA label for the carousel region. */
   'aria-label'?: string;
+  /** Automatically advances slides on an interval. */
   autoPlay?: boolean;
+  /** Slide content rendered inside the carousel. */
   children?: ReactNode;
+  /** Visual variant for the previous and next controls. */
   controlsVariant?: IconButtonVariant;
+  /** Initial slide index to show on mount. */
   defaultIndex?: number;
+  /** Enables swipe and drag gestures. */
   enableSwipe?: boolean;
+  /** Horizontal gap between slides, in pixels. */
   gap?: CarouselGap;
+  /** Autoplay interval, in milliseconds. */
   interval?: number;
+  /** Number of slides visible in the viewport. */
   slidesPerView?: CarouselSlidesPerView;
+  /** Number of slides advanced per navigation action. */
   slidesPerGroup?: CarouselSlidesPerGroup;
+  /** Enables looping when the carousel reaches either end. */
   loop?: boolean;
+  /** Pauses autoplay while the pointer is over the carousel. */
   pauseOnHover?: boolean;
+  /** ARIA role for the carousel wrapper. */
   role?: CarouselRole;
+  /** Ref forwarded to the outer carousel wrapper. */
   ref?: Ref<HTMLDivElement>;
+  /** Shows the previous and next navigation buttons. */
   showControls?: boolean;
+  /** Shows pagination dots below the carousel. */
   showDots?: boolean;
+  /** Transition style between slides. */
   transition?: CarouselTransition;
+  /** Transition duration used by Embla, in milliseconds. */
   transitionDuration?: number;
 }
 
@@ -132,6 +148,10 @@ const Carousel: FC<CarouselProps> = ({
   transitionDuration = 25,
   ...rest
 }) => {
+  const smSlidesPerGroup = Math.min(
+    slidesPerGroup,
+    2,
+  ) as CarouselSlidesPerGroup;
   const [emblaRef, emblaApi] = useEmblaCarousel(
     {
       loop,
@@ -139,6 +159,12 @@ const Carousel: FC<CarouselProps> = ({
       watchDrag: enableSwipe,
       slidesToScroll: slidesPerGroup,
       duration: Math.min(Math.max(transitionDuration, 20), 60),
+      breakpoints: {
+        '(max-width: 39.999rem)': { slidesToScroll: 1 },
+        '(min-width: 40rem) and (max-width: 63.999rem)': {
+          slidesToScroll: smSlidesPerGroup,
+        },
+      },
     },
     [...(transition === 'fade' ? [Fade()] : [])],
   );
@@ -146,6 +172,8 @@ const Carousel: FC<CarouselProps> = ({
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
 
   const isPaused = useRef(false);
+  const slidesLength = Children.toArray(children).length;
+  const hasMultipleSlides = slidesLength > 1;
 
   const handleMouseEnter = () => {
     if (pauseOnHover) isPaused.current = true;
@@ -155,10 +183,18 @@ const Carousel: FC<CarouselProps> = ({
     if (pauseOnHover) isPaused.current = false;
   };
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     if (!emblaApi) return;
-    emblaApi?.scrollNext();
-  };
+    const lastSnapIndex = emblaApi.scrollSnapList().length - 1;
+    const isLastSnap = emblaApi.selectedScrollSnap() === lastSnapIndex;
+
+    if (loop && isLastSnap) {
+      emblaApi.scrollTo(0);
+      return;
+    }
+
+    emblaApi.scrollNext();
+  }, [emblaApi, loop]);
 
   const handleSelect = useCallback(() => {
     if (!emblaApi) return;
@@ -172,11 +208,19 @@ const Carousel: FC<CarouselProps> = ({
 
   const handlePrev = () => {
     if (!emblaApi) return;
-    emblaApi?.scrollPrev();
+    const lastSnapIndex = emblaApi.scrollSnapList().length - 1;
+    const isFirstSnap = emblaApi.selectedScrollSnap() === 0;
+
+    if (loop && isFirstSnap) {
+      emblaApi.scrollTo(lastSnapIndex);
+      return;
+    }
+
+    emblaApi.scrollPrev();
   };
 
   const containerClasses = classNames(
-    'mg:relative mg:flex mg:justify-start mg:w-full mg:pt-6 mg:px-8 mg:overflow-hidden',
+    'mg:relative mg:flex mg:justify-start mg:w-full mg:pt-4 mg:px-3 mg:overflow-hidden mg:xs:px-4 mg:sm:pt-6 mg:sm:px-8',
     {
       'mg:cursor-grab': enableSwipe,
     },
@@ -188,39 +232,34 @@ const Carousel: FC<CarouselProps> = ({
       'mg:bg-secondary-subtle': index !== selectedIndex,
     });
 
-  const slideClasses = classNames(
-    'mg:h-full mg:flex mg:justify-center mg:items-stretch mg:w-9/10 mg:shrink-0',
+  const slideContainerClasses = classNames(
+    'mg:flex mg:items-stretch mg:justify-start mg:pb-3 mg:w-full',
     {
-      'mg:gap-8': gap === 8,
-      'mg:gap-16': gap === 16,
-      'mg:gap-24': gap === 24,
-      'mg:gap-32': gap === 32,
-      'mg:gap-40': gap === 40,
-      'mg:gap-48': gap === 48,
+      'mg:gap-1 mg:pl-1': gap === 8,
+      'mg:gap-2 mg:pl-2': gap === 16,
+      'mg:gap-3 mg:pl-3': gap === 24,
+      'mg:gap-4 mg:pl-4': gap === 32,
+      'mg:gap-5 mg:pl-5': gap === 40,
+      'mg:gap-6 mg:pl-6': gap === 48,
     },
   );
 
-  const arrangeSlides = (children: ReactNode) => {
+  const slideClasses = classNames(
+    'mg:h-full mg:flex mg:justify-center mg:items-stretch mg:min-w-0 mg:basis-[90%] mg:p-2 mg:shrink-0',
+    smSlideBasisClasses[slidesPerView],
+    lgSlideBasisClasses[slidesPerView],
+  );
+
+  const slideInnerClasses = classNames('mg:flex mg:w-full', {
+    'mg:justify-center': slidesPerView > 1,
+  });
+
+  const renderSlides = (children: ReactNode) => {
     const slides = Children.toArray(children);
-    const numberOfViews = Math.ceil(slides.length / slidesPerView);
-    const views: ReactNode[][] = new Array(Math.ceil(numberOfViews))
-      .fill(null)
-      .map(() => []);
-    let viewCount = 0;
 
-    if (slides.length === 0) return [];
-    if (views.length === 1) return slides;
-
-    slides.forEach((slide, index) => {
-      if (index % slidesPerView === 0 && index > 0) {
-        viewCount++;
-      }
-      views[viewCount].push(slide);
-    });
-
-    return views.map((view, index) => (
-      <div key={`view-${index}`} className={slideClasses}>
-        {view}
+    return slides.map((slide, index) => (
+      <div key={`slide-${index}`} className={slideClasses}>
+        <div className={slideInnerClasses}>{slide}</div>
       </div>
     ));
   };
@@ -237,13 +276,20 @@ const Carousel: FC<CarouselProps> = ({
   }, [emblaApi, handleSelect]);
 
   useEffect(() => {
+    if (!emblaApi) return;
+    emblaApi.reInit();
+    setScrollSnaps(emblaApi.scrollSnapList());
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, [children, emblaApi, slidesPerGroup, slidesPerView, smSlidesPerGroup]);
+
+  useEffect(() => {
     if (!autoPlay || !emblaApi) return;
     const tick = () => {
-      if (!isPaused.current) emblaApi.scrollNext();
+      if (!isPaused.current) handleNext();
     };
     const timer = setInterval(tick, interval);
     return () => clearInterval(timer);
-  }, [autoPlay, emblaApi, interval]);
+  }, [autoPlay, emblaApi, handleNext, interval]);
 
   useEffect(() => {
     setScrollSnaps(emblaApi?.scrollSnapList() || []);
@@ -263,11 +309,9 @@ const Carousel: FC<CarouselProps> = ({
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <div className="mg:flex mg:items-stretch mg:justify-start mg:w-full">
-          {arrangeSlides(children)}
-        </div>
-        {showControls && (
-          <div className="mg:absolute mg:top-1/2 mg:left-0 mg:w-full mg:flex mg:items-center mg:justify-between mg:px-2 mg:pointer-events-none">
+        <div className={slideContainerClasses}>{renderSlides(children)}</div>
+        {showControls && hasMultipleSlides && (
+          <div className="mg:absolute mg:top-1/2 mg:left-0 mg:w-full mg:flex mg:items-center mg:justify-between mg:px-1 mg:pointer-events-none mg:sm:px-2">
             <IconButton
               variant={controlsVariant}
               color="secondary"
@@ -287,7 +331,7 @@ const Carousel: FC<CarouselProps> = ({
           </div>
         )}
       </div>
-      {showDots && scrollSnaps.length > 1 && (
+      {showDots && scrollSnaps.length >= 1 && (
         <div className="mg:flex mg:justify-center mg:items-center mg:gap-2 mg:w-full mg:h-6">
           {scrollSnaps.map((_, index) => (
             <button
