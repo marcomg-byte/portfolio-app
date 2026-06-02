@@ -158,10 +158,18 @@ const Carousel: FC<CarouselProps> = ({
     if (pauseOnHover) isPaused.current = false;
   };
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     if (!emblaApi) return;
-    emblaApi?.scrollNext();
-  };
+    const lastSnapIndex = emblaApi.scrollSnapList().length - 1;
+    const isLastSnap = emblaApi.selectedScrollSnap() === lastSnapIndex;
+
+    if (loop && isLastSnap) {
+      emblaApi.scrollTo(0);
+      return;
+    }
+
+    emblaApi.scrollNext();
+  }, [emblaApi, loop]);
 
   const handleSelect = useCallback(() => {
     if (!emblaApi) return;
@@ -175,7 +183,15 @@ const Carousel: FC<CarouselProps> = ({
 
   const handlePrev = () => {
     if (!emblaApi) return;
-    emblaApi?.scrollPrev();
+    const lastSnapIndex = emblaApi.scrollSnapList().length - 1;
+    const isFirstSnap = emblaApi.selectedScrollSnap() === 0;
+
+    if (loop && isFirstSnap) {
+      emblaApi.scrollTo(lastSnapIndex);
+      return;
+    }
+
+    emblaApi.scrollPrev();
   };
 
   const containerClasses = classNames(
@@ -254,11 +270,11 @@ const Carousel: FC<CarouselProps> = ({
   useEffect(() => {
     if (!autoPlay || !emblaApi) return;
     const tick = () => {
-      if (!isPaused.current) emblaApi.scrollNext();
+      if (!isPaused.current) handleNext();
     };
     const timer = setInterval(tick, interval);
     return () => clearInterval(timer);
-  }, [autoPlay, emblaApi, interval]);
+  }, [autoPlay, emblaApi, handleNext, interval]);
 
   useEffect(() => {
     setScrollSnaps(emblaApi?.scrollSnapList() || []);

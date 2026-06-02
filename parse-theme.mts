@@ -135,6 +135,14 @@ interface Typography {
 type BorderWidthScale = Record<string, string>;
 
 /**
+ * BreakpointScale: Defines the viewport min-width scale used by Tailwind v4
+ * responsive variants.
+ *
+ * Tailwind v4 consumes these through `--breakpoint-*` variables in `@theme`.
+ */
+type BreakpointScale = Record<string, string>;
+
+/**
  * @interface
  * Theme: Contains the semantic palette for both light and dark modes.
  * @property colors - The semantic color palette for the theme, mapping to a Palette of light and dark modes.
@@ -167,10 +175,12 @@ interface Theme {
   spacing: SpacingScale;
   typography: Typography;
   borderWidth: BorderWidthScale;
+  breakpoints: BreakpointScale;
   [key: string]:
     | string
     | { palette: Palette }
     | SpacingScale
+    | BreakpointScale
     | BorderWidthScale
     | Record<string, Record<string, string>>
     | Typography;
@@ -372,6 +382,7 @@ function categoryToThemeNamespace(category: string): string {
  * @param mode - The semantic color mapping for the current theme mode (light or dark).
  * @param spacing - The spacing scale for the theme.
  * @param borderWidths - The border width scale for the theme.
+ * @param breakpoints - The breakpoint scale for Tailwind responsive variants.
  *
  * @example
  * appendThemeInline(container, {
@@ -393,6 +404,7 @@ function appendThemeInline(
   mode: Mode,
   spacing: SpacingScale,
   borderWidths: BorderWidthScale,
+  breakpoints: BreakpointScale,
   typography?: { fontSize?: Record<string, string> },
 ): void {
   const themeRule = postcss.atRule({ name: 'theme', params: 'inline' });
@@ -427,6 +439,15 @@ function appendThemeInline(
       );
     },
   );
+
+  Object.entries(breakpoints).forEach(([breakpointName, breakpointValue]) => {
+    themeRule.append(
+      postcss.decl({
+        prop: `--breakpoint-${breakpointName}`,
+        value: breakpointValue,
+      }),
+    );
+  });
 
   Object.entries(spacing).forEach(([spacingName, spacingValue]) => {
     if (spacingName !== 'space-unit') {
@@ -529,6 +550,7 @@ function generateTheme(tokens: Tokens): string {
     tokens.theme.colors.palette.light,
     tokens.theme.spacing,
     tokens.theme.borderWidth,
+    tokens.theme.breakpoints,
     tokens.theme.typography,
   );
 

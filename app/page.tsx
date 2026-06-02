@@ -126,7 +126,6 @@ export default function Home() {
           enableSwipe
           slidesPerView={2}
           slidesPerGroup={2}
-          loop
         >
           <Card>
             <CardMedia
