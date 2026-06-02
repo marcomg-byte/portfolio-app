@@ -80,7 +80,7 @@ export default function Home() {
           },
         ]}
       />
-      <div className="mg:flex mg:items-stretch mg:justify-center mg:w-full mg:gap-16 mg:p-6">
+      <div className="mg:flex mg:items-stretch mg:justify-center mg:w-full mg:gap-16 mg:overflow-x-scroll mg:p-6">
         {cards.map((card, index) => (
           <Card key={index}>
             <CardHeader
@@ -126,6 +126,7 @@ export default function Home() {
           enableSwipe
           slidesPerView={2}
           slidesPerGroup={2}
+          loop
         >
           <Card>
             <CardMedia
