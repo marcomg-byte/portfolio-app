@@ -3,49 +3,75 @@ import type { FC, HTMLAttributes, ReactNode } from 'react';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import classNames from 'classnames';
+import { twMerge } from 'tailwind-merge';
 import {
   faChevronLeft,
   faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 import NextImage from 'next/image';
 import { Button, IconButton, Typography } from '@/components/ui';
-import type { HeadingVariant, ParagraphVariant } from '@/components/ui';
+import type { HeadingVariant } from '@/components/ui';
+
+/**
+ * Optional class overrides for the hero layout regions.
+ */
+interface HeaderClasses {
+  /** Class applied to the header action row. */
+  action?: string;
+  /** Class applied to the overlay controls wrapper. */
+  controls?: string;
+  /** Class applied to each pagination dot. */
+  dot?: string;
+  /** Class applied to the pagination dots container. */
+  dotsContainer?: string;
+  /** Class applied to the root hero container. */
+  root?: string;
+  /** Class applied to each hero slide. */
+  slide?: string;
+  /** Class applied to the slide viewport wrapper. */
+  viewport?: string;
+  /** Classes applied to header overlay regions. */
+  header?: {
+    /** Class applied to the main header overlay container. */
+    root?: string;
+    /** Class applied to the header title. */
+    title?: string;
+  };
+}
 
 /**
  * Represents a link/button in the Hero section.
- * @property {string} href - The URL the link points to.
- * @property {string} label - The display text for the link.
- * @property {'primary' | 'secondary' | 'text' | 'outline'} [variant] - Visual style of the link/button.
  */
 interface HeroLink {
+  /** Destination URL for the hero action. */
   href: string;
+  /** Visible label for the action. */
   label: string;
+  /** Optional visual style for the action button. */
   variant?: 'primary' | 'secondary' | 'text' | 'outline';
 }
 
 /**
  * Header content for the Hero section, including title, description, and links.
- * @property {string} [description] - Optional description text.
- * @property {HeroLink[]} [links] - Optional array of action links/buttons.
- * @property {ReactNode} [title] - Optional title content (can be string or JSX).
- * @property {ParagraphVariant} [descriptionVariant] - Typography variant for the description.
- * @property {HeadingVariant} [variant] - Typography variant for the title.
  */
 interface HeroHeader {
-  description?: string;
+  /** Optional description text rendered below the title. */
+  description?: ReactNode;
+  /** Optional array of action links or buttons shown in the header. */
   links?: HeroLink[];
-  title?: ReactNode;
-  descriptionVariant?: ParagraphVariant;
+  /** Optional title content, either plain text or JSX. */
+  title?: string;
+  /** Typography variant used for the title. */
   variant?: HeadingVariant;
 }
 
 /**
  * Represents an image displayed in the Hero carousel.
- * @property {string} src - Image source URL.
- * @property {string} alt - Alternative text for accessibility.
  */
 interface HeroImage {
+  /** Source path or URL for the hero image. */
   src: string;
+  /** Alternative text describing the hero image. */
   alt: string;
 }
 
@@ -72,6 +98,22 @@ const heightClasses: Record<HeroHeight, string> = {
 };
 
 /**
+ * Maps HeroHeight values to responsive Tailwind CSS height classes.
+ * @property {'sm'} sm - Small responsive height class.
+ * @property {'md'} md - Medium responsive height class.
+ * @property {'lg'} lg - Large responsive height class.
+ * @property {'xl'} xl - Extra large responsive height class.
+ * @property {'full'} full - Full-height responsive class.
+ */
+const responsiveHeightClasses: Record<HeroHeight, string> = {
+  sm: 'mg:h-[260px] mg:sm:h-[300px]',
+  md: 'mg:h-[340px] mg:sm:h-[450px]',
+  lg: 'mg:h-[420px] mg:sm:h-[600px]',
+  xl: 'mg:h-[520px] mg:sm:h-[750px]',
+  full: 'mg:min-h-svh mg:h-svh',
+};
+
+/**
  * Allowed aspect ratio options for the Hero component.
  * @type {'16:9'|'4:3'|'1:1'}
  */
@@ -90,41 +132,54 @@ const aspectRatioClasses: Record<HeroAspectRatio, string> = {
 };
 
 /**
- * Props for the Hero component, configuring layout, images, header, and carousel behavior.
- *
- * @property {HeroAspectRatio} [aspectRatio] - Aspect ratio of the hero image area.
- * @property {boolean} [autoPlay] - Enables automatic slide transition.
- * @property {boolean} [enableSwipe] - Enables swipe gesture navigation.
- * @property {HeroHeader} [header] - Header content (title, description, links).
- * @property {HeroHeight} [height] - Height of the hero section.
- * @property {HeroImage[]} [images] - Array of images to display in the carousel.
- * @property {number} [interval] - Autoplay interval in ms.
- * @property {boolean} [lazyLoad] - Enables lazy loading for images.
- * @property {boolean} [loop] - Enables infinite looping of slides.
- * @property {'cover'|'contain'|'fill'|'none'|'scale-down'} [objectFit] - CSS object-fit for images.
- * @property {boolean} [showControls] - Shows navigation controls.
- * @property {boolean} [pauseOnHover] - Pauses autoplay on hover.
- * @property {boolean} [responsive] - Makes the hero section responsive.
- * @property {boolean} [showDots] - Shows pagination dots.
- * @property {'fade'|'slide'} [transition] - Transition animation type.
- * @property {number} [transitionDuration] - Transition duration in ms.
+ * Maps HeroAspectRatio values to responsive Tailwind CSS aspect ratio classes.
+ * @property {'16:9'} '16:9' - 16:9 responsive aspect ratio class.
+ * @property {'4:3'} '4:3' - 4:3 responsive aspect ratio class.
+ * @property {'1:1'} '1:1' - 1:1 responsive aspect ratio class.
  */
-interface HeroProps extends HTMLAttributes<HTMLDivElement> {
+const responsiveAspectRatioClasses: Record<HeroAspectRatio, string> = {
+  '16:9': 'mg:aspect-[4/5] mg:sm:aspect-[16/9]',
+  '4:3': 'mg:aspect-[4/5] mg:sm:aspect-[4/3]',
+  '1:1': 'mg:aspect-square',
+};
+
+/**
+ * Props for the Hero component, configuring layout, images, header, and carousel behavior.
+ */
+interface HeroProps extends Omit<HTMLAttributes<HTMLDivElement>, 'className'> {
+  /** Aspect ratio used when the hero is rendered as an image container. */
   aspectRatio?: HeroAspectRatio;
+  /** Automatically advances between images on a timer. */
   autoPlay?: boolean;
+  /** Optional class overrides for hero layout regions. */
+  classes?: HeaderClasses;
+  /** Enables swipe and drag gestures for the hero carousel. */
   enableSwipe?: boolean;
+  /** Header content rendered over the hero images. */
   header?: HeroHeader;
+  /** Fixed hero height preset used when `aspectRatio` is not provided. */
   height?: HeroHeight;
+  /** Images displayed inside the hero carousel. */
   images?: HeroImage[];
+  /** Autoplay interval in milliseconds. */
   interval?: number;
+  /** Uses lazy loading for hero images instead of eager loading. */
   lazyLoad?: boolean;
+  /** Enables looping when the carousel reaches either end. */
   loop?: boolean;
+  /** CSS object-fit value used for the hero images. */
   objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
+  /** Shows the previous and next navigation controls. */
   showControls?: boolean;
+  /** Pauses autoplay while the pointer is over the hero. */
   pauseOnHover?: boolean;
+  /** Enables the mobile-first responsive layout. */
   responsive?: boolean;
+  /** Shows pagination dots below the hero. */
   showDots?: boolean;
+  /** Transition style used between hero images. */
   transition?: 'fade' | 'slide';
+  /** Transition duration in milliseconds. */
   transitionDuration?: number;
 }
 
@@ -174,6 +229,7 @@ interface HeroProps extends HTMLAttributes<HTMLDivElement> {
 const Hero: FC<HeroProps> = ({
   aspectRatio,
   autoPlay = false,
+  classes = {},
   enableSwipe = true,
   header = { links: [], variant: 'h2' },
   height = 'md',
@@ -230,30 +286,84 @@ const Hero: FC<HeroProps> = ({
   };
 
   const imageContainerClasses = aspectRatio
-    ? aspectRatioClasses[aspectRatio]
-    : heightClasses[height];
+    ? responsive
+      ? responsiveAspectRatioClasses[aspectRatio]
+      : aspectRatioClasses[aspectRatio]
+    : responsive
+      ? responsiveHeightClasses[height]
+      : heightClasses[height];
 
-  const containerClasses = classNames(
-    'mg:relative mg:overflow-hidden',
-    responsive && 'mg:w-full',
-    enableSwipe && 'mg:cursor-grab',
+  const containerClasses = twMerge(
+    classNames(
+      'mg:relative mg:overflow-hidden mg:isolate',
+      responsive && 'mg:w-full',
+      enableSwipe && 'mg:cursor-grab',
+    ),
+    classes?.root,
+  );
+
+  const viewportClasses = twMerge(
+    classNames('mg:flex', {
+      'mg:touch-pan-y': enableSwipe,
+    }),
+    classes?.viewport,
   );
 
   const dotClasses = (index: number) =>
-    classNames(
-      'mg:w-2 mg:h-2 mg:rounded-full mg:transition-colors mg:hover:cursor-pointer',
-      {
-        'mg:bg-secondary': index === selectedIndex,
-        'mg:bg-secondary-subtle': index !== selectedIndex,
-      },
+    twMerge(
+      classNames(
+        'mg:w-2 mg:h-2 mg:rounded-full mg:transition-colors mg:hover:cursor-pointer',
+        {
+          'mg:bg-secondary': index === selectedIndex,
+          'mg:bg-secondary-subtle': index !== selectedIndex,
+        },
+      ),
+      classes?.dot,
     );
 
-  const slideClasses = classNames(
-    'mg:flex-[0_0_100%] mg:relative',
-    imageContainerClasses,
-    {
+  const slideClasses = twMerge(
+    classNames('mg:flex-[0_0_100%] mg:relative', imageContainerClasses, {
       'mg:transition-opacity': transition === 'fade',
-    },
+    }),
+    classes?.slide,
+  );
+
+  const headerClasses = twMerge(
+    classNames(
+      'mg:absolute mg:z-10 mg:flex mg:flex-col',
+      responsive
+        ? 'mg:inset-x-4 mg:top-1/2 mg:max-w-[calc(100%-2rem)] mg:-translate-y-1/2 mg:sm:inset-x-auto mg:sm:top-1/4 mg:sm:left-1/6 mg:sm:max-w-[min(72%,48rem)] mg:sm:translate-y-0 mg:gap-1 mg:sm:gap-2'
+        : 'mg:top-1/4 mg:left-1/6 mg:gap-2',
+    ),
+    classes?.header?.root,
+  );
+
+  const actionClasses = twMerge(
+    classNames(
+      'mg:flex mg:justify-start',
+      responsive
+        ? 'mg:items-start mg:gap-2 mg:xs:flex-row mg:xs:flex-wrap mg:sm:items-center mg:sm:gap-4'
+        : 'mg:items-center mg:gap-4',
+    ),
+    classes?.action,
+  );
+
+  const controlsClasses = twMerge(
+    classNames(
+      'mg:absolute mg:left-0 mg:z-10 mg:flex mg:w-full mg:items-center mg:justify-between mg:pointer-events-none',
+      responsive
+        ? 'mg:top-1/2 mg:-translate-y-1/2 mg:px-2 mg:sm:top-1/3 mg:sm:translate-y-0 mg:sm:px-6'
+        : 'mg:top-1/3 mg:px-6',
+    ),
+    classes?.controls,
+  );
+
+  const dotsContainerClasses = twMerge(
+    classNames(
+      'mg:absolute mg:left-1/2 mg:z-10 mg:flex mg:-translate-x-1/2 mg:gap-2',
+      responsive ? 'mg:bottom-3 mg:sm:bottom-4' : 'mg:bottom-4',
+    ),
+    classes?.dotsContainer,
   );
 
   useEffect(() => {
@@ -284,7 +394,7 @@ const Hero: FC<HeroProps> = ({
       onMouseLeave={handleMouseLeave}
       {...(rest as HTMLAttributes<HTMLDivElement>)}
     >
-      <div className="mg:flex">
+      <div className={viewportClasses}>
         {images.map((image, index) => (
           <div
             key={`hero-image-${index}`}
@@ -308,18 +418,18 @@ const Hero: FC<HeroProps> = ({
           </div>
         ))}
       </div>
-      <div className="mg:absolute mg:top-1/4 mg:left-1/6 mg:flex mg:flex-col mg:gap-4">
-        {header.title && (
-          <Typography color="inverse" variant={header?.variant}>
+      <div className={headerClasses}>
+        {header?.title && (
+          <Typography
+            className={classes?.header?.title}
+            color="white"
+            variant={header?.variant}
+          >
             {header.title}
           </Typography>
         )}
-        {header?.description && (
-          <Typography color="inverse" variant={header?.descriptionVariant}>
-            {header?.description}
-          </Typography>
-        )}
-        <div className="mg:flex mg:justify-start mg:items-center mg:gap-4">
+        {header?.description}
+        <div className={actionClasses}>
           {header?.links?.map((link, index) => (
             <Button
               key={`hero-link-${index}`}
@@ -334,11 +444,13 @@ const Hero: FC<HeroProps> = ({
         </div>
       </div>
       {showControls && images.length > 1 && (
-        <div className="mg:absolute mg:top-1/3 mg:w-full mg:flex mg:items-center mg:justify-between mg:px-6">
+        <div className={controlsClasses}>
           <IconButton
             variant="filled"
             color="secondary"
-            classes={{ iconButton: 'mg:animate-slide-in-left' }}
+            classes={{
+              iconButton: 'mg:pointer-events-auto mg:animate-slide-in-left',
+            }}
             onClick={handlePrev}
           >
             {faChevronLeft}
@@ -346,7 +458,9 @@ const Hero: FC<HeroProps> = ({
           <IconButton
             variant="filled"
             color="secondary"
-            classes={{ iconButton: 'mg:animate-slide-in-right' }}
+            classes={{
+              iconButton: 'mg:pointer-events-auto mg:animate-slide-in-right',
+            }}
             onClick={handleNext}
           >
             {faChevronRight}
@@ -354,7 +468,7 @@ const Hero: FC<HeroProps> = ({
         </div>
       )}
       {showDots && scrollSnaps.length > 1 && (
-        <div className="mg:absolute mg:bottom-4 mg:left-1/2 mg:-translate-x-1/2 mg:flex mg:gap-2">
+        <div className={dotsContainerClasses}>
           {scrollSnaps.map((_, index) => (
             <button
               key={`hero-dot-${index}`}

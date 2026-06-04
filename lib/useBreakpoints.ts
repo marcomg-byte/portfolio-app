@@ -3,10 +3,9 @@ import { useSyncExternalStore } from 'react';
 import tokens from '@/tokens.json';
 
 /**
- * Viewport breakpoint names recognized by the app, plus the `base` range
- * below the smallest configured breakpoint.
+ * Viewport breakpoint names recognized by the app.
  */
-type Breakpoint = keyof typeof tokens.theme.breakpoints | 'base';
+type Breakpoint = keyof typeof tokens.theme.breakpoints;
 
 /**
  * Mapping of breakpoint names to their min-width values.
@@ -14,14 +13,19 @@ type Breakpoint = keyof typeof tokens.theme.breakpoints | 'base';
 type Breakpoints = Record<Breakpoint, string>;
 
 /**
- * Breakpoint scale loaded from the theme tokens and extended with `base`.
+ * Breakpoint scale loaded from the theme tokens.
  */
 const breakpoints: Breakpoints = tokens.theme.breakpoints as Breakpoints;
 
 /**
  * Ordered breakpoint names used to compare viewport ranges.
  */
-const breakpointsKeys = Object.keys(breakpoints);
+const breakpointsKeys = Object.keys(breakpoints) as Breakpoint[];
+
+/**
+ * Default breakpoint used before the browser viewport can be measured.
+ */
+const defaultBreakpoint = breakpointsKeys[0];
 
 /**
  * Converts a rem value to pixels using the root font size.
@@ -41,12 +45,12 @@ function remToPx(value: string): number {
 /**
  * Resolves the current viewport breakpoint from the window width.
  *
- * @returns The active breakpoint name, or `base` below the first breakpoint.
+ * @returns The active breakpoint name from the configured breakpoint scale.
  */
 function getCurrentBreakpoint(): Breakpoint {
-  if (typeof window === 'undefined') return 'base';
+  if (typeof window === 'undefined') return defaultBreakpoint;
 
-  let current: Breakpoint = 'base';
+  let current: Breakpoint = defaultBreakpoint;
 
   Object.entries(breakpoints).forEach(([breakpoint, value]) => {
     if (window.innerWidth >= remToPx(value)) {
@@ -114,7 +118,7 @@ function useBreakpoints(): {
   const breakpoint: Breakpoint = useSyncExternalStore(
     subscribeToViewport,
     getCurrentBreakpoint,
-    () => 'base',
+    () => defaultBreakpoint,
   );
   const breakpointIndex = breakpointsKeys.indexOf(breakpoint);
 
