@@ -43,6 +43,15 @@ interface ButtonImage {
 type ButtonType = 'button' | 'submit' | 'reset';
 
 /**
+ * Size options for the Button component.
+ *
+ * - 'sm': Small
+ * - 'md': Medium
+ * - 'lg': Large
+ */
+type ButtonSize = 'sm' | 'md' | 'lg';
+
+/**
  * Visual style variants for the Button component.
  *
  * - 'primary': Main action button
@@ -53,6 +62,25 @@ type ButtonType = 'button' | 'submit' | 'reset';
 type ButtonVariant = 'primary' | 'secondary' | 'text' | 'outline';
 
 /**
+ * Maps ButtonSize values to fixed spacing, radius, and text size classes.
+ */
+const sizeClasses: Record<ButtonSize, string> = {
+  sm: 'mg:px-1.5 mg:py-1 mg:rounded-sm mg:text-sm',
+  md: 'mg:px-2.5 mg:py-2 mg:rounded-md mg:text-sm',
+  lg: 'mg:px-3.5 mg:py-3 mg:rounded-lg mg:text-base',
+};
+
+/**
+ * Maps ButtonSize values to mobile-first spacing, radius, and text size classes.
+ * Larger breakpoints preserve the fixed size classes.
+ */
+const responsiveSizeClasses: Record<ButtonSize, string> = {
+  sm: 'mg:px-1.5 mg:py-1 mg:rounded-sm mg:text-sm',
+  md: 'mg:px-2 mg:py-1.5 mg:rounded-md mg:text-sm mg:sm:px-2.5 mg:sm:py-2',
+  lg: 'mg:px-2.5 mg:py-2 mg:rounded-md mg:text-sm mg:sm:px-3.5 mg:sm:py-3 mg:sm:rounded-lg mg:sm:text-base',
+};
+
+/**
  * Common props for the Button component, shared by both anchor and button variants.
  */
 interface BaseProps {
@@ -60,7 +88,8 @@ interface BaseProps {
   classes?: ButtonClasses;
   endAdornment?: Adornment;
   fullWidth?: boolean;
-  size?: 'sm' | 'md' | 'lg';
+  responsive?: boolean;
+  size?: ButtonSize;
   startAdornment?: Adornment;
   ref?: Ref<HTMLAnchorElement>;
   variant?: ButtonVariant;
@@ -184,6 +213,7 @@ function Button({
   endAdornment,
   href,
   fullWidth = false,
+  responsive = true,
   size = 'md',
   startAdornment,
   ref,
@@ -196,18 +226,19 @@ function Button({
   const isEndAdornmentIcon = endAdornment && 'iconName' in endAdornment;
   const isStartAdornmentImage = startAdornment && 'src' in startAdornment;
   const isEndAdornmentImage = endAdornment && 'src' in endAdornment;
+  const buttonSizeClasses = responsive
+    ? responsiveSizeClasses[size]
+    : sizeClasses[size];
+  const fullWidthClasses = responsive
+    ? 'mg:w-full mg:py-2 mg:rounded-lg mg:text-sm mg:sm:py-3 mg:sm:text-base'
+    : 'mg:w-full mg:py-3 mg:rounded-lg mg:text-base';
 
   const buttonClasses = twMerge(
     classNames(
       'mg:inline-flex mg:items-center mg:justify-between mg:font-body mg:text-primary mg:hover:text-primary-hover mg:hover:cursor-pointer',
       'mg:focus-visible:outline-1 mg:focus-visible:outline-offset-4 mg:focus-visible:outline-primary',
+      fullWidth ? fullWidthClasses : buttonSizeClasses,
       {
-        'mg:px-1.5 mg:py-1 mg:rounded-sm': size === 'sm' && !fullWidth,
-        'mg:px-2.5 mg:py-2 mg:rounded-md': size === 'md' && !fullWidth,
-        'mg:px-3.5 mg:py-3 mg:rounded-lg': size === 'lg' && !fullWidth,
-        'mg:py-3 mg:rounded-lg mg:w-full': fullWidth,
-        'mg:text-sm': (size === 'sm' || size === 'md') && !fullWidth,
-        'mg:text-base': size === 'lg' || fullWidth,
         'mg:bg-primary mg:hover:bg-primary-hover': variant === 'primary',
         'mg:bg-secondary mg:hover:bg-secondary-hover': variant === 'secondary',
         'mg:bg-transparent mg:hover:border-solid mg:hover:border-1 mg:hover:border-accent':

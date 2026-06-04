@@ -3,6 +3,7 @@ import type { FC, HTMLAttributes, ReactNode, Ref } from 'react';
 import { Children, useState, useEffect, useRef, useCallback } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Fade from 'embla-carousel-fade';
+import { twMerge } from 'tailwind-merge';
 import classNames from 'classnames';
 import {
   faChevronLeft,
@@ -10,6 +11,30 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { IconButton } from '../buttons';
 import type { IconButtonVariant } from '../buttons';
+
+/**
+ * Optional class overrides for the carousel layout regions.
+ */
+interface CarouselClasses {
+  /** Class applied to the outer carousel container. */
+  container?: string;
+  /** Class applied to the carousel controls. */
+  controls?: string;
+  /** Class applied to the controls wrapper. */
+  controlsContainer?: string;
+  /** Class applied to each pagination dot. */
+  dot?: string;
+  /** Class applied to the pagination dots container. */
+  dotsContainer?: string;
+  /** Class applied to the root carousel wrapper. */
+  root?: string;
+  /** Class applied to each carousel slide. */
+  slide?: string;
+  /** Class applied to the slides container. */
+  slidesContainer?: string;
+  /** Class applied to the inner slide content wrapper. */
+  slideInner?: string;
+}
 
 /**
  * Gap size (in px) between carousel slides.
@@ -41,6 +66,9 @@ type CarouselSlidesPerGroup = 1 | 2 | 3 | 4 | 5;
  */
 type CarouselTransition = 'fade' | 'slide';
 
+/**
+ * Maps CarouselSlidesPerView values to small breakpoint slide basis classes.
+ */
 const smSlideBasisClasses: Record<CarouselSlidesPerView, string> = {
   1: 'mg:sm:basis-[90%]',
   2: 'mg:sm:basis-[45%]',
@@ -49,6 +77,9 @@ const smSlideBasisClasses: Record<CarouselSlidesPerView, string> = {
   5: 'mg:sm:basis-[45%]',
 };
 
+/**
+ * Maps CarouselSlidesPerView values to large breakpoint slide basis classes.
+ */
 const lgSlideBasisClasses: Record<CarouselSlidesPerView, string> = {
   1: 'mg:lg:basis-[90%]',
   2: 'mg:lg:basis-[45%]',
@@ -60,13 +91,18 @@ const lgSlideBasisClasses: Record<CarouselSlidesPerView, string> = {
 /**
  * Props for the Carousel component.
  */
-interface CarouselProps extends HTMLAttributes<HTMLDivElement> {
+interface CarouselProps extends Omit<
+  HTMLAttributes<HTMLDivElement>,
+  'className'
+> {
   /** ARIA label for the carousel region. */
   'aria-label'?: string;
   /** Automatically advances slides on an interval. */
   autoPlay?: boolean;
   /** Slide content rendered inside the carousel. */
   children?: ReactNode;
+  /** Optional class overrides for carousel layout regions. */
+  classes?: CarouselClasses;
   /** Visual variant for the previous and next controls. */
   controlsVariant?: IconButtonVariant;
   /** Initial slide index to show on mount. */
@@ -132,6 +168,7 @@ const Carousel: FC<CarouselProps> = ({
   autoPlay = false,
   children,
   controlsVariant = 'filled',
+  classes = {},
   defaultIndex = 0,
   enableSwipe = true,
   gap = 16,
@@ -219,40 +256,72 @@ const Carousel: FC<CarouselProps> = ({
     emblaApi.scrollPrev();
   };
 
-  const containerClasses = classNames(
-    'mg:relative mg:flex mg:justify-start mg:w-full mg:pt-4 mg:px-3 mg:overflow-hidden mg:xs:px-4 mg:sm:pt-6 mg:sm:px-8',
-    {
-      'mg:cursor-grab': enableSwipe,
-    },
+  const rootClasses = twMerge(
+    'mg:flex mg:flex-col mg:justify-center mg:items-center mg:w-full',
+    classes?.root,
+  );
+
+  const containerClasses = twMerge(
+    classNames(
+      'mg:relative mg:flex mg:justify-start mg:w-full mg:pt-4 mg:px-3 mg:overflow-hidden mg:xs:px-4 mg:sm:pt-6 mg:sm:px-8',
+      {
+        'mg:cursor-grab': enableSwipe,
+      },
+    ),
+    classes?.container,
+  );
+
+  const controlsContainerClasses = twMerge(
+    'mg:absolute mg:top-1/2 mg:left-0 mg:w-full mg:flex mg:items-center mg:justify-between mg:px-1 mg:pointer-events-none mg:sm:px-2',
+    classes?.controlsContainer,
+  );
+
+  const controlsClasses = classNames(
+    'mg:pointer-events-auto',
+    classes?.controls,
   );
 
   const dotClasses = (index: number) =>
-    classNames('mg:w-2 mg:h-2 mg:rounded-full mg:hover:cursor-pointer', {
-      'mg:bg-secondary': index === selectedIndex,
-      'mg:bg-secondary-subtle': index !== selectedIndex,
-    });
+    twMerge(
+      classNames('mg:w-2 mg:h-2 mg:rounded-full mg:hover:cursor-pointer', {
+        'mg:bg-secondary': index === selectedIndex,
+        'mg:bg-secondary-subtle': index !== selectedIndex,
+      }),
+      classes?.dot,
+    );
 
-  const slideContainerClasses = classNames(
-    'mg:flex mg:items-stretch mg:justify-start mg:pb-3 mg:w-full',
-    {
+  const dotsContainerClasses = twMerge(
+    'mg:flex mg:justify-center mg:items-center mg:gap-2 mg:w-full mg:h-6',
+    classes?.dotsContainer,
+  );
+
+  const slidesContainerClasses = twMerge(
+    classNames('mg:flex mg:items-stretch mg:justify-start mg:pb-3 mg:w-full', {
       'mg:gap-1 mg:pl-1': gap === 8,
       'mg:gap-2 mg:pl-2': gap === 16,
       'mg:gap-3 mg:pl-3': gap === 24,
       'mg:gap-4 mg:pl-4': gap === 32,
       'mg:gap-5 mg:pl-5': gap === 40,
       'mg:gap-6 mg:pl-6': gap === 48,
-    },
+    }),
+    classes?.slidesContainer,
   );
 
-  const slideClasses = classNames(
-    'mg:h-full mg:flex mg:justify-center mg:items-stretch mg:min-w-0 mg:basis-[90%] mg:p-2 mg:shrink-0',
-    smSlideBasisClasses[slidesPerView],
-    lgSlideBasisClasses[slidesPerView],
+  const slideClasses = twMerge(
+    classNames(
+      'mg:h-full mg:flex mg:justify-center mg:items-stretch mg:min-w-0 mg:basis-[90%] mg:p-2 mg:shrink-0',
+      smSlideBasisClasses[slidesPerView],
+      lgSlideBasisClasses[slidesPerView],
+    ),
+    classes?.slide,
   );
 
-  const slideInnerClasses = classNames('mg:flex mg:w-full', {
-    'mg:justify-center': slidesPerView > 1,
-  });
+  const slideInnerClasses = twMerge(
+    classNames('mg:flex mg:w-full', {
+      'mg:justify-center': slidesPerView > 1,
+    }),
+    classes?.slideInner,
+  );
 
   const renderSlides = (children: ReactNode) => {
     const slides = Children.toArray(children);
@@ -297,7 +366,7 @@ const Carousel: FC<CarouselProps> = ({
 
   return (
     <div
-      className="mg:flex mg:flex-col mg:justify-center mg:items-center mg:w-full"
+      className={rootClasses}
       ref={ref}
       {...(rest as HTMLAttributes<HTMLDivElement>)}
     >
@@ -309,13 +378,13 @@ const Carousel: FC<CarouselProps> = ({
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <div className={slideContainerClasses}>{renderSlides(children)}</div>
+        <div className={slidesContainerClasses}>{renderSlides(children)}</div>
         {showControls && hasMultipleSlides && (
-          <div className="mg:absolute mg:top-1/2 mg:left-0 mg:w-full mg:flex mg:items-center mg:justify-between mg:px-1 mg:pointer-events-none mg:sm:px-2">
+          <div className={controlsContainerClasses}>
             <IconButton
               variant={controlsVariant}
               color="secondary"
-              classes={{ iconButton: 'mg:pointer-events-auto' }}
+              classes={{ iconButton: controlsClasses }}
               onClick={handlePrev}
             >
               {faChevronLeft}
@@ -323,7 +392,7 @@ const Carousel: FC<CarouselProps> = ({
             <IconButton
               variant={controlsVariant}
               color="secondary"
-              classes={{ iconButton: 'mg:pointer-events-auto' }}
+              classes={{ iconButton: controlsClasses }}
               onClick={handleNext}
             >
               {faChevronRight}
@@ -332,7 +401,7 @@ const Carousel: FC<CarouselProps> = ({
         )}
       </div>
       {showDots && scrollSnaps.length >= 1 && (
-        <div className="mg:flex mg:justify-center mg:items-center mg:gap-2 mg:w-full mg:h-6">
+        <div className={dotsContainerClasses}>
           {scrollSnaps.map((_, index) => (
             <button
               key={`dot-${index}`}

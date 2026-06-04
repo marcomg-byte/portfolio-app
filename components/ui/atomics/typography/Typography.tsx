@@ -78,6 +78,12 @@ const headingVariants = [
 type ParagraphVariant = 'base' | 'small' | 'large';
 
 /**
+ * Combined heading and paragraph variants supported by Typography.
+ * Used internally for responsive text sizing and variant lookups.
+ */
+type TypographyVariant = HeadingVariant | ParagraphVariant;
+
+/**
  * List of all valid paragraph variants for Typography.
  * Used internally for type checks and rendering.
  * @see ParagraphVariant
@@ -85,65 +91,74 @@ type ParagraphVariant = 'base' | 'small' | 'large';
 const paragraphVariants = ['base', 'small', 'large'] as ParagraphVariant[];
 
 /**
+ * Maps typography variants to mobile-first text size classes.
+ * Larger breakpoints preserve the current desktop sizes.
+ */
+const variantTextClasses: Record<TypographyVariant, string> = {
+  base: 'mg:text-base',
+  small: 'mg:text-sm',
+  large: 'mg:text-base mg:sm:text-lg',
+  h1: 'mg:text-5xl mg:sm:text-6xl mg:lg:text-8xl',
+  h2: 'mg:text-4xl mg:sm:text-5xl mg:lg:text-7xl',
+  h3: 'mg:text-3xl mg:sm:text-4xl mg:lg:text-6xl',
+  h4: 'mg:text-base mg:sm:text-lg',
+  h5: 'mg:text-sm mg:sm:text-base',
+  h6: 'mg:text-sm',
+};
+
+/**
  * Common base props for Typography components.
- *
- * @property {'left' | 'center' | 'right'} [align] - Text alignment.
- * @property {boolean} [bold] - Whether to use bold font weight.
- * @property {string} [className] - Additional CSS classes to apply.
- * @property {Color} [color] - Text color variant.
- * @property {ClampLine} [clamp] - Number of lines to clamp (truncates overflow).
- * @property {ReactNode} [children] - Content to render inside the component.
- * @property {boolean} [removePadding] - If true, removes default vertical padding.
- * @property {boolean} [span] - Render as a <span> instead of a heading or paragraph.
- * @property {boolean} [truncate] - Truncate text with ellipsis if it overflows.
- * @property {boolean} [underline] - Underline the text.
  */
 interface BaseProps {
+  /** Text alignment. */
   align?: 'left' | 'center' | 'right' | 'justify';
+  /** Whether to use bold font weight. */
   bold?: boolean;
+  /** Additional CSS classes to apply. */
   className?: string;
+  /** Text color variant. */
   color?: Color;
+  /** Number of lines to clamp, truncating overflow. */
   clamp?: ClampLine;
+  /** Content to render inside the component. */
   children?: ReactNode;
+  /** Removes the default vertical padding when true. */
   removePadding?: boolean;
+  /** Renders the content as a `span` instead of a heading or paragraph. */
   span?: boolean;
+  /** Truncates text with an ellipsis when it overflows. */
   truncate?: boolean;
+  /** Underlines the text. */
   underline?: boolean;
 }
 
 /**
  * Props for heading elements (h1-h6) in Typography.
- *
- * @property {Ref<HTMLHeadingElement>} [ref] - React ref for the heading element.
- * @property {HeadingVariant} [variant] - Specifies which heading tag to render (h1-h6).
- * Inherited: All standard HTML heading element attributes.
  */
 interface HeadingProps extends HTMLAttributes<HTMLHeadingElement> {
+  /** React ref for the heading element. */
   ref?: Ref<HTMLHeadingElement>;
+  /** Specifies which heading tag to render (`h1`-`h6`). */
   variant?: HeadingVariant;
 }
 
 /**
  * Props for paragraph elements in Typography.
- *
- * @property {Ref<HTMLParagraphElement>} [ref] - React ref for the paragraph element.
- * @property {ParagraphVariant} [variant] - Paragraph style variant (base, small, large).
- * Inherited: All standard HTML paragraph element attributes.
  */
 interface ParagraphProps extends HTMLAttributes<HTMLParagraphElement> {
+  /** React ref for the paragraph element. */
   ref?: Ref<HTMLParagraphElement>;
+  /** Paragraph style variant (`base`, `small`, or `large`). */
   variant?: ParagraphVariant;
 }
 
 /**
  * Props for span elements in Typography.
- *
- * @property {Ref<HTMLSpanElement>} [ref] - React ref for the span element.
- * @property {ParagraphVariant} [variant] - Span style variant (base, small, large).
- * Inherited: All standard HTML span element attributes.
  */
 interface SpanProps extends HTMLAttributes<HTMLSpanElement> {
+  /** React ref for the span element. */
   ref?: Ref<HTMLSpanElement>;
+  /** Span style variant (`base`, `small`, or `large`). */
   variant?: ParagraphVariant;
 }
 
@@ -238,12 +253,6 @@ function Typography({
         'mg:text-justify': align === 'justify',
         'mg:truncate': truncate,
         'mg:underline': underline,
-        'mg:text-sm': variant === 'small' || variant === 'h6',
-        'mg:text-base': variant === 'base' || variant === 'h5',
-        'mg:text-lg': variant === 'large' || variant === 'h4',
-        'mg:text-8xl': variant === 'h1',
-        'mg:text-7xl': variant === 'h2',
-        'mg:text-6xl': variant === 'h3',
         'mg:text-black': color === 'black',
         'mg:text-primary': color === 'primary',
         'mg:text-secondary': color === 'secondary',
@@ -255,6 +264,7 @@ function Typography({
       headingClasses,
       paragraphClasses,
       spanClasses,
+      variantTextClasses[variant as TypographyVariant],
       clamp ? clampClasses[clamp] : '',
     ),
     className,

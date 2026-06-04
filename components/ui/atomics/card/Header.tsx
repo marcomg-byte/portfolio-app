@@ -122,7 +122,12 @@ const Header: FC<HeaderProps> = ({
     >
       <div className="mg:flex mg:items-center mg:gap-3">
         {adornment && renderAdornment(adornment)}
-        <Typography clamp={3} bold className="mg:text-base" variant="h2">
+        <Typography
+          clamp={3}
+          bold
+          className="mg:lg:text-2xl mg:sm:text-lg mg:text-base"
+          variant="h2"
+        >
           {title}
         </Typography>
         {badge && cloneBadge(badge)}

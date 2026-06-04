@@ -50,21 +50,36 @@ export default function Home() {
       <Hero
         autoPlay
         showControls={false}
+        classes={{
+          header: { title: 'mg:text-3xl mg:sm:text-4xl mg:lg:text-6xl' },
+        }}
         header={{
-          title: (
-            <div className="mg:flex mg:flex-col mg:gap-2 mg:min-w-72">
-              <span className="mg:text-7xl mg:text-white">Hello, I&apos;m</span>
-              <h1 className="mg:text-5xl mg:text-white">Marco Antonio Melo</h1>
-              <h1 className="mg:text-3xl mg:text-white">
+          title: "Hello I'm",
+          description: (
+            <div className="mg:flex mg:flex-col mg:gap-3 mg:pb-3">
+              <Typography
+                className="mg:text-3xl mg:sm:text-4xl mg:lg:text-6xl"
+                variant="h1"
+                color="white"
+                removePadding
+              >
+                Marco Antonio Melo
+              </Typography>
+              <Typography
+                className="mg:text-xl mg:sm:text-2xl mg:lg:text-4xl"
+                variant="h1"
+                color="accent"
+                removePadding
+              >
                 Cloud Architect * Full Stack Engineer * Pentester
-              </h1>
+              </Typography>
             </div>
           ),
           variant: 'h1',
           links: [
             { href: '/about', label: 'About Me', variant: 'secondary' },
-            { href: '#projects', label: 'Projects', variant: 'secondary' },
-            { href: '#contact', label: 'Contact', variant: 'secondary' },
+            { href: '/projects', label: 'Projects', variant: 'secondary' },
+            { href: '/contact', label: 'Contact', variant: 'secondary' },
           ],
         }}
         height="lg"
