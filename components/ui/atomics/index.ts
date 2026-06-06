@@ -8,6 +8,7 @@ import {
 } from './card';
 import type { FooterAction } from './card';
 import { Carousel, Hero } from './carousel';
+import { Drawer } from './drawer';
 import { Form, TextArea, TextInput } from './form';
 import type { FormValue } from './form';
 import { List, ListItem } from './list';
@@ -26,6 +27,7 @@ export {
   CardMedia,
   CardFooter,
   Connector,
+  Drawer,
   Form,
   Hero,
   Carousel,
