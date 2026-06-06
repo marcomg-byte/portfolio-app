@@ -1,6 +1,6 @@
-@import "tailwindcss" prefix(mg);
+@import 'tailwindcss' prefix(mg);
 @config "../tailwind.config.ts";
-@import "./theme.css";
+@import './theme.css';
 
 @font-face {
   font-family: 'Inter Body';

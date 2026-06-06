@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import plugin from 'tailwindcss/plugin';
 
 const config: Config = {
   content: [
@@ -75,7 +76,32 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(({ addUtilities }) => {
+      addUtilities({
+        '.scrollbar-subtle': {
+          'scrollbar-color': 'var(--border-secondary) transparent',
+          'scrollbar-width': 'thin',
+        },
+        '.scrollbar-subtle::-webkit-scrollbar': {
+          height: '8px',
+          width: '8px',
+        },
+        '.scrollbar-subtle::-webkit-scrollbar-track': {
+          background: 'transparent',
+        },
+        '.scrollbar-subtle::-webkit-scrollbar-thumb': {
+          'background-color': 'var(--border-secondary)',
+          'background-clip': 'content-box',
+          border: '2px solid transparent',
+          'border-radius': '999px',
+        },
+        '.scrollbar-subtle::-webkit-scrollbar-thumb:hover': {
+          'background-color': 'var(--border-secondary-hover)',
+        },
+      });
+    }),
+  ],
 };
 
 export default config;
