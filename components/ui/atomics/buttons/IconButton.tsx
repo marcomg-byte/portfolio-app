@@ -239,4 +239,4 @@ function IconButton({
 IconButton.displayName = 'IconButton';
 
 export { IconButton };
-export type { IconButtonVariant };
+export type { IconButtonClasses, IconButtonVariant };

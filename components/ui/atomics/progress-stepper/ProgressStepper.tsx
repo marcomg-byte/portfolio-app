@@ -18,10 +18,15 @@ import {
 } from 'react';
 import classNames from 'classnames';
 import { Step } from './Step';
+import type { StepClasses } from './Step';
 import { Connector } from './Connector';
-import { Button, Typography } from '@/components/ui';
-import { useControlled } from '@/lib';
+import type { ConnectorClasses } from './Connector';
+import { Button } from '../buttons';
+import { ButtonClasses } from '../buttons';
+import { Typography } from '../typography';
+import { useControlled, useBreakpoints } from '@/lib';
 import { capitalize } from '@/utils';
+import { twMerge } from 'tailwind-merge';
 
 /**
  * @interface StepType
@@ -67,23 +72,50 @@ interface Slots {
 }
 
 /**
+ * Class name overrides for the `ProgressStepper` component parts.
+ */
+interface ProgressStepperClasses {
+  /** Classes applied to the action buttons. */
+  button?: ButtonClasses;
+  /** Classes applied to the button wrapper inside the controls footer. */
+  buttonsContainer?: string;
+  /** Classes applied to the step connectors. */
+  connector?: ConnectorClasses;
+  /** Classes applied to the footer controls container. */
+  controls?: string;
+  /** Classes applied to the active step label. */
+  label?: string;
+  /** Classes applied to the outer wrapper around the stepper and controls. */
+  outer?: string;
+  /** Classes applied to the root step list container. */
+  root?: string;
+  /** Classes applied to each rendered step. */
+  step?: StepClasses;
+}
+
+/**
  * @interface ProgressStepperProps
  * @extends HTMLAttributes<HTMLDivElement>
  * @description
  * Props for the ProgressStepper component, extending standard HTML div attributes.
  * Includes properties for active step index, custom connectors, click handling, layout orientation, and linear mode.
  */
-interface ProgressStepperProps extends HTMLAttributes<HTMLDivElement> {
+interface ProgressStepperProps extends Omit<
+  HTMLAttributes<HTMLDivElement>,
+  'className'
+> {
   /** Controlled value representing the currently active step object. */
   activeStep?: StepType;
   /** One or more `<Step />` nodes to render inside the stepper. */
   children?: ReactNode;
-  /** Additional CSS class names applied to the root container. */
-  className?: string;
+  /** Optional class overrides for the stepper layout, controls, and steps. */
+  classes?: ProgressStepperClasses;
   /** Whether all steps have been completed. */
   completed?: boolean;
   /** Index of the initially active step when uncontrolled (default: `0`). */
   defaultStep?: number;
+  /** Forces horizontal layout even on small screens. */
+  forceHorizontal?: boolean;
   /** When `true`, hides the default step controls in non linear Progress Steppers. */
   hideControls?: boolean;
   /** When `true`, step activation follows linear behaviour; when `false`, steps are clickable. */
@@ -176,9 +208,10 @@ function mapChildrenToSteps(
 const ProgressStepper: FC<ProgressStepperProps> = ({
   activeStep: activeStepProp,
   children: childrenProp,
-  className,
+  classes = {},
   completed: completedProp,
   defaultStep: defaultStepProp = 0,
+  forceHorizontal = false,
   hideControls = false,
   linear = true,
   onComplete,
@@ -229,13 +262,31 @@ const ProgressStepper: FC<ProgressStepperProps> = ({
     value: completedProp,
   });
 
-  const classes = classNames(
-    'mg:w-full mg:h-full mg:flex mg:px-6 mg:pb-2 mg:pt-6 mg:overflow-x-scroll',
-    {
-      'mg:flex-col': orientation === 'vertical',
-      'mg:justify-between': orientation === 'horizontal',
-    },
-    className,
+  const { isBelow } = useBreakpoints();
+  const isBelowSm = isBelow('sm');
+
+  const buttonsContainerClasses = twMerge(
+    'mg:flex mg:gap-1 mg:items-center',
+    classes?.buttonsContainer,
+  );
+
+  const controlsClasses = twMerge(
+    'mg:w-full mg:flex mg:items-center mg:justify-between mg:pb-5 mg:sm:pb-6 mg:px-6',
+    classes?.controls,
+  );
+
+  const outerClasses = twMerge('mg:flex mg:flex-col mg:w-full', classes?.outer);
+
+  const rootClasses = twMerge(
+    classNames(
+      'mg:w-full mg:h-full mg:flex mg:px-6 mg:pb-2 mg:pt-0 mg:sm:pt-6 mg:overflow-x-scroll mg:scrollbar-subtle',
+      {
+        'mg:flex-col':
+          orientation === 'vertical' || (isBelowSm && !forceHorizontal),
+        'mg:justify-between': orientation === 'horizontal' && !isBelowSm,
+      },
+    ),
+    classes?.root,
   );
 
   const handleStepClick = (
@@ -384,6 +435,7 @@ const ProgressStepper: FC<ProgressStepperProps> = ({
             return {
               node: cloneElement(child as StepComponent, {
                 index,
+                classes: classes?.step,
                 id: index === defaultStepProp ? `step-${index}` : undefined,
                 active: steps[index]?.active,
                 completed: steps[index]?.completed,
@@ -393,7 +445,9 @@ const ProgressStepper: FC<ProgressStepperProps> = ({
                       handleStepClick(event, index)
                   : undefined,
               }),
-              connector: <Connector lastIndex={isLast} />,
+              connector: (
+                <Connector classes={classes?.connector} lastIndex={isLast} />
+              ),
             };
           }
           return null;
@@ -427,50 +481,67 @@ const ProgressStepper: FC<ProgressStepperProps> = ({
   }, [steps, setCompleted, linear, onComplete]);
 
   return (
-    <div className="mg:flex mg:flex-col mg:w-full">
-      <div className={classes} ref={ref} role="list" {...rest}>
+    <div className={outerClasses}>
+      <div className={rootClasses} ref={ref} role="list" {...rest}>
         {children.map(({ node, connector }, index) => (
           <Fragment key={`progress-stepper-node-${index}`}>
             {node}
-            {connector}
+            {orientation === 'horizontal' && !isBelowSm && connector}
           </Fragment>
         ))}
       </div>
       {(!hideControls || linear || completed) && (
-        <div className="mg:w-full mg:flex mg:items-center mg:justify-between mg:pb-6 mg:px-6">
-          <Typography color="primary" variant="base">
+        <div className={controlsClasses}>
+          <Typography className={classes?.label} color="primary" variant="base">
             {completed ? 'Completed' : activeStepLabel}
           </Typography>
-          {completed && !linear && (
-            <div className="mg:flex mg:gap-1 mg:items-center">
-              <Button onClick={handleReset} variant="outline">
+          <div className={buttonsContainerClasses}>
+            {completed && !linear && (
+              <Button
+                classes={classes?.button}
+                onClick={handleReset}
+                variant="outline"
+              >
                 RESET
               </Button>
-            </div>
-          )}
-          {linear && (
-            <div className="mg:flex mg:gap-1 mg:items-center">
-              {!completed ? (
-                <>
-                  <Button onClick={handleNext} variant="outline">
-                    NEXT
-                  </Button>
-                  <Button onClick={handleComplete} variant="outline">
-                    {activeStepCompleted ? 'UNDO' : 'COMPLETE'}
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Button onClick={handleComplete} variant="outline">
-                    UNDO
-                  </Button>
-                  <Button onClick={handleReset} variant="outline">
-                    FINISH
-                  </Button>
-                </>
-              )}
-            </div>
-          )}
+            )}
+            {!completed && linear && (
+              <>
+                <Button
+                  classes={classes?.button}
+                  onClick={handleNext}
+                  variant="outline"
+                >
+                  NEXT
+                </Button>
+                <Button
+                  classes={classes?.button}
+                  onClick={handleComplete}
+                  variant="outline"
+                >
+                  {activeStepCompleted ? 'UNDO' : 'COMPLETE'}
+                </Button>
+              </>
+            )}
+            {completed && linear && (
+              <>
+                <Button
+                  classes={classes?.button}
+                  onClick={handleComplete}
+                  variant="outline"
+                >
+                  UNDO
+                </Button>
+                <Button
+                  classes={classes?.button}
+                  onClick={handleReset}
+                  variant="outline"
+                >
+                  FINISH
+                </Button>
+              </>
+            )}
+          </div>
         </div>
       )}
     </div>
@@ -480,4 +551,4 @@ const ProgressStepper: FC<ProgressStepperProps> = ({
 ProgressStepper.displayName = 'ProgressStepper';
 
 export { ProgressStepper };
-export type { StepType };
+export type { ProgressStepperClasses, StepType };

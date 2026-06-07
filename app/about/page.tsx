@@ -57,7 +57,12 @@ const SkillBadge: FC<SkillBadgeProps> = ({
       </div>
     </div>
     <div className="mg:flex mg:flex-col mg:pt-0.5 mg:pb-1 mg:pr-1.5 mg:gap-0.5">
-      <Typography className="mg:text-lg" bold removePadding variant="h3">
+      <Typography
+        className="mg:text-base mg:sm:text-lg mg:lg:text-2xl"
+        bold
+        removePadding
+        variant="h3"
+      >
         {skillName}
       </Typography>
       <Typography removePadding variant="base">
@@ -293,28 +298,33 @@ export default function About() {
 
   return (
     <Page>
-      <div className="mg:flex mg:justify-center mg:items-start mg:w-full">
+      <div className="mg:flex mg:flex-col mg:justify-center mg:items-center mg:w-full mg:md:flex-row mg:md:items-start">
         <div className="mg:flex mg:flex-col mg:justify-center mg:items-start mg:grow mg:gap-2 mg:p-6">
           <Typography clamp={5} variant="h2">
             Building scalable solutions that drive <br />
             <span className="mg:text-secondary">real impact.</span>
           </Typography>
-          <Typography clamp={5} className="mg:text-lg" variant="base">
-            Software Engineer and Cloud Architect with 6+ years of experience in
-            distributed systems, cloud-native architectures, and full-stack
-            development. Passionate about building scalable platforms, improving
-            developer experience, and delivering high-quality software at scale.
-          </Typography>
+          <div className="mg:flex mg:flex-col mg:gap-1">
+            <Typography removePadding clamp={8} variant="base">
+              Software Engineer and Cloud Architect with 6+ years of experience
+              in distributed systems, cloud-native architectures, and full-stack
+              development.
+            </Typography>
+            <Typography removePadding clamp={8} variant="base">
+              Passionate about building scalable platforms, improving developer
+              experience, and delivering high-quality software at scale.
+            </Typography>
+          </div>
         </div>
-        <div className="mg:flex mg:w-full mg:p-6">
-          <div className="mg:relative mg:w-full mg:bg-secondary-subtle mg:rounded-full mg:aspect-square mg:transition-transform mg:duration-200 mg:hover:scale-105">
+        <div className="mg:flex mg:w-full mg:justify-center mg:p-4 mg:sm:p-6 mg:md:w-auto mg:md:flex-1">
+          <div className="mg:relative mg:w-52 mg:max-w-full mg:bg-secondary-subtle mg:rounded-full mg:aspect-square mg:transition-transform mg:duration-200 mg:hover:scale-105 mg:sm:w-64 mg:md:w-full mg:md:max-w-80 mg:lg:max-w-56 mg:2xl:max-w-60">
             <Image
               src="/images/profile-photo.png"
               alt="Marco's Profile Photo"
               fill
               priority
-              sizes="(max-width: 768px) 100vw, 300px"
-              className="mg:object-cover mg:animate-fade-in mg:duration-500"
+              sizes="(max-width: 640px) 13rem, (max-width: 768px) 16rem, (max-width: 1024px) 20rem, 30rem"
+              className="mg:object-cover mg:object-top mg:animate-fade-in mg:duration-500"
             />
           </div>
         </div>
@@ -322,14 +332,14 @@ export default function About() {
       <div className="mg:flex mg:justify-start mg:items-center mg:w-full mg:px-6 mg:pb-2">
         <Typography variant="h2">Skills & Expertise</Typography>
       </div>
-      <div className="mg:flex mg:justify-evenly mg:items-center mg:w-full mg:py-3 mg:px-6 mg:gap-4 mg:overflow-scroll">
+      <div className="mg:flex mg:justify-evenly mg:items-center mg:w-full mg:py-3 mg:px-6 mg:gap-4 mg:overflow-x-scroll mg:scrollbar-subtle">
         {skills.map((skill, index) => (
           <SkillBadge key={`skill-${index + 1}`} {...skill} />
         ))}
       </div>
       <div className="mg:flex mg:flex-col mg:gap-2 mg:w-full mg:px-6 mg:py-3">
         <Typography variant="h2">My Journey</Typography>
-        <Typography className="mg:text-lg" clamp={4} variant="base">
+        <Typography clamp={8} variant="base">
           My path in tech has been driven by curiosity, constant learning and a
           passion for solving complex problems. From building secure systems to
           improving developer experience, and meaning digital infrastructure. I
@@ -429,7 +439,7 @@ export default function About() {
       </div>
       <div className="mg:flex mg:flex-col mg:pb-6 mg:w-full mg:px-6">
         <Typography variant="h2">What I do</Typography>
-        <div className="mg:flex mg:gap-6 mg:py-6 mg:w-full mg:overflow-x-scroll">
+        <div className="mg:flex mg:gap-6 mg:py-6 mg:w-full mg:overflow-x-scroll mg:scrollbar-subtle">
           {keySkills.map((skill, index) => (
             <Card key={`card-${index + 1}`}>
               <CardHeader adornment={skill.adornment} title={skill.title} />
@@ -440,13 +450,13 @@ export default function About() {
       </div>
       <div className="mg:flex mg:flex-col mg:gap-2 mg:w-full mg:px-6 mg:pb-3">
         <Typography variant="h2">Beyond Code</Typography>
-        <Typography variant="base">
+        <Typography clamp={8} variant="base">
           I&apos;m passionate about learning, sharing knowledge and building
           things that make a difference. When I&apos;m not coding, you can find
           me exploring new technologies, reading or watching a good movie, or
           spending time outdoors
         </Typography>
-        <div className="mg:flex mg:w-full mg:gap-2 mg:py-3 mg:overflow-x-scroll">
+        <div className="mg:flex mg:w-full mg:gap-2 mg:py-3 mg:overflow-x-scroll mg:scrollbar-subtle">
           {hobbies.map((hobby, index) => (
             <HobbyCard
               key={`hobby-card-${index + 1}`}

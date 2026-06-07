@@ -198,3 +198,4 @@ const Drawer: FC<DrawerProps> = ({
 Drawer.displayName = 'Drawer';
 
 export { Drawer };
+export type { DrawerClasses };

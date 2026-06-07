@@ -25,8 +25,11 @@ import Image from 'next/image';
 import { twMerge } from 'tailwind-merge';
 import classNames from 'classnames';
 import { Button, Typography } from '@/components/ui';
-import { useControlled } from '@/lib';
+import { useBreakpoints, useControlled } from '@/lib';
 
+/**
+ * React element shape used when recursively traversing nested children.
+ */
 type ElementWithChildren = ReactElement<{ children?: ReactNode }>;
 
 /**
@@ -80,6 +83,8 @@ interface FormClasses {
   header?: string;
   /** Classes applied to the form footer. */
   footer?: string;
+  /** Classes applied to the wrapper that contains the footer action buttons. */
+  footerButtonsContainer?: string;
   /** Classes applied to the root `<form>` element. */
   form?: string;
   /** Classes applied to the submit button container. */
@@ -126,6 +131,7 @@ interface FormProps extends Omit<
   encType?: JSX.IntrinsicElements['form']['encType'];
   /** Optional adornment to render at the end of the form header (icon or image). */
   endAdornment?: FormAdornment;
+  /** Controlled error state for the form, derived from child field validation. */
   error?: boolean;
   /** `id` attribute for the form element. */
   id?: string;
@@ -181,6 +187,9 @@ interface FormValue {
  */
 type TextAreaComponent = ReactElement<ComponentProps<typeof TextArea>>;
 
+/**
+ * Props inferred from the `TextArea` component.
+ */
 type TextAreaProps = ComponentProps<typeof TextArea>;
 
 /**
@@ -189,6 +198,9 @@ type TextAreaProps = ComponentProps<typeof TextArea>;
  */
 type TextInputComponent = ReactElement<ComponentProps<typeof TextInput>>;
 
+/**
+ * Props inferred from the `TextInput` component.
+ */
 type TextInputProps = ComponentProps<typeof TextInput>;
 
 /**
@@ -344,6 +356,9 @@ const Form: FC<FormProps> = ({
     value: valueProp,
   });
 
+  const { isBelow } = useBreakpoints();
+  const isBelowSm = isBelow('sm');
+
   const adornmentClasses = classNames(
     'mg:text-2xl',
     {
@@ -388,8 +403,13 @@ const Form: FC<FormProps> = ({
   );
 
   const footerClasses = twMerge(
-    'mg:flex mg:items-center mg:justify-between mg:w-full mg:gap-4',
+    'mg:flex mg:flex-col mg:items-start mg:gap-3 mg:sm:flex-row mg:sm:items-center mg:justify-between mg:w-full',
     classes?.footer,
+  );
+
+  const footerButtonsContainerClasses = twMerge(
+    classNames('mg:flex mg:items-center mg:justify-between mg:w-full'),
+    classes?.footerButtonsContainer,
   );
 
   const formClasses = twMerge(
@@ -548,7 +568,7 @@ const Form: FC<FormProps> = ({
         <div className="mg:flex mg:items-center mg:gap-2">
           {startAdornment && renderAdornment(startAdornment, adornmentClasses)}
           {title && (
-            <Typography className="mg:text-white mg:text-xl" variant="h2">
+            <Typography color="white" variant="h2">
               {title}
             </Typography>
           )}
@@ -557,20 +577,41 @@ const Form: FC<FormProps> = ({
       </div>
       <div className={bodyClasses}>{children && renderChildren(children)}</div>
       <div className={footerClasses}>
-        <Button
-          classes={{ button: submitButtonClasses }}
-          type="submit"
-          variant="outline"
-        >
-          SUBMIT
-        </Button>
-        <Button
-          classes={{ button: submitButtonClasses }}
-          type="reset"
-          variant="outline"
-        >
-          RESET
-        </Button>
+        {isBelowSm ? (
+          <div className={footerButtonsContainerClasses}>
+            <Button
+              classes={{ button: submitButtonClasses }}
+              type="submit"
+              variant="outline"
+            >
+              SUBMIT
+            </Button>
+            <Button
+              classes={{ button: submitButtonClasses }}
+              type="reset"
+              variant="outline"
+            >
+              RESET
+            </Button>
+          </div>
+        ) : (
+          <>
+            <Button
+              classes={{ button: submitButtonClasses }}
+              type="submit"
+              variant="outline"
+            >
+              SUBMIT
+            </Button>
+            <Button
+              classes={{ button: submitButtonClasses }}
+              type="reset"
+              variant="outline"
+            >
+              RESET
+            </Button>
+          </>
+        )}
         {disclaimer && (
           <div className={disclaimerContainerClasses}>
             {disclaimer?.adornment &&

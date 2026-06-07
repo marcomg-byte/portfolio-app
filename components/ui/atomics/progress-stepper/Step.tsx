@@ -1,11 +1,41 @@
 'use client';
-import type { HTMLAttributes, FC, MouseEvent, ReactNode, Ref } from 'react';
+import type {
+  ComponentProps,
+  HTMLAttributes,
+  FC,
+  MouseEvent,
+  ReactNode,
+  ReactElement,
+  Ref,
+} from 'react';
+import { Children, cloneElement, isValidElement } from 'react';
 import classNames from 'classnames';
 import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Fab } from '../buttons';
+import type { FabClasses } from '../buttons';
 import { Node } from './Node';
+import type { NodeClasses } from './Node';
 import { Typography } from '../typography';
+import { twMerge } from 'tailwind-merge';
+
+/**
+ * Class name overrides for the `Step` component parts.
+ */
+interface StepClasses {
+  /** Classes applied to the description wrapper. */
+  descriptionContainer?: string;
+  /** Classes applied to the step body content. */
+  body?: string;
+  /** Class overrides passed to the node or fab used for the step marker. */
+  node?: FabClasses | NodeClasses;
+  /** Classes applied to the node container wrapper. */
+  nodeContainer?: string;
+  /** Classes applied to the root step container. */
+  root?: string;
+  /** Classes applied to the step title. */
+  title?: string;
+}
 
 /**
  * @description Allowed color variants for the step/node components.
@@ -29,11 +59,14 @@ type StepColor =
  * @extends Omit<HTMLAttributes<HTMLDivElement>, 'onClick'>
  * @description Props accepted by the `Step` component.
  */
-interface StepProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onClick'> {
+interface StepProps extends Omit<
+  HTMLAttributes<HTMLDivElement>,
+  'onClick' | 'className'
+> {
   /** Whether the step is currently active (shows expanded content). */
   active?: boolean;
-  /** Additional CSS class names applied to the step container. */
-  className?: string;
+  /** Optional class overrides for the step container, node, and content. */
+  classes?: StepClasses;
   /** Color variant for the step node. */
   color?: StepColor;
   /** Whether the step is marked as completed. */
@@ -57,6 +90,41 @@ interface StepProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onClick'> {
   /** Title displayed when the step is active. */
   title?: string;
 }
+
+/**
+ * React element shape for the `Typography` helper used in descriptions.
+ */
+type TypographyComponent = ReactElement<ComponentProps<typeof Typography>>;
+
+/**
+ * Props inferred from the `Typography` component.
+ */
+type TypographyProps = ComponentProps<typeof Typography>;
+
+/**
+ * Render step description content while preserving nested `Typography`
+ * styling conventions.
+ *
+ * @param {ReactNode} description - Description content to render.
+ * @returns {ReactNode} The rendered description tree.
+ */
+const renderDescription = (description: ReactNode): ReactNode => {
+  const walk = (node?: ReactNode): ReactNode => {
+    return Children.map(node, (child) => {
+      if (!isValidElement(child)) return child;
+
+      if (child.type === Typography) {
+        return cloneElement<TypographyProps>(child as TypographyComponent, {
+          className: 'mg:text-xs mg:sm:text-sm mg:lg:text-lg',
+        });
+      }
+
+      return child;
+    });
+  };
+
+  return walk(description);
+};
 
 /**
  * @component Step
@@ -85,7 +153,7 @@ interface StepProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onClick'> {
  */
 const Step: FC<StepProps> = ({
   active = false,
-  className,
+  classes = {},
   color = 'primary',
   completed = false,
   description,
@@ -99,25 +167,45 @@ const Step: FC<StepProps> = ({
   title,
   ...rest
 }) => {
-  const containerClasses = classNames(
-    'mg:flex mg:max-w-44 mg:p-3 mg:rounded-md',
-    {
+  const bodyClasses = twMerge(
+    'mg:animate-fade-in mg:transition-opacity mg:duration-300',
+    classes?.body,
+  );
+
+  const descriptionContainerClasses = twMerge(
+    'mg:flex mg:flex-col mg:text-primary mg:gap-1',
+    classes?.descriptionContainer,
+  );
+
+  const rootClasses = twMerge(
+    classNames('mg:flex mg:max-w-44 mg:p-3 mg:rounded-md', {
       'mg:flex-col mg:gap-1': orientation === 'horizontal',
       'mg:justify-between mg:items-start': orientation === 'vertical',
       'mg:relative mg:z-10 mg:min-w-32 mg:hover:bg-primary mg:transition-all mg:duration-200 mg:ease-in-out mg:hover:scale-105 mg:hover:shadow-lg':
         active,
-    },
-    className,
+    }),
+    classes?.root,
+  );
+
+  const titleClasses = classNames(
+    'mg:text-base mg:sm:text-xl mg:lg:text-3xl',
+    classes?.title,
+  );
+
+  const nodeContainerClasses = twMerge(
+    'mg:flex mg:pb-2',
+    classes?.nodeContainer,
   );
 
   const index = indexProp !== undefined ? (indexProp + 1).toString() : '–';
 
   if (!linear) {
     return (
-      <div className={containerClasses} ref={ref} {...rest}>
-        <div className="mg:flex mg:pb-2">
+      <div className={rootClasses} ref={ref} {...rest}>
+        <div className={nodeContainerClasses}>
           <Fab
             aria-label={label}
+            classes={classes?.node as FabClasses}
             color={completed ? 'success' : color}
             onClick={onClick}
             variant="circular"
@@ -126,18 +214,18 @@ const Step: FC<StepProps> = ({
           </Fab>
         </div>
         {active && (
-          <div className="mg:animate-fade-in mg:transition-opacity mg:duration-300">
+          <div className={bodyClasses}>
             <Typography
               removePadding
-              className="mg:text-base"
+              className={titleClasses}
               bold
               color="primary"
               variant="h3"
             >
               {title}
             </Typography>
-            <div className="mg:flex mg:flex-col mg:text-primary mg:gap-1">
-              {description}
+            <div className={descriptionContainerClasses}>
+              {description && renderDescription(description)}
             </div>
           </div>
         )}
@@ -146,10 +234,11 @@ const Step: FC<StepProps> = ({
   }
 
   return (
-    <div className={containerClasses} ref={ref} {...rest}>
-      <div className="mg:flex mg:pb-2">
+    <div className={rootClasses} ref={ref} {...rest}>
+      <div className={nodeContainerClasses}>
         <Node
           aria-label={label}
+          classes={classes?.node as NodeClasses}
           color={completed ? 'success' : color}
           variant="circular"
         >
@@ -157,18 +246,18 @@ const Step: FC<StepProps> = ({
         </Node>
       </div>
       {active && (
-        <div className="mg:animate-fade-in mg:transition-opacity mg:duration-300">
+        <div className={bodyClasses}>
           <Typography
             removePadding
-            className="mg:text-base"
+            className={titleClasses}
             bold
             color="primary"
             variant="h3"
           >
             {title}
           </Typography>
-          <div className="mg:flex mg:flex-col mg:text-primary mg:gap-1">
-            {description}
+          <div className={descriptionContainerClasses}>
+            {description && renderDescription(description)}
           </div>
         </div>
       )}
@@ -177,4 +266,6 @@ const Step: FC<StepProps> = ({
 };
 
 Step.displayName = 'ProgressStepper.Step';
+
 export { Step };
+export type { StepClasses };

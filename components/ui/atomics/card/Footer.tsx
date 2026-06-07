@@ -1,6 +1,6 @@
 import type { FC, HTMLAttributes, Ref } from 'react';
 import { Button } from '../buttons';
-import type { Adornment, ButtonVariant } from '../buttons';
+import type { ButtonAdornment, ButtonVariant } from '../buttons';
 import { Typography } from '../typography';
 
 /**
@@ -15,11 +15,11 @@ import { Typography } from '../typography';
  * @property {ButtonVariant} [variant] - Visual style variant for the button.
  */
 interface FooterAction {
-  endAdornment?: Adornment;
+  endAdornment?: ButtonAdornment;
   href?: string;
   label: string;
   onClick?: () => void;
-  startAdornment?: Adornment;
+  startAdornment?: ButtonAdornment;
   target?: string;
   variant?: ButtonVariant;
 }
@@ -83,7 +83,12 @@ const Footer: FC<FooterProps> = ({
       <div className="mg:flex mg:flex-col mg:justify-center mg:items-start mg:gap-1.5">
         {title && (
           <>
-            <Typography clamp={3} bold className="mg:text-base" variant="h3">
+            <Typography
+              className="mg:text-base mg:sm:text-xl mg:lg:text-3xl"
+              clamp={3}
+              bold
+              variant="h3"
+            >
               {title}
             </Typography>
             {subtitle && (

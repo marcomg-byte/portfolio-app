@@ -29,7 +29,7 @@ const clampClasses: Record<ClampLine, string> = {
 };
 
 /**
- * Color options for Typography text.
+ * TypographyColor options for Typography text.
  * Determines the text color utility class applied.
  *
  * - 'black': Solid black color
@@ -40,7 +40,8 @@ const clampClasses: Record<ClampLine, string> = {
  * - 'inverse': For use on dark backgrounds
  * - 'white': Solid white color
  */
-type Color =
+type TypographyColor =
+  | 'active'
   | 'black'
   | 'primary'
   | 'secondary'
@@ -117,7 +118,7 @@ interface BaseProps {
   /** Additional CSS classes to apply. */
   className?: string;
   /** Text color variant. */
-  color?: Color;
+  color?: TypographyColor;
   /** Number of lines to clamp, truncating overflow. */
   clamp?: ClampLine;
   /** Content to render inside the component. */
@@ -253,6 +254,7 @@ function Typography({
         'mg:text-justify': align === 'justify',
         'mg:truncate': truncate,
         'mg:underline': underline,
+        'mg:text-active': color === 'active',
         'mg:text-black': color === 'black',
         'mg:text-primary': color === 'primary',
         'mg:text-secondary': color === 'secondary',
@@ -299,5 +301,11 @@ function Typography({
 
 Typography.displayName = 'Typography';
 
-export { Typography };
-export type { HeadingVariant, ParagraphVariant };
+export { headingVariants, paragraphVariants, Typography };
+export type {
+  HeadingVariant,
+  ParagraphVariant,
+  TypographyColor,
+  TypographyProps,
+  TypographyVariant,
+};
