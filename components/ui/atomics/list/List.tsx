@@ -21,8 +21,10 @@ import { twMerge } from 'tailwind-merge';
 import { useControlled } from '@/lib';
 import { ListItem as ListItemComponent } from './ListItem';
 
+/** React element helper that guarantees an optional `children` prop. */
 type ElementWithChildren = ReactElement<{ children?: ReactNode }>;
 
+/** Supported colors for list adornments. */
 type ListAdornmentColor =
   | 'accent'
   | 'black'
@@ -37,10 +39,13 @@ type ListAdornmentColor =
   | 'warning'
   | 'white';
 
+/** Status variants that can be forwarded to list items. */
 type ListStatus = 'error' | 'info' | 'success' | 'warning';
 
+/** Background variants for the list container. */
 type ListBackground = 'primary' | 'secondary' | 'subtle' | 'inverse';
 
+/** Text and surface colors supported by the list container. */
 type ListColor =
   | 'accent'
   | 'black'
@@ -50,55 +55,125 @@ type ListColor =
   | 'subtle'
   | 'white';
 
+/** Internal list item shape used to track selection state. */
 interface ListItem {
+  /** Stable identifier assigned while walking the nested children tree. */
   key?: string;
+  /** Human-readable label for the item. */
   label?: string;
+  /** Whether the item is currently selected. */
   selected?: boolean;
+  /** Backing value associated with the item. */
   value?: string | number;
 }
 
+/** Public item payload emitted to consumers. */
 type Item = Omit<ListItem, 'selected'>;
 
+/** React element type for rendered list items. */
 type ListItemElement = ReactElement<ComponentProps<typeof ListItemComponent>>;
 
+/** Props extracted from the reusable list item component. */
 type ListItemProps = ComponentProps<typeof ListItemComponent>;
 
+/** Shared props supported by all list render targets. */
 interface BaseProps {
+  /** Render target to use for the outer list wrapper. */
   as?: 'ul' | 'ol' | 'div';
+  /** Color token used for item adornments. */
   adornmentColor?: ListAdornmentColor;
+  /** Background token for the list container. */
   background?: ListBackground;
+  /** Nested content used to discover and render list items. */
   children?: ReactNode;
+  /** Additional class names merged onto the wrapper. */
   className?: string;
+  /** Color token applied to text and item accents. */
   color?: ListColor;
+  /** Compact spacing mode for dense layouts. */
   compact?: boolean;
+  /** Whether to render dividers between items. */
   divider?: boolean;
+  /** Whether the list and its items are disabled. */
   disabled?: boolean;
+  /** Whether the wrapper should expand to the full available width. */
   fullWidth?: boolean;
+  /** Element type to render for nested list items. */
   itemsAs?: 'a' | 'div' | 'li';
+  /** Callback fired when the selected item set changes. */
   onChange?: (selectedItems: Item[]) => void;
+  /** Whether list items can be selected. */
   selectable?: boolean;
+  /** Size token controlling the wrapper width. */
   size?: 'sm' | 'md' | 'lg';
+  /** Status token forwarded to child items. */
   status?: ListStatus;
+  /** Controlled value used to seed or manage selected items. */
   value?: ListItem[];
 }
 
+/** Props for rendering the list as a div. */
 interface DivProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
+  /** Optional ref forwarded to the div wrapper. */
   ref?: Ref<HTMLDivElement>;
+  /** Accessible role for the div wrapper. */
   role?: JSX.IntrinsicElements['div']['role'];
 }
 
+/** Props for rendering the list as an ordered list. */
 interface OlProps extends Omit<OlHTMLAttributes<HTMLOListElement>, 'onChange'> {
+  /** Optional ref forwarded to the ordered list wrapper. */
   ref?: Ref<HTMLOListElement>;
+  /** Accessible role for the ordered list wrapper. */
   role?: JSX.IntrinsicElements['ol']['role'];
 }
 
+/** Props for rendering the list as an unordered list. */
 interface UlProps extends Omit<HTMLAttributes<HTMLUListElement>, 'onChange'> {
+  /** Optional ref forwarded to the unordered list wrapper. */
   ref?: Ref<HTMLUListElement>;
+  /** Accessible role for the unordered list wrapper. */
   role?: JSX.IntrinsicElements['ul']['role'];
 }
 
+/** Combined prop signature for the overloaded list component. */
 type ListProps = (DivProps | OlProps | UlProps) & BaseProps;
 
+/**
+ * Renders a selectable list container that can behave like a `ul`, `ol`, or
+ * `div` while discovering nested `ListItem` children and wiring selection
+ * state for them.
+ *
+ * The component supports controlled and uncontrolled selection, optional
+ * divider display, responsive width tokens, and item-level presentation
+ * variants such as adornment color, background, status, and disabled state.
+ * It is intended to wrap `ListItem` children and propagate the interaction
+ * props needed for consistent list behavior across the design system.
+ *
+ * @example
+ * ```tsx
+ * import { List } from '@/components/ui';
+ * import { ListItem } from '@/components/ui';
+ *
+ * export function Example() {
+ *   return (
+ *     <List
+ *       as="ul"
+ *       selectable
+ *       fullWidth
+ *       size="md"
+ *       onChange={(selectedItems) => {
+ *         console.log('Selected items:', selectedItems);
+ *       }}
+ *     >
+ *       <ListItem label="Overview" value="overview" selected />
+ *       <ListItem label="Projects" value="projects" />
+ *       <ListItem label="Contact" value="contact" />
+ *     </List>
+ *   );
+ * }
+ * ```
+ */
 function List(props: DivProps & BaseProps): JSX.Element;
 function List(props: OlProps & BaseProps): JSX.Element;
 function List(props: UlProps & BaseProps): JSX.Element;

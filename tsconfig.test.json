@@ -3,7 +3,7 @@
     "target": "esnext",
     "module": "esnext",
     "lib": ["ESNext"],
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "noEmit": true,
     "strict": true,
     "skipLibCheck": true,
@@ -14,14 +14,13 @@
     "verbatimModuleSyntax": true,
     "types": ["node"]
   },
-  "include": ["parse-theme.mts"],
+  "include": ["vitest.config.mts", "test/**/*.spec.ts", "test/**/*.test.ts"],
   "exclude": [
     "node_modules",
     "app",
     ".next",
     ".yarn",
     "components",
-    "public",
-    "test"
+    "public"
   ]
 }
