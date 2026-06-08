@@ -7,6 +7,16 @@ import { writeFile } from 'fs/promises';
 const FILEPATH = './app/theme.css';
 
 /**
+ * Normalizes PostCSS output where generated declarations can leave semicolons
+ * on their own line or omit the final semicolon before a block closes.
+ */
+function formatGeneratedCss(css: string): string {
+  return css
+    .replace(/^([ \t]*[^{}\r\n]+:[^\r\n;{}]+)\r?\n[ \t]*;[ \t]*$/gmu, '$1;')
+    .replace(/[ \t]*;?[ \t]*(?:\r?\n[ \t]*)+\}$/gu, ';\n}');
+}
+
+/**
  * Custom error for invalid color reference strings in design tokens.
  * Includes the problematic colorRef and an optional cause.
  *
@@ -578,7 +588,7 @@ async function buildCssFile(source: string): Promise<void> {
 
   const formattedRoot = postcss.parse(result.css);
   const formattedCss = `${formattedRoot.nodes
-    .map((node) => node.toString())
+    .map((node) => formatGeneratedCss(node.toString()))
     .join('\n\n')}\n`;
 
   await writeFile(FILEPATH, formattedCss, 'utf8');
