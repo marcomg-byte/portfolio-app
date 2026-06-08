@@ -91,8 +91,7 @@
     --color-sky-800: 0 68 148;
     --color-sky-900: 0 51 112;
     --color-white: 255 255 255;
-    --space-unit: 8px
-;
+    --space-unit: 8px;
     --font-size-text-xs: 0.75rem;
     --font-size-text-sm: 0.875rem;
     --font-size-text-base: 1rem;
@@ -105,8 +104,7 @@
     --font-size-text-6xl: 3.75rem;
     --font-size-text-7xl: 4.5rem;
     --font-size-text-8xl: 6rem;
-    --font-size-text-9xl: 8rem
-;
+    --font-size-text-9xl: 8rem;
     --background-primary: rgb(var(--color-azure-100));
     --background-primary-hover: rgb(var(--color-azure-200));
     --background-primary-active: rgb(var(--color-white));
@@ -244,8 +242,7 @@
     --outline-warning: rgb(var(--color-amber-500));
     --outline-warning-hover: rgb(var(--color-amber-700));
     --outline-info: rgb(var(--color-cyan-500));
-    --outline-info-hover: rgb(var(--color-cyan-700))
-
+    --outline-info-hover: rgb(var(--color-cyan-700));
 }
 
 @theme inline {
@@ -424,8 +421,7 @@
     --font-size-text-6xl: var(--font-size-text-6xl);
     --font-size-text-7xl: var(--font-size-text-7xl);
     --font-size-text-8xl: var(--font-size-text-8xl);
-    --font-size-text-9xl: var(--font-size-text-9xl)
-
+    --font-size-text-9xl: var(--font-size-text-9xl);
 }
 
 [data-theme="light"] {
@@ -566,8 +562,7 @@
     --outline-warning: rgb(var(--color-amber-500));
     --outline-warning-hover: rgb(var(--color-amber-700));
     --outline-info: rgb(var(--color-cyan-500));
-    --outline-info-hover: rgb(var(--color-cyan-700))
-
+    --outline-info-hover: rgb(var(--color-cyan-700));
 }
 
 [data-theme="dark"] {
@@ -708,6 +703,5 @@
     --outline-warning: rgb(var(--color-amber-700));
     --outline-warning-hover: rgb(var(--color-amber-500));
     --outline-info: rgb(var(--color-cyan-700));
-    --outline-info-hover: rgb(var(--color-cyan-500))
-
+    --outline-info-hover: rgb(var(--color-cyan-500));
 }

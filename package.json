@@ -4,13 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "yarn theme:run && next dev",
+    "dev": "concurrently -k \"yarn theme:watch\" \"next dev\"",
     "build": "yarn theme:run && next build",
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "theme:check": "tsc -p tsconfig.tailwind.json",
-    "theme:run": "tsx parse-theme.mts"
+    "theme:run": "tsx parse-theme.mts",
+    "theme:watch": "nodemon --watch tokens.json --ext json --exec \"yarn theme:run\""
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.2.0",
@@ -31,10 +32,12 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "concurrently": "^10.0.3",
     "eslint": "^9",
     "eslint-config-next": "16.2.3",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
+    "nodemon": "^3.1.14",
     "postcss": "^8.5.9",
     "postcss-js": "^5.1.0",
     "prettier": "^3.8.2",
