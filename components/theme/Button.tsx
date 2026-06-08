@@ -1,7 +1,18 @@
-import type { JSX } from 'react';
+import type { ComponentProps, FC, JSX } from 'react';
 import { IconButton } from '@/components/ui';
+import type { IconButtonClasses } from '@/components/ui';
 import { useTheme } from '@/lib';
 import { faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
+import classNames from 'classnames';
+
+/** Props inherited from the shared `IconButton` component. */
+type IconButtonProps = ComponentProps<typeof IconButton>;
+
+/** Props supported by the theme toggle button. */
+interface ButtonProps extends IconButtonProps {
+  /** Optional class name overrides for the button internals. */
+  classes?: IconButtonClasses;
+}
 
 /**
  * Theme toggle button component.
@@ -23,8 +34,10 @@ import { faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
  * }
  * ```
  */
-const Button = (): JSX.Element => {
+const Button: FC<ButtonProps> = ({ classes, ...rest }): JSX.Element => {
   const { mode, setMode } = useTheme();
+
+  const childrenClasses = classNames('mg:animate-spin-in', classes?.children);
 
   const handleToggle = () => {
     setMode(mode === 'light' ? 'dark' : 'light');
@@ -32,8 +45,9 @@ const Button = (): JSX.Element => {
 
   return (
     <IconButton
-      classes={{ children: 'mg:animate-spin-in' }}
+      classes={{ children: childrenClasses, iconButton: classes?.iconButton }}
       onClick={handleToggle}
+      {...rest}
     >
       {mode === 'light' ? faMoon : faSun}
     </IconButton>

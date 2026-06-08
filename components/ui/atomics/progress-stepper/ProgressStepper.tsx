@@ -22,7 +22,7 @@ import type { StepClasses } from './Step';
 import { Connector } from './Connector';
 import type { ConnectorClasses } from './Connector';
 import { Button } from '../buttons';
-import { ButtonClasses } from '../buttons';
+import type { ButtonClasses } from '../buttons';
 import { Typography } from '../typography';
 import { useControlled, useBreakpoints } from '@/lib';
 import { capitalize } from '@/utils';

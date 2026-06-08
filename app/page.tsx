@@ -10,7 +10,7 @@ import {
   CardMedia,
 } from '@/components/ui/atomics';
 import { Page } from '@/components/ui/components';
-import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import {
   faStar,
   faHandsBubbles,

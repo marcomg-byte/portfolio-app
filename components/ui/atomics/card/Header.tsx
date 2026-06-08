@@ -9,7 +9,7 @@ import type {
 import { cloneElement, isValidElement } from 'react';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Badge } from '../badge';
 import { Typography } from '../typography';
 
