@@ -30,6 +30,7 @@ import type {
   StepType,
 } from './progress-stepper';
 import { Select } from './select';
+import type { SelectClasses } from './select';
 import { Link, Typography } from './typography';
 import type {
   HeadingVariant,
@@ -81,6 +82,7 @@ export type {
   TypographyColor,
   TypographyVariant,
   ProgressStepperClasses,
+  SelectClasses,
   StepClasses,
   StepType,
   FooterAction,

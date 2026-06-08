@@ -1,28 +1,41 @@
-import type { JSX, MouseEvent } from 'react';
+import type { ComponentProps, FC, JSX, MouseEvent } from 'react';
 import { Select } from '@/components/ui';
+import type { SelectClasses } from '@/components/ui';
 import { useTheme, THEME_MODES, THEME_OPTIONS } from '@/lib';
 import type { ThemeMode } from '@/lib';
 
+/** Props inherited from the shared `Select` component. */
+type SelectProps = ComponentProps<typeof Select>;
+
+/** Props supported by the theme selector wrapper. */
+interface SelectorProps extends SelectProps {
+  /** Optional class name overrides for the underlying select internals. */
+  classes?: SelectClasses;
+}
+
 /**
- * Theme mode selector component.
+ * Renders the theme mode selector that stays synchronized with the current
+ * application theme and updates it when the user chooses a new option.
  *
- * Renders a Select dropdown for choosing the application theme mode (system, light, dark).
- * Integrates with the useTheme hook to update and reflect the current mode.
+ * The component wraps the shared `Select` control with the theme-specific
+ * label, option list, and change handler needed to switch between the
+ * supported theme modes.
  *
- * @returns {JSX.Element} The theme selector dropdown component.
+ * @param {SelectorProps} props - Props forwarded to the theme selector, plus optional class overrides.
+ * @returns {JSX.Element} The themed select dropdown.
  * @example
  * ```tsx
  * import { Selector } from '@/components/theme/Selector';
  *
- * function App() {
- *  return (
- *     <div>
- *      <Selector />
- *    </div>
- * );
+ * export function Toolbar() {
+ *   return <Selector />;
+ * }
  * ```
  */
-const Selector = (): JSX.Element => {
+const Selector: FC<SelectorProps> = ({
+  classes = {},
+  ...rest
+}): JSX.Element => {
   const { mode, setMode } = useTheme();
 
   const handleChange = (event: MouseEvent<HTMLLIElement>) => {
@@ -34,10 +47,12 @@ const Selector = (): JSX.Element => {
 
   return (
     <Select
+      classes={classes}
       label="Theme"
       options={THEME_OPTIONS}
       value={mode}
       onChange={handleChange}
+      {...rest}
     />
   );
 };
