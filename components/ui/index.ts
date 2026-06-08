@@ -27,6 +27,7 @@ import type {
   TypographyVariant,
   HeadingVariant,
   ParagraphVariant,
+  SelectClasses,
   StepType,
   FormValue,
   FooterAction,
@@ -65,6 +66,7 @@ export type {
   TypographyVariant,
   HeadingVariant,
   ParagraphVariant,
+  SelectClasses,
   StepType,
   FooterAction,
 };
