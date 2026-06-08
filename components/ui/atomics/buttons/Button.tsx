@@ -15,7 +15,7 @@ import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 /**
  * Supported adornments for the Button component: either a FontAwesome icon or an image.
  */
-type Adornment = IconDefinition | ButtonImage;
+type ButtonAdornment = IconDefinition | ButtonImage;
 
 interface ButtonClasses {
   adornment?: string;
@@ -86,11 +86,11 @@ const responsiveSizeClasses: Record<ButtonSize, string> = {
 interface BaseProps {
   children?: ReactNode;
   classes?: ButtonClasses;
-  endAdornment?: Adornment;
+  endAdornment?: ButtonAdornment;
   fullWidth?: boolean;
   responsive?: boolean;
   size?: ButtonSize;
-  startAdornment?: Adornment;
+  startAdornment?: ButtonAdornment;
   ref?: Ref<HTMLAnchorElement>;
   variant?: ButtonVariant;
 }
@@ -147,10 +147,10 @@ type ButtonComponentProps = (AnchorProps | ButtonProps) & BaseProps;
 /**
  * Utility function to render a button adornment (icon or image).
  *
- * @param {Adornment} adornment - The adornment to render (FontAwesome icon or image object).
+ * @param {ButtonAdornment} adornment - The adornment to render (FontAwesome icon or image object).
  * @returns {JSX.Element} The rendered icon or image element.
  */
-const renderAdornment = (adornment: Adornment, className?: string) => {
+const renderAdornment = (adornment: ButtonAdornment, className?: string) => {
   const iconClasses = twMerge('mg:text-xs', className);
   const imageClasses = twMerge(
     'mg:object-contain mg:animate-fade-in mg:duration-500',
@@ -285,4 +285,4 @@ function Button({
 Button.displayName = 'Button';
 
 export { Button };
-export type { Adornment, ButtonVariant };
+export type { ButtonAdornment, ButtonClasses, ButtonVariant };

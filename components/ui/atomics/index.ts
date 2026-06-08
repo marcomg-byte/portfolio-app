@@ -1,5 +1,13 @@
 import { Badge } from './badge';
-import { Button, IconButton } from './buttons';
+import { Button, Fab, IconButton } from './buttons';
+import type {
+  ButtonAdornment,
+  ButtonClasses,
+  ButtonVariant,
+  IconButtonClasses,
+  IconButtonVariant,
+  FabClasses,
+} from './buttons';
 import {
   Card,
   Header as CardHeader,
@@ -9,15 +17,27 @@ import {
 import type { FooterAction } from './card';
 import { Carousel, Hero } from './carousel';
 import { Drawer } from './drawer';
+import type { DrawerClasses } from './drawer';
 import { Form, TextArea, TextInput } from './form';
 import type { FormValue } from './form';
 import { List, ListItem } from './list';
 import type { Item } from './list';
 import { Connector, ProgressStepper, Step } from './progress-stepper';
-import type { StepType } from './progress-stepper';
+import type {
+  ConnectorClasses,
+  ProgressStepperClasses,
+  StepClasses,
+  StepType,
+} from './progress-stepper';
 import { Select } from './select';
-import { Typography } from './typography';
-import type { HeadingVariant, ParagraphVariant } from './typography';
+import { Link, Typography } from './typography';
+import type {
+  HeadingVariant,
+  LinkClasses,
+  ParagraphVariant,
+  TypographyColor,
+  TypographyVariant,
+} from './typography';
 
 export {
   Badge,
@@ -28,12 +48,14 @@ export {
   CardFooter,
   Connector,
   Drawer,
+  Fab,
   Form,
   Hero,
   Carousel,
   IconButton,
   List,
   ListItem,
+  Link,
   ProgressStepper,
   Select,
   Step,
@@ -41,11 +63,25 @@ export {
   TextInput,
   Typography,
 };
+
 export type {
+  ButtonAdornment,
+  ButtonClasses,
+  ButtonVariant,
+  ConnectorClasses,
+  IconButtonClasses,
+  IconButtonVariant,
+  FabClasses,
+  DrawerClasses,
+  LinkClasses,
   Item,
   FormValue,
   HeadingVariant,
   ParagraphVariant,
+  TypographyColor,
+  TypographyVariant,
+  ProgressStepperClasses,
+  StepClasses,
   StepType,
   FooterAction,
 };

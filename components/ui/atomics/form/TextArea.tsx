@@ -414,7 +414,7 @@ const TextArea: FC<TextAreaProps> = ({
     classes?.adornment,
   );
   const adornmentContainerClasses = twMerge(
-    'mg:flex mg:w-full mg:gap-2 mg:overflow-x-scroll mg:p-1',
+    'mg:flex mg:w-full mg:gap-2 mg:overflow-x-auto mg:scrollbar-subtle mg:p-1',
     classes?.adornmentContainer,
   );
   const rightAdormentContainerClasses = classNames(

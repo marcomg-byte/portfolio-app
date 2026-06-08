@@ -120,11 +120,11 @@ export default function Projects() {
 
   return (
     <Page title="Projects">
-      <div className="mg:flex mg:w-full mg:pb-4">
-        <div className="mg:flex mg:flex-col mg:gap-1 mg:pt-6 mg:pl-6">
+      <div className="mg:flex mg:flex-col mg:w-full mg:items-center mg:pb-4 mg:md:flex-row mg:md:items-start">
+        <div className="mg:flex mg:flex-col mg:gap-1 mg:p-6 mg:md:grow">
           <Typography
             removePadding
-            className="mg:text-xl"
+            className="mg:text-lg mg:sm:text-xl mg:lg:text-3xl"
             color="secondary"
             variant="h1"
           >
@@ -134,28 +134,28 @@ export default function Projects() {
             <Typography removePadding variant="h1" className="mb-4">
               Solutions I&apos;ve built
             </Typography>
-            <Typography variant="base" clamp={6}>
+            <Typography variant="base" clamp={10}>
               A collection of projects that showcase my passion for building
               scalable systems, developer tooling and modern web applications
               with a strong focus on architecture, performance and usability.
             </Typography>
           </div>
         </div>
-        <div className="mg:flex mg:w-full mg:pt-4 mg:px-4">
-          <div className="mg:relative mg:w-full mg:aspect-video mg:rounded-full mg:overflow-hidden mg:transition-transform mg:duration-200 mg:hover:scale-105">
+        <div className="mg:flex mg:w-full mg:justify-center mg:px-4 mg:pb-4 mg:md:w-auto mg:md:flex-1 mg:md:pt-6 mg:md:pr-6">
+          <div className="mg:relative mg:w-full mg:max-w-64 mg:aspect-video mg:rounded-4xl mg:overflow-hidden mg:transition-transform mg:duration-200 mg:hover:scale-105 mg:sm:max-w-80 mg:md:max-w-48g:max-w-60 mg:2xl:max-w-72">
             <Image
               src="/images/site.jpg"
               alt="Server Room"
               fill
               priority
-              sizes="(max-width: 768px) 100vw, 300px"
+              sizes="(max-width: 640px) 16rem, (max-width: 768px) 20rem, (max-width: 1024px) 26rem, 36rem"
               className="mg:object-cover mg:animate-fade-in mg:duration-500"
             />
           </div>
         </div>
       </div>
       <div className="mg:flex mg:flex-col mg:w-full mg:gap-2 mg:pt-4 mg:pb-6 mg:px-6">
-        <div className="mg:flex mg:w-full mg:gap-4 mg:overflow-x-scroll">
+        <div className="mg:flex mg:w-full mg:gap-4 mg:overflow-x-auto mg:scrollbar-subtle">
           {categories.map((category, index) => (
             <Button
               key={`category-${index}`}
@@ -174,7 +174,7 @@ export default function Projects() {
             Reset
           </Button>
         </div>
-        <div className="mg:flex mg:flex-wrap mg:w-full mg:gap-y-8 mg:gap-1 mg:justify-evenly mg:p-6 mg:overflow-auto">
+        <div className="mg:flex mg:flex-wrap mg:w-full mg:gap-y-8 mg:gap-1 mg:justify-evenly mg:p-6 mg:overflow-auto mg:scrollbar-subtle">
           {selectedProjects.map((project, index) => (
             <Card key={`project-${index}`}>
               <CardHeader
@@ -196,33 +196,41 @@ export default function Projects() {
           ))}
         </div>
       </div>
-      <div className="mg:flex mg:w-full mg:items-center mg:justify-between mg:px-6 mg:pb-6">
-        <div className="mg:flex mg:gap-8 mg:w-2/3">
-          <Image
-            width={160}
-            height={160}
-            src="/images/team-work.png"
-            alt="Team Work Icon"
-            className="mg:animate-fade-in mg:duration-500"
-            style={{ width: 'auto', height: 'auto' }}
-          />
-          <div className="mg:flex mg:flex-col mg:gap-4 mg:grow">
-            <Typography variant="h2">Have an idea in mind?</Typography>
-            <Typography variant="base">
+      <div className="mg:flex mg:flex-col mg:w-full mg:items-stretch mg:gap-6 mg:px-6 mg:pb-6 mg:sm:items-center mg:lg:flex-row mg:lg:items-center mg:lg:justify-between">
+        <div className="mg:flex mg:w-full mg:flex-col mg:items-center mg:gap-4 mg:text-center mg:sm:max-w-2xl mg:sm:flex-row mg:sm:text-left mg:lg:max-w-none mg:lg:w-2/3 mg:lg:gap-8">
+          <div className="mg:relative mg:w-36 mg:shrink-0 mg:aspect-video mg:overflow-hidden mg:rounded-4xl mg:sm:w-44 mg:lg:w-52">
+            <Image
+              fill
+              src="/images/mac-desktop.jpg"
+              alt="Desktop with iMacs Image"
+              loading="eager"
+              sizes="(max-width: 640px) 9rem, (max-width: 1024px) 11rem, 13rem"
+              className="mg:object-cover mg:animate-fade-in mg:duration-500"
+            />
+          </div>
+          <div className="mg:flex mg:flex-col mg:gap-3 mg:grow mg:sm:gap-4">
+            <Typography removePadding variant="h2">
+              Have an idea in mind?
+            </Typography>
+            <Typography removePadding clamp={10} variant="base">
               I&apos;m always open to new opportunities and collaborations. If
               you have a project in mind or just want to chat about technology,
               feel free to reach out!
             </Typography>
           </div>
         </div>
-        <Button
-          endAdornment={faArrowRight}
-          target="_blank"
-          href="/contact"
-          variant="outline"
-        >
-          LET&apos;S CONNECT
-        </Button>
+        <div className="mg:w-18 mg:sm:w-22">
+          <Button
+            fullWidth
+            endAdornment={faArrowRight}
+            target="_blank"
+            href="/contact"
+            variant="outline"
+            classes={{ button: 'mg:p-1 mg:sm:p-2' }}
+          >
+            LET&apos;S CONNECT
+          </Button>
+        </div>
       </div>
     </Page>
   );

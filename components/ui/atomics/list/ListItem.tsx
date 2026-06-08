@@ -14,6 +14,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import { twMerge } from 'tailwind-merge';
 import { Typography } from '@/components/ui';
+import type { TypographyColor } from '@/components/ui';
 import { useControlled } from '@/lib';
 
 type ListItemAdornment = IconDefinition | { src: string; alt?: string };
@@ -44,21 +45,12 @@ interface ListItemClasses {
   title?: string;
 }
 
-type ListItemColor =
-  | 'accent'
-  | 'black'
-  | 'inverse'
-  | 'primary'
-  | 'secondary'
-  | 'subtle'
-  | 'white';
-
 interface BaseProps {
   as?: 'a' | 'div' | 'li';
   adornment?: ListItemAdornment;
   adornmentColor?: ListItemAdornmentColor;
   classes?: ListItemClasses;
-  color?: ListItemColor;
+  color?: TypographyColor;
   defaultSelected?: boolean;
   disabled?: boolean;
   divider?: boolean;

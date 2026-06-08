@@ -73,7 +73,10 @@ interface BaseProps {
  * Props when the `Fab` is rendered as an anchor (`<a>`).
  * Extends native anchor attributes but disallows `type`.
  */
-interface AnchorProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
+interface AnchorProps extends Omit<
+  AnchorHTMLAttributes<HTMLAnchorElement>,
+  'className'
+> {
   /** Destination URL for the anchor. */
   href?: string;
   /** Click handler when rendered as an anchor. */
@@ -90,7 +93,10 @@ interface AnchorProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
  * Props when the `Fab` is rendered as a button (`<button>`).
  * Extends native button attributes but disallows `href` and `target`.
  */
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  'className'
+> {
   /** Explicitly disallowed on the button variant. */
   href?: never;
   /** Click handler when rendered as a button. */
@@ -251,3 +257,4 @@ function Fab({
 Fab.displayName = 'Fab';
 
 export { Fab };
+export type { FabClasses };
