@@ -9,15 +9,19 @@ import type {
 } from 'react';
 import { cloneElement, isValidElement } from 'react';
 import Image from 'next/image';
-import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import { twMerge } from 'tailwind-merge';
 
+/** Child content supported by the icon button. */
 type IconButtonChildren = IconDefinition | ReactElement;
 
+/** Optional class name hooks for the icon button internals. */
 interface IconButtonClasses {
+  /** Class names applied to the rendered child icon or image. */
   children?: string;
+  /** Class names applied to the outer button or anchor element. */
   iconButton?: string;
 }
 
@@ -47,65 +51,63 @@ type IconButtonSize = 'sm' | 'md' | 'lg';
  */
 type IconButtonVariant = 'outline' | 'filled';
 
+/** React element wrapper used when cloning a Next.js image child. */
 type ImageComponent = ReactElement<ComponentProps<typeof Image>>;
 
+/** Shared props for both anchor and button variants. */
 interface BaseProps {
+  /** Icon or custom element rendered inside the control. */
   children?: IconButtonChildren;
+  /** Optional class name hooks for inner and outer styling. */
   classes?: IconButtonClasses;
+  /** Color token for the button styling. */
   color?: IconButtonColor;
+  /** Size token controlling the visual scale of the control. */
   size?: IconButtonSize;
+  /** Visual style variant for the control. */
   variant?: IconButtonVariant;
 }
 
-/**
- * Props for the anchor variant of the IconButton component.
- *
- * @property {IconDefinition} [children] - The icon to display inside the anchor.
- * @property {string} [className] - Additional CSS classes for the anchor.
- * @property {IconButtonColor} [color] - The color style of the anchor.
- * @property {string} href - The URL to link to (required for anchor usage).
- * @property {IconButtonSize} [size] - The size of the anchor button.
- * @property {(event: MouseEvent<HTMLAnchorElement>) => void} [onClick] - Click event handler for the anchor.
- * @property {Ref<HTMLAnchorElement>} [ref] - Ref for the anchor element.
- * @property {IconButtonVariant} [variant] - The visual style of the anchor button.
- * @property {(event: MouseEvent<HTMLAnchorElement>) => void} [onClick] - Click event handler for the anchor.
- * @property {Ref<HTMLAnchorElement>} [ref] - Ref for the anchor element.
- * @property {IconButtonVariant} [variant] - The visual style of the anchor button.
- */
+/** Props for the anchor variant of the IconButton component. */
 interface AnchorProps extends Omit<
   AnchorHTMLAttributes<HTMLAnchorElement>,
   'children' | 'className'
 > {
+  /** Destination URL for the anchor variant. */
   href?: string;
+  /** Click handler for the anchor variant. */
   onClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
+  /** Optional ref forwarded to the anchor element. */
   ref?: Ref<HTMLAnchorElement>;
+  /** Optional target for the anchor element. */
   target?: string;
 }
 
-/**
- * Props for the button variant of the IconButton component.
- *
- * @property {IconDefinition} [children] - The icon to display inside the button.
- * @property {string} [className] - Additional CSS classes for the button.
- * @property {IconButtonColor} [color] - The color style of the button.
- * @property {never} [href] - Not allowed for button usage.
- * @property {IconButtonSize} [size] - The size of the button.
- * @property {(event: MouseEvent<HTMLButtonElement>) => void} [onClick] - Click event handler for the button.
- * @property {Ref<HTMLButtonElement>} [ref] - Ref for the button element.
- * @property {IconButtonVariant} [variant] - The visual style of the button.
- */
+/** Props for the button variant of the IconButton component. */
 interface ButtonProps extends Omit<
   ButtonHTMLAttributes<HTMLButtonElement>,
   'children' | 'className'
 > {
+  /** Disallowed for the button variant. */
   href?: never;
+  /** Click handler for the button variant. */
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
+  /** Optional ref forwarded to the button element. */
   ref?: Ref<HTMLButtonElement>;
+  /** Disallowed for the button variant. */
   target?: never;
 }
 
+/** Combined prop signature for the icon button component. */
 type IconButtonProps = (AnchorProps | ButtonProps) & BaseProps;
 
+/**
+ * Normalizes the icon button child into the rendered icon or image element.
+ *
+ * Font Awesome icons are passed through directly with the shared class name,
+ * while `next/image` children are cloned so they inherit the standard icon
+ * sizing and motion classes used by the component.
+ */
 const renderChildren = (children: IconButtonChildren, className?: string) => {
   const imageClasses = twMerge(
     'mg:object-cover mg:animate-fade-in mg:duration-500',

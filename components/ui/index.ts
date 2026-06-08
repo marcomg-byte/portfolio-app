@@ -20,6 +20,7 @@ import {
   Typography,
 } from './atomics';
 import type {
+  IconButtonClasses,
   Item,
   LinkClasses,
   TypographyColor,
@@ -56,6 +57,7 @@ export {
   Typography,
 };
 export type {
+  IconButtonClasses,
   Item,
   LinkClasses,
   FormValue,

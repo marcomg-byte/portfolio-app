@@ -10,7 +10,7 @@ import type {
 } from 'react';
 import { Children, cloneElement, isValidElement } from 'react';
 import classNames from 'classnames';
-import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Fab } from '../buttons';
 import type { FabClasses } from '../buttons';

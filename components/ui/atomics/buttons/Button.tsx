@@ -10,7 +10,7 @@ import Image from 'next/image';
 import classNames from 'classnames';
 import { twMerge } from 'tailwind-merge';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 /**
  * Supported adornments for the Button component: either a FontAwesome icon or an image.
