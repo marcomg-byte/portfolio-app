@@ -42,8 +42,12 @@ describe('Form', () => {
     expect(form.getAttribute('method')).toBe('post');
     expect(form.getAttribute('name')).toBe('contact');
     expect(form.hasAttribute('novalidate')).toBe(true);
-    expect(screen.getByRole('heading', { level: 2, name: 'Contact' })).toBeDefined();
-    expect(screen.getByAltText('Logo').getAttribute('src')).toContain('logo.png');
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'Contact' }),
+    ).toBeDefined();
+    expect(screen.getByAltText('Logo').getAttribute('src')).toContain(
+      'logo.png',
+    );
     expect(screen.getByText('We reply soon.')).toBeDefined();
     expect(container.querySelectorAll('svg').length).toBeGreaterThan(0);
     expect(screen.getByRole('button', { name: 'SUBMIT' })).toBeDefined();

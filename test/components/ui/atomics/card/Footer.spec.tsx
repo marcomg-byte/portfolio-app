@@ -15,7 +15,9 @@ describe('Footer', () => {
       />,
     );
 
-    expect(screen.getByRole('heading', { level: 3, name: 'Project' })).toBeDefined();
+    expect(
+      screen.getByRole('heading', { level: 3, name: 'Project' }),
+    ).toBeDefined();
     expect(screen.getByText('Case study')).toBeDefined();
     expect(screen.getByText('A detailed project summary.')).toBeDefined();
   });
