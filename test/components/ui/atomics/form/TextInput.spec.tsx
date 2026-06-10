@@ -47,11 +47,7 @@ describe('TextInput', () => {
     const handleError = vi.fn();
 
     render(
-      <TextInput
-        aria-label="Code"
-        pattern={/^\d+$/}
-        onError={handleError}
-      />,
+      <TextInput aria-label="Code" pattern={/^\d+$/} onError={handleError} />,
     );
 
     fireEvent.change(screen.getByRole('textbox', { name: 'Code' }), {
@@ -79,12 +75,10 @@ describe('TextInput', () => {
 
     expect(handleClear).toHaveBeenCalledTimes(1);
     expect(
-      container.querySelector('svg[data-icon="envelope"]')?.getAttribute(
-        'data-icon',
-      ),
-    ).toBe(
-      'envelope',
-    );
+      container
+        .querySelector('svg[data-icon="envelope"]')
+        ?.getAttribute('data-icon'),
+    ).toBe('envelope');
     expect(screen.getByAltText('End icon').getAttribute('src')).toContain(
       'icon.png',
     );
@@ -92,11 +86,7 @@ describe('TextInput', () => {
 
   it('toggles password visibility', () => {
     render(
-      <TextInput
-        aria-label="Password"
-        type="password"
-        defaultValue="secret"
-      />,
+      <TextInput aria-label="Password" type="password" defaultValue="secret" />,
     );
 
     const input = screen.getByLabelText('Password') as HTMLInputElement;

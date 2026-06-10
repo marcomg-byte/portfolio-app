@@ -1,6 +1,10 @@
 {
   "name": "@marcomg-byte/portfolio-app",
   "version": "0.1.0",
+  "packageManager": "yarn@4.16.0",
+  "engines": {
+    "node": ">=24 <25"
+  },
   "private": true,
   "type": "module",
   "scripts": {
