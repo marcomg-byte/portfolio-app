@@ -1,6 +1,9 @@
 name: Deploy
 
 on:
+  repository_dispatch:
+    types:
+      - production_deploy
   release:
     types:
       - published
@@ -51,17 +54,7 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
       - name: Deploy to Vercel
-        id: deploy
-        run: |
-          deployment_url=$(yarn dlx vercel deploy --prebuilt --prod --token="${{ secrets.VERCEL_TOKEN }}")
-          echo "url=$deployment_url" >> "$GITHUB_OUTPUT"
-          echo "$deployment_url"
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
-      - name: Alias Production Domain
-        run: yarn dlx vercel alias set "${{ steps.deploy.outputs.url }}" "$VERCEL_DOMAIN" --token="${{ secrets.VERCEL_TOKEN }}"
+        run: yarn dlx vercel deploy --prebuilt --prod --token="${{ secrets.VERCEL_TOKEN }}"
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}

@@ -49,6 +49,3 @@ jobs:
       
       - name: Run Tests
         run: yarn test:cov
-      
-      - name: Build App
-        run: yarn build
