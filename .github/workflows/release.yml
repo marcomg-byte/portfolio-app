@@ -110,5 +110,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh pr edit "${{ github.event.pull_request.number }}" \
-            --add-label released
+          cat <<'JSON' | gh api "repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels" \
+            --method POST \
+            --input -
+          {
+            "labels": ["released"]
+          }
+          JSON
