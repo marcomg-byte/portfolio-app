@@ -46,7 +46,7 @@ const cards: CardData[] = [
 
 export default function Home() {
   return (
-    <Page>
+    <Page title="Home">
       <Hero
         autoPlay
         showControls={false}

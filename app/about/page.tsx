@@ -297,7 +297,7 @@ export default function About() {
   const [completed, setCompleted] = useState<boolean>(false);
 
   return (
-    <Page>
+    <Page title="About">
       <div className="mg:flex mg:flex-col mg:justify-center mg:items-center mg:w-full mg:md:flex-row mg:md:items-start">
         <div className="mg:flex mg:flex-col mg:justify-center mg:items-start mg:grow mg:gap-2 mg:p-6">
           <Typography clamp={5} variant="h2">
