@@ -95,10 +95,16 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh api "repos/${{ github.repository }}/dispatches" \
+          cat <<'JSON' | gh api "repos/${{ github.repository }}/dispatches" \
             --method POST \
-            --field event_type=production_deploy \
-            --raw-field client_payload='{"tag":"${{ steps.version.outputs.tag }}"}'
+            --input -
+          {
+            "event_type": "production_deploy",
+            "client_payload": {
+              "tag": "${{ steps.version.outputs.tag }}"
+            }
+          }
+          JSON
 
       - name: Mark Pull Request as Released
         env:
