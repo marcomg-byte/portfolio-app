@@ -188,7 +188,7 @@ const contactCards: ContactCardProps[] = [
     image: { src: '/images/internet.png', alt: 'Internet Icon' },
     link: {
       text: 'See personal page',
-      href: 'marcoantoniomelo.dev',
+      href: '/about',
       target: '_blank',
     },
     title: 'Website',
