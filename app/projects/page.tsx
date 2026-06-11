@@ -65,10 +65,14 @@ const projects: Project[] = [
       {
         label: 'View on GitHub',
         startAdornment: { src: '/images/github.png', alt: 'GitHub Logo' },
+        href: 'https://github.com/marcomg-byte/portfolio-app',
+        target: '_blank',
       },
       {
         label: 'Use case',
         startAdornment: { src: '/images/eyeglasses.png', alt: 'Usage Icon' },
+        href: 'https://github.com/marcomg-byte/portfolio-app/blob/main/README.md',
+        target: '_blank',
       },
     ],
     adornment: { src: '/images/atom.png', alt: 'React Logo' },
@@ -83,10 +87,14 @@ const projects: Project[] = [
       {
         label: 'View on GitHub',
         startAdornment: { src: '/images/github.png', alt: 'GitHub Logo' },
+        href: 'https://github.com/marcomg-byte/offser',
+        target: '_blank',
       },
       {
         label: 'Use case',
         startAdornment: { src: '/images/eyeglasses.png', alt: 'Usage Icon' },
+        href: 'https://github.com/marcomg-byte/offser/blob/main/README.md',
+        target: '_blank',
       },
     ],
     adornment: {
