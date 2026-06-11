@@ -60,10 +60,10 @@ describe('Projects page', () => {
     ).toBe('/contact');
     expect(screen.getByAltText('Desktop with iMacs Image')).toBeDefined();
     expect(
-      screen.getAllByRole('button', { name: /View on GitHub/ }).length,
+      screen.getAllByRole('link', { name: /View on GitHub/ }).length,
     ).toBeGreaterThan(0);
     expect(
-      screen.getAllByRole('button', { name: /Use case/ }).length,
+      screen.getAllByRole('link', { name: /Use case/ }).length,
     ).toBeGreaterThan(0);
   });
 });
