@@ -20,7 +20,7 @@ The project is built with Next.js, React, TypeScript, Tailwind CSS, Font Awesome
 
 ## Current Version
 
-Current app version: `1.0.0`
+Current app version: `1.0.1`
 
 The version is tracked in `package.json` and is bumped automatically by the release workflow when a merged pull request has one release label: `patch`, `minor`, or `major`.
 
@@ -31,7 +31,7 @@ Latest releases are published as GitHub Releases from `.github/workflows/release
 Use the repository Releases page to review published versions, tags, and release notes. Each release tag follows the package version, for example:
 
 ```txt
-v0.1.0
+v1.0.0
 ```
 
 ## Requirements
